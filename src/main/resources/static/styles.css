@@ -1,0 +1,88 @@
+/* styles.css - Ecoloop UI inspired by provided mockups */
+:root{
+  --green-dark: #0e5a36;
+  --green: #12a24f;
+  --mint: #cdeecc;
+  --bg: linear-gradient(180deg,#dff3e7,#bfeccf);
+  --card: rgba(255,255,255,0.9);
+  --muted: #2b6b56;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family: 'Inter', Arial, Helvetica, sans-serif;background:var(--bg);color:#0b3b2a}
+a{color:inherit;text-decoration:none}
+
+/* Layout */
+.app{
+  display:flex;
+  min-height:100vh;
+  gap:24px;
+}
+
+/* Sidebar */
+.sidebar{
+  width:230px;
+  background:linear-gradient(180deg,var(--green-dark),#0b5a36);
+  color:white;
+  padding:22px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  box-shadow: 4px 0 20px rgba(6,50,30,0.12);
+}
+.brand{display:flex;align-items:center;gap:10px}
+.brand .logo{width:36px;height:36px;border-radius:8px;background:linear-gradient(180deg,#12b55a,#0a7e3a);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff}
+.brand h1{font-size:18px;margin:0}
+
+/* Menu */
+.menu{margin-top:6px;display:flex;flex-direction:column;gap:6px}
+.menu a{padding:8px 10px;border-radius:6px;color:rgba(255,255,255,0.95);display:flex;align-items:center;gap:10px;font-size:14px}
+.menu a:hover{background:rgba(255,255,255,0.04)}
+
+/* Content area */
+.content{flex:1;padding:26px;display:flex;flex-direction:column;gap:18px}
+
+/* Header row */
+.header-row{display:flex;justify-content:space-between;align-items:center;gap:12px}
+
+/* Card */
+.card{background:var(--card);border-radius:10px;padding:16px;box-shadow:0 6px 18px rgba(10,10,10,0.06);border:1px solid rgba(6,58,42,0.06)}
+
+/* Grid layouts */
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+
+/* Dashboard specifics */
+.upload-box{background:linear-gradient(180deg,#eaf9ee,#d5f1db);padding:14px;border-radius:8px;border:2px solid rgba(6,58,42,0.06);display:flex;flex-direction:column;gap:8px}
+.upload-actions{display:flex;gap:8px;align-items:center}
+
+/* Buttons */
+.btn{background:var(--green);color:white;padding:10px 14px;border:none;border-radius:8px;cursor:pointer;font-weight:600}
+.btn-outline{background:transparent;border:2px solid rgba(6,58,42,0.12);padding:8px 12px;border-radius:8px}
+
+/* Login page */
+.login-wrapper{display:flex;justify-content:center;align-items:center;min-height:80vh}
+.login-card{width:420px;padding:28px;border-radius:12px;background:linear-gradient(180deg,#c8f6d7,#9fe4b8);box-shadow:0 10px 30px rgba(6,50,30,0.12)}
+
+.input{width:100%;padding:10px 12px;border-radius:8px;border:1px solid rgba(6,58,42,0.12);margin-bottom:12px;background:rgba(255,255,255,0.9)}
+
+/* Profile */
+.profile-row{display:flex;align-items:center;gap:16px}
+.avatar{width:72px;height:72px;border-radius:50%;background:linear-gradient(180deg,#fff,#f1f9f1);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--muted)}
+
+/* Upload dropzone */
+.dropzone{border:2px dashed rgba(6,58,42,0.12);border-radius:10px;padding:28px;text-align:center;background:linear-gradient(180deg,#f6fff6,#eaf9ee)}
+
+/* Small chips / tags */
+.chips{display:flex;gap:8px}
+.chip{padding:6px 10px;border-radius:999px;background:rgba(6,58,42,0.06);font-weight:600;color:var(--muted)}
+
+/* Footer action */
+.footer-actions{display:flex;gap:10px;align-items:center;justify-content:flex-end}
+
+/* Responsive */
+@media(max-width:900px){
+  .grid-3{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .app{padding:0}
+}
