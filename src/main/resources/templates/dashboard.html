@@ -1,71 +1,87 @@
 <!doctype html>
-<html lang="pt-BR">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Dashboard - Ecoloop</title>
-<link rel="stylesheet" href="/styles.css"><script src="../js/scripts.js" defer></script></head>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <title>Dashboard - Ecoloop</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
 <body>
   <div class="app">
-    
-<nav class="sidebar">
-  <div class="brand">
-    <div class="logo">E</div>
-    <h1>Ecoloop</h1>
-  </div>
-  <div class="menu">
-      <a href="/dashboard">Home</a>
-      <a href="/enviar">Enviar</a>
-      <a href="/beneficios">Benefícios</a>
-      <a href="/conquistas">Conquistas</a>
-      <a href="/perfil">Perfil</a>
-      <a href="/configuracoes">Configurações</a>
-      <a href="/uploads">Gerenciar Uploads</a>
-      <a href="#">Sair</a>
-    </div>
-</nav>
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo">E</div>
+        <h1>Ecoloop</h1>
+      </div>
+
+      <nav class="menu">
+        <a th:href="@{/dashboard}">Dashboard</a>
+        <a th:href="@{/beneficios}">Benefícios</a>
+        <a th:href="@{/conquistas}">Conquistas</a>
+        <a th:href="@{/enviar}">Enviar</a>
+        <a th:href="@{/perfil}">Perfil</a>
+        <a th:href="@{/configuracoes}">Configurações</a>
+        <a th:href="@{/admin}" th:if="${#authentication == null ? false : (session.usuario != null and session.usuario.role == 'ADMIN')}">Admin</a>
+        <a th:href="@{/logout}">Sair</a>
+      </nav>
+    </aside>
 
     <main class="content">
       <div class="header-row">
-        <h1>Dashboard</h1>
-        <div class="chips"><div class="chip">Dicas & Desafios</div></div>
+        <div>
+          <h2>Olá, <span th:text="${usuario.nome}">Usuário</span></h2>
+          <div style="color:var(--muted)">Bem-vindo ao painel</div>
+        </div>
+        <div class="chips">
+          <div class="chip">Pontos: <strong th:text="${usuario.pontos}">0</strong></div>
+          <div class="chip">Nível: <strong th:text="${usuario.nivel}">Bronze</strong></div>
+        </div>
       </div>
+
       <div class="grid-3">
         <div class="card">
-          <h3>Enviar Foto/Vídeo</h3>
+          <h3>Notificações</h3>
+          <ul>
+            <li th:each="n : ${notificacoes}">
+              <div><strong th:text="${n.mensagem}">Mensagem</strong></div>
+              <div style="font-size:12px;color:var(--muted)"><span th:text="${#temporals.format(m.dataEnvio, 'dd/MM/yyyy HH:mm')}"></span></div>
+            </li>
+            <li th:if="${#lists.isEmpty(notificacoes)}">Sem notificações</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>Últimos uploads</h3>
           <div class="upload-box">
-            <p>Arraste ou selecione uma foto ou vídeo do material reciclável</p>
-            <div class="upload-actions">
-              <a class="btn" href="/enviar">Abrir envio</a>
-              <button class="btn-outline">Gerar vídeo</button>
+            <div th:each="m : ${uploads}">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+                <div>
+                  <a th:href="${m.caminhoArquivo}" target="_blank" th:text="${m.descricao}">Arquivo</a>
+                  <div style="font-size:12px;color:var(--muted)"><span th:text="${#temporals.format(m.dataEnvio, 'dd/MM/yyyy HH:mm')}"></span></div>
+                </div>
+                <div><span class="chip" th:text="${m.status}">pendente</span></div>
+              </div>
             </div>
+            <div th:if="${#lists.isEmpty(uploads)}">Nenhum envio</div>
           </div>
         </div>
+
         <div class="card">
-          <h3>Benefícios em destaque</h3>
-          <div style="display:flex;gap:8px;margin-top:10px">
-            <div class="card" style="flex:1;padding:10px">Cupom A</div>
-            <div class="card" style="flex:1;padding:10px">Cupom B</div>
-          </div>
-        </div>
-        <div class="card">
-          <h3>Últimas Compras</h3>
-          <div style="height:120px"></div>
+          <h3>Conquistas</h3>
+          <ul>
+            <li th:each="c : ${conquistas}">
+              <span th:text="${c.conquistaId}">ID</span> - <span th:text="${#temporals.format(m.dataEnvio, 'dd/MM/yyyy HH:mm')}"></span>
+            </li>
+            <li th:if="${#lists.isEmpty(conquistas)}">Sem conquistas</li>
+          </ul>
         </div>
       </div>
-      <div class="grid-3">
-        <div class="card">
-          <h3>Ranking Local</h3>
-          <div style="height:160px"></div>
-        </div>
-        <div class="card">
-          <h3>Suas Conquistas</h3>
-          <div style="display:flex;gap:8px;margin-top:10px">
-            <div class="card" style="width:80px;height:80px"></div>
-            <div class="card" style="width:80px;height:80px"></div>
-            <div class="card" style="width:80px;height:80px"></div>
-          </div>
-        </div>
-        <div class="card">
-          <h3>Total de Pontos</h3>
-          <div style="font-size:28px;font-weight:700;margin-top:8px">1250 pts</div>
+
+      <div class="card">
+        <h3>Atalhos</h3>
+        <div style="display:flex;gap:10px">
+          <a class="btn" th:href="@{/enviar}">Enviar material</a>
+          <a class="btn-outline" th:href="@{/beneficios}">Ver benefícios</a>
+          <a class="btn-outline" th:href="@{/conquistas}">Ver conquistas</a>
         </div>
       </div>
     </main>

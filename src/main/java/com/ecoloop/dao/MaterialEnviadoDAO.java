@@ -1,126 +1,203 @@
 package com.ecoloop.dao;
 
 import com.ecoloop.model.MaterialEnviado;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
-import java.sql.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class MaterialEnviadoDAO {
 
-    public Integer create(MaterialEnviado m) {
-        String sql = "INSERT INTO materiais_enviados (usuario_id, descricao, tipo_arquivo, caminho_arquivo, pontos_gerados, status, comentario_avaliacao) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        try (Connection conn = ConnectionBD.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+    private final JdbcTemplate jdbc;
 
-            ps.setInt(1, m.getUsuarioId());
-            ps.setString(2, m.getDescricao());
-            ps.setString(3, m.getTipoArquivo());
-            ps.setString(4, m.getCaminhoArquivo());
-            ps.setInt(5, m.getPontosGerados() == null ? 0 : m.getPontosGerados());
-            ps.setString(6, m.getStatus() == null ? "pendente" : m.getStatus());
-            ps.setString(7, m.getComentarioAvaliacao());
-
-            int affected = ps.executeUpdate();
-            if (affected == 0) return null;
-            try (ResultSet rs = ps.getGeneratedKeys()) {
-                if (rs.next()) return rs.getInt(1);
-            }
-            return null;
-        } catch (SQLException e) {
-            throw new RuntimeException("Erro ao criar material enviado", e);
-        }
+    public MaterialEnviadoDAO(JdbcTemplate jdbc) {
+        this.jdbc = jdbc;
     }
 
-    public boolean update(MaterialEnviado m) {
-        String sql = "UPDATE materiais_enviados SET descricao=?, tipo_arquivo=?, caminho_arquivo=?, pontos_gerados=?, status=?, data_avaliacao=?, comentario_avaliacao=? WHERE id=?";
-        try (Connection conn = ConnectionBD.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, m.getDescricao());
-            ps.setString(2, m.getTipoArquivo());
-            ps.setString(3, m.getCaminhoArquivo());
-            if (m.getPontosGerados() == null) ps.setNull(4, Types.INTEGER); else ps.setInt(4, m.getPontosGerados());
-            ps.setString(5, m.getStatus());
-            if (m.getDataAvaliacao() == null) ps.setNull(6, Types.TIMESTAMP); else ps.setTimestamp(6, Timestamp.valueOf(m.getDataAvaliacao()));
-            ps.setString(7, m.getComentarioAvaliacao());
-            ps.setInt(8, m.getId());
-            return ps.executeUpdate() > 0;
-        } catch (SQLException e) {
-            throw new RuntimeException("Erro ao atualizar material", e);
-        }
-    }
-
-    public boolean delete(int id) {
-        String sql = "DELETE FROM materiais_enviados WHERE id=?";
-        try (Connection conn = ConnectionBD.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, id);
-            return ps.executeUpdate() > 0;
-        } catch (SQLException e) {
-            throw new RuntimeException("Erro ao deletar material", e);
-        }
-    }
-
-    public MaterialEnviado findById(int id) {
-        String sql = "SELECT * FROM materiais_enviados WHERE id=?";
-        try (Connection conn = ConnectionBD.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, id);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) return mapRow(rs);
-                return null;
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Erro ao buscar material por id", e);
-        }
-    }
-
-    public List<MaterialEnviado> findByUsuarioId(int usuarioId) {
-        String sql = "SELECT * FROM materiais_enviados WHERE usuario_id=? ORDER BY data_envio DESC";
-        List<MaterialEnviado> lista = new ArrayList<>();
-        try (Connection conn = ConnectionBD.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, usuarioId);
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) lista.add(mapRow(rs));
-            }
-            return lista;
-        } catch (SQLException e) {
-            throw new RuntimeException("Erro ao listar materiais por usuário", e);
-        }
-    }
-
-    public List<MaterialEnviado> findAll(int limit, int offset) {
-        String sql = "SELECT * FROM materiais_enviados ORDER BY data_envio DESC LIMIT ? OFFSET ?";
-        List<MaterialEnviado> lista = new ArrayList<>();
-        try (Connection conn = ConnectionBD.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, limit);
-            ps.setInt(2, offset);
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) lista.add(mapRow(rs));
-            }
-            return lista;
-        } catch (SQLException e) {
-            throw new RuntimeException("Erro ao listar materiais", e);
-        }
-    }
-
-    private MaterialEnviado mapRow(ResultSet rs) throws SQLException {
+    private RowMapper<MaterialEnviado> mapper = (rs, n) -> {
         MaterialEnviado m = new MaterialEnviado();
         m.setId(rs.getInt("id"));
         m.setUsuarioId(rs.getInt("usuario_id"));
         m.setDescricao(rs.getString("descricao"));
         m.setTipoArquivo(rs.getString("tipo_arquivo"));
         m.setCaminhoArquivo(rs.getString("caminho_arquivo"));
-        Timestamp t = rs.getTimestamp("data_envio");
-        if (t != null) m.setDataEnvio(t.toLocalDateTime());
+
+        if (rs.getTimestamp("data_envio") != null)
+            m.setDataEnvio(rs.getTimestamp("data_envio").toLocalDateTime());
+
         m.setPontosGerados(rs.getInt("pontos_gerados"));
         m.setStatus(rs.getString("status"));
-        Timestamp ta = rs.getTimestamp("data_avaliacao");
-        if (ta != null) m.setDataAvaliacao(ta.toLocalDateTime());
+
+        if (rs.getTimestamp("data_avaliacao") != null)
+            m.setDataAvaliacao(rs.getTimestamp("data_avaliacao").toLocalDateTime());
+
         m.setComentarioAvaliacao(rs.getString("comentario_avaliacao"));
         return m;
+    };
+
+    // ===========================
+    // CRIAÇÃO
+    // ===========================
+    public Integer create(MaterialEnviado m) {
+        String sql = """
+                INSERT INTO materiais_enviados
+                (usuario_id, descricao, tipo_arquivo, caminho_arquivo, pontos_gerados, status, comentario_avaliacao)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+                """;
+
+        jdbc.update(sql,
+                m.getUsuarioId(),
+                m.getDescricao(),
+                m.getTipoArquivo(),
+                m.getCaminhoArquivo(),
+                m.getPontosGerados(),
+                m.getStatus(),
+                m.getComentarioAvaliacao()
+        );
+
+        return jdbc.queryForObject("SELECT LAST_INSERT_ID()", Integer.class);
     }
+
+    // ===========================
+    // UPDATE GERAL
+    // ===========================
+    public boolean update(MaterialEnviado m) {
+        String sql = """
+                UPDATE materiais_enviados SET
+                descricao=?, tipo_arquivo=?, caminho_arquivo=?, pontos_gerados=?,
+                status=?, data_avaliacao=?, comentario_avaliacao=?
+                WHERE id=?
+                """;
+
+        return jdbc.update(sql,
+                m.getDescricao(),
+                m.getTipoArquivo(),
+                m.getCaminhoArquivo(),
+                m.getPontosGerados(),
+                m.getStatus(),
+                m.getDataAvaliacao(),
+                m.getComentarioAvaliacao(),
+                m.getId()
+        ) > 0;
+    }
+
+    // ===========================
+    // BUSCAS
+    // ===========================
+    public MaterialEnviado findById(int id) {
+        List<MaterialEnviado> list = jdbc.query(
+                "SELECT * FROM materiais_enviados WHERE id=?",
+                mapper,
+                id
+        );
+        return list.isEmpty() ? null : list.get(0);
+    }
+
+    public List<MaterialEnviado> findByUsuarioId(int usuarioId) {
+        return jdbc.query(
+                "SELECT * FROM materiais_enviados WHERE usuario_id=? ORDER BY data_envio DESC",
+                mapper, usuarioId
+        );
+    }
+
+    public List<MaterialEnviado> findAll() {
+        return jdbc.query("SELECT * FROM materiais_enviados ORDER BY data_envio DESC", mapper);
+    }
+
+    public List<MaterialEnviado> findAll(int limit, int offset) {
+        return jdbc.query(
+                "SELECT * FROM materiais_enviados ORDER BY data_envio DESC LIMIT ? OFFSET ?",
+                mapper, limit, offset
+        );
+    }
+
+    // ===========================
+    // DELETE
+    // ===========================
+    public boolean delete(int id) {
+        return jdbc.update("DELETE FROM materiais_enviados WHERE id=?", id) > 0;
+    }
+
+    // ===========================
+    // ADMIN — PENDENTES
+    // ===========================
+    public int countPendentes() {
+        return jdbc.queryForObject(
+                "SELECT COUNT(*) FROM materiais_enviados WHERE status='pendente'",
+                Integer.class
+        );
+    }
+
+    public List<MaterialEnviado> findAllPendentes() {
+        return jdbc.query(
+                "SELECT * FROM materiais_enviados WHERE status='pendente' ORDER BY data_envio ASC",
+                mapper
+        );
+    }
+
+    // ===========================
+    // ADMIN — APROVAR MATERIAL
+    // ===========================
+    public boolean aprovar(int id, int pontosGerados) {
+        String sql = """
+                UPDATE materiais_enviados SET
+                status='aprovado',
+                pontos_gerados=?,
+                data_avaliacao=?,
+                comentario_avaliacao=NULL
+                WHERE id=?
+                """;
+
+        return jdbc.update(sql,
+                pontosGerados,
+                LocalDateTime.now(),
+                id
+        ) > 0;
+    }
+
+    // ===========================
+    // ADMIN — REPROVAR MATERIAL
+    // ===========================
+    public boolean reprovar(int id, String comentario) {
+        String sql = """
+                UPDATE materiais_enviados SET
+                status='recusado',
+                comentario_avaliacao=?,
+                data_avaliacao=?
+                WHERE id=?
+                """;
+
+        return jdbc.update(sql,
+                comentario,
+                LocalDateTime.now(),
+                id
+        ) > 0;
+    }
+    
+    public boolean aprovar(int id, int pontos, String comentario) {
+        String sql = """
+            UPDATE materiais_enviados
+            SET status='aprovado',
+                pontos_gerados=?,
+                comentario_avaliacao=?,
+                data_avaliacao=NOW()
+            WHERE id=?
+        """;
+        return jdbc.update(sql, pontos, comentario, id) > 0;
+    }
+
+    public boolean recusar(int id, String comentario) {
+        String sql = """
+            UPDATE materiais_enviados
+            SET status='recusado',
+                comentario_avaliacao=?,
+                data_avaliacao=NOW()
+            WHERE id=?
+        """;
+        return jdbc.update(sql, comentario, id) > 0;
+    }
+
 }

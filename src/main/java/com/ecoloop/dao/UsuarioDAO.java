@@ -1,107 +1,22 @@
 package com.ecoloop.dao;
 
 import com.ecoloop.model.Usuario;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
-import java.sql.*;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class UsuarioDAO {
 
-    public Integer create(Usuario u) {
-        String sql = "INSERT INTO usuarios (nome, email, senha_hash, foto_perfil, nivel, pontos) VALUES (?, ?, ?, ?, ?, ?)";
-        try (Connection conn = ConnectionBD.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+    private final JdbcTemplate jdbc;
 
-            ps.setString(1, u.getNome());
-            ps.setString(2, u.getEmail());
-            ps.setString(3, u.getSenhaHash());
-            ps.setString(4, u.getFotoPerfil());
-            ps.setString(5, u.getNivel());
-            ps.setInt(6, u.getPontos() == null ? 0 : u.getPontos());
-
-            int affected = ps.executeUpdate();
-            if (affected == 0) return null;
-            try (ResultSet rs = ps.getGeneratedKeys()) {
-                if (rs.next()) return rs.getInt(1);
-            }
-            return null;
-        } catch (SQLException e) {
-            throw new RuntimeException("Erro ao criar usuário", e);
-        }
+    public UsuarioDAO(JdbcTemplate jdbc) {
+        this.jdbc = jdbc;
     }
 
-    public boolean update(Usuario u) {
-        String sql = "UPDATE usuarios SET nome=?, email=?, senha_hash=?, foto_perfil=?, nivel=?, pontos=? WHERE id=?";
-        try (Connection conn = ConnectionBD.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, u.getNome());
-            ps.setString(2, u.getEmail());
-            ps.setString(3, u.getSenhaHash());
-            ps.setString(4, u.getFotoPerfil());
-            ps.setString(5, u.getNivel());
-            ps.setInt(6, u.getPontos() == null ? 0 : u.getPontos());
-            ps.setInt(7, u.getId());
-            return ps.executeUpdate() > 0;
-        } catch (SQLException e) {
-            throw new RuntimeException("Erro ao atualizar usuário", e);
-        }
-    }
-
-    public boolean delete(int id) {
-        String sql = "DELETE FROM usuarios WHERE id=?";
-        try (Connection conn = ConnectionBD.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, id);
-            return ps.executeUpdate() > 0;
-        } catch (SQLException e) {
-            throw new RuntimeException("Erro ao deletar usuário", e);
-        }
-    }
-
-    public Usuario findById(int id) {
-        String sql = "SELECT * FROM usuarios WHERE id=?";
-        try (Connection conn = ConnectionBD.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, id);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) return mapRow(rs);
-                return null;
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Erro ao buscar usuário por id", e);
-        }
-    }
-
-    public Usuario findByEmail(String email) {
-        String sql = "SELECT * FROM usuarios WHERE email=?";
-        try (Connection conn = ConnectionBD.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, email);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) return mapRow(rs);
-                return null;
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Erro ao buscar usuário por email", e);
-        }
-    }
-
-    public List<Usuario> findAll() {
-        String sql = "SELECT * FROM usuarios ORDER BY pontos DESC, data_cadastro DESC";
-        List<Usuario> lista = new ArrayList<>();
-        try (Connection conn = ConnectionBD.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) lista.add(mapRow(rs));
-            return lista;
-        } catch (SQLException e) {
-            throw new RuntimeException("Erro ao listar usuários", e);
-        }
-    }
-
-    private Usuario mapRow(ResultSet rs) throws SQLException {
+    private RowMapper<Usuario> mapper = (rs, n) -> {
         Usuario u = new Usuario();
         u.setId(rs.getInt("id"));
         u.setNome(rs.getString("nome"));
@@ -110,8 +25,96 @@ public class UsuarioDAO {
         u.setFotoPerfil(rs.getString("foto_perfil"));
         u.setNivel(rs.getString("nivel"));
         u.setPontos(rs.getInt("pontos"));
-        Timestamp ts = rs.getTimestamp("data_cadastro");
-        if (ts != null) u.setDataCadastro(ts.toLocalDateTime());
+        if (rs.getTimestamp("data_cadastro") != null) {
+            u.setDataCadastro(rs.getTimestamp("data_cadastro").toLocalDateTime());
+        }
+        u.setRole(rs.getString("role"));
         return u;
+    };
+
+    // ======================
+    // LOGIN
+    // ======================
+    public Usuario findByEmail(String email) {
+        List<Usuario> list = jdbc.query(
+                "SELECT * FROM usuarios WHERE email=?",
+                mapper,
+                email
+        );
+        return list.isEmpty() ? null : list.get(0);
     }
+
+    // ======================
+    // ADMIN: CRUD
+    // ======================
+
+    public Usuario findById(Integer id) {
+        List<Usuario> list = jdbc.query(
+                "SELECT * FROM usuarios WHERE id=?",
+                mapper,
+                id
+        );
+        return list.isEmpty() ? null : list.get(0);
+    }
+
+    public List<Usuario> findAll() {
+        return jdbc.query(
+                "SELECT * FROM usuarios ORDER BY id DESC",
+                mapper
+        );
+    }
+
+    public int countAll() {
+        return jdbc.queryForObject(
+                "SELECT COUNT(*) FROM usuarios",
+                Integer.class
+        );
+    }
+
+    public boolean create(Usuario u) {
+        String sql = """
+            INSERT INTO usuarios (nome, email, senha_hash, role, nivel, pontos)
+            VALUES (?, ?, ?, ?, ?, ?)
+        """;
+
+        return jdbc.update(sql,
+                u.getNome(),
+                u.getEmail(),
+                u.getSenhaHash(),
+                u.getRole(),
+                u.getNivel(),
+                u.getPontos()
+        ) > 0;
+    }
+
+    public boolean update(Usuario u) {
+        String sql = """
+            UPDATE usuarios SET nome=?, email=?, role=?, nivel=?, pontos=? 
+            WHERE id=?
+        """;
+
+        return jdbc.update(sql,
+                u.getNome(),
+                u.getEmail(),
+                u.getRole(),
+                u.getNivel(),
+                u.getPontos(),
+                u.getId()
+        ) > 0;
+    }
+
+    public boolean delete(Integer id) {
+        return jdbc.update(
+                "DELETE FROM usuarios WHERE id=?",
+                id
+        ) > 0;
+    }
+    
+    public boolean addPoints(int userId, int pontos) {
+        return jdbc.update(
+                "UPDATE usuarios SET pontos = pontos + ? WHERE id=?",
+                pontos, userId
+        ) > 0;
+    }
+
 }

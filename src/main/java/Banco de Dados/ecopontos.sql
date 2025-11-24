@@ -9,7 +9,8 @@ CREATE TABLE usuarios (
   foto_perfil VARCHAR(255),
   nivel VARCHAR(50) DEFAULT 'Bronze',
   pontos INT DEFAULT 0,
-  data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  role VARCHAR(20) NOT NULL DEFAULT 'USER'   -- ADICIONADO
 );
 
 CREATE TABLE configuracoes_usuario (
@@ -42,16 +43,6 @@ CREATE TABLE beneficios (
   categoria VARCHAR(50),
   pontos_necessarios INT NOT NULL,
   imagem_url VARCHAR(255)
-);
-
-CREATE TABLE resgates (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  usuario_id INT NOT NULL,
-  beneficio_id INT NOT NULL,
-  data_resgate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  pontos_gastos INT NOT NULL,
-  FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
-  FOREIGN KEY (beneficio_id) REFERENCES beneficios(id) ON DELETE CASCADE
 );
 
 CREATE TABLE conquistas (
@@ -97,4 +88,14 @@ CREATE TABLE logs_acoes (
   descricao TEXT,
   data_acao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE SET NULL
+);
+
+CREATE TABLE beneficios_resgatados (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id INT NOT NULL,
+    beneficio_id INT NOT NULL,
+    data_resgate DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
+    FOREIGN KEY (beneficio_id) REFERENCES beneficios(id)
 );

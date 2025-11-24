@@ -2,15 +2,19 @@ package com.ecoloop.controller;
 
 import com.ecoloop.dao.UsuarioDAO;
 import com.ecoloop.model.Usuario;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class AuthController {
 
-    private final UsuarioDAO usuarioDAO = new UsuarioDAO();
+    private final UsuarioDAO usuarioDAO;
+
+    // INJEÇÃO AUTOMÁTICA DO USUARIODAO
+    public AuthController(UsuarioDAO usuarioDAO) {
+        this.usuarioDAO = usuarioDAO;
+    }
 
     @GetMapping("/")
     public String home() {
@@ -32,8 +36,14 @@ public class AuthController {
         Usuario u = usuarioDAO.findByEmail(username);
 
         if (u != null && u.getSenhaHash().equals(password)) {
+
             session.setAttribute("usuario", u);
-            return "redirect:/dashboard";
+
+            if ("ADMIN".equalsIgnoreCase(u.getRole())) {
+                return "redirect:/uploads";      // Painel administrador
+            } else {
+                return "redirect:/dashboard";    // Painel usuário
+            }
         }
 
         return "redirect:/login?erro=true";
@@ -45,4 +55,3 @@ public class AuthController {
         return "redirect:/login";
     }
 }
-

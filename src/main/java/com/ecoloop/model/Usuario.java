@@ -11,6 +11,7 @@ public class Usuario {
     private String nivel;
     private Integer pontos;
     private LocalDateTime dataCadastro;
+    private String role; 
 
     // getters/setters
     public Integer getId() { return id; }
@@ -29,4 +30,6 @@ public class Usuario {
     public void setPontos(Integer pontos) { this.pontos = pontos; }
     public LocalDateTime getDataCadastro() { return dataCadastro; }
     public void setDataCadastro(LocalDateTime dataCadastro) { this.dataCadastro = dataCadastro; }
+    public String getRole() { return role; }
+    public void setRole(String role) { this.role = role; }
 }

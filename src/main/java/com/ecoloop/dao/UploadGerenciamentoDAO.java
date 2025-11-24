@@ -1,57 +1,62 @@
 package com.ecoloop.dao;
 
 import com.ecoloop.model.MaterialEnviado;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
-import java.sql.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class UploadGerenciamentoDAO {
 
-    private final MaterialEnviadoDAO materialDAO = new MaterialEnviadoDAO();
+    private final JdbcTemplate jdbc;
+    private final MaterialEnviadoDAO materialDAO;
 
-    public List<MaterialEnviado> listarPorStatus(String status) {
-        String sql = "SELECT * FROM materiais_enviados WHERE status=? ORDER BY data_envio DESC";
-        List<MaterialEnviado> lista = new ArrayList<>();
-        try (Connection conn = ConnectionBD.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, status);
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    lista.add(materialDAO.findById(rs.getInt("id")));
-                }
-            }
-            return lista;
-        } catch (SQLException e) {
-            throw new RuntimeException("Erro ao listar uploads por status", e);
-        }
+    public UploadGerenciamentoDAO(JdbcTemplate jdbc, MaterialEnviadoDAO materialDAO) {
+        this.jdbc = jdbc;
+        this.materialDAO = materialDAO;
     }
 
-    public boolean aprovar(int id, int pontosGerados, String comentario) {
-        String sql = "UPDATE materiais_enviados SET status='aprovado', pontos_gerados=?, data_avaliacao=?, comentario_avaliacao=? WHERE id=?";
-        try (Connection conn = ConnectionBD.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, pontosGerados);
-            ps.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now()));
-            ps.setString(3, comentario);
-            ps.setInt(4, id);
-            return ps.executeUpdate() > 0;
-        } catch (SQLException e) {
-            throw new RuntimeException("Erro ao aprovar upload", e);
-        }
+    public List<MaterialEnviado> listarPorStatus(String status) {
+        return jdbc.query(
+            "SELECT id FROM materiais_enviados WHERE status=? ORDER BY data_envio DESC",
+            (rs, n) -> materialDAO.findById(rs.getInt("id")),
+            status
+        );
+    }
+
+    public boolean aprovar(int id, int pontos, String comentario) {
+        String sql = """
+            UPDATE materiais_enviados SET
+            status='aprovado',
+            pontos_gerados=?,
+            data_avaliacao=?,
+            comentario_avaliacao=?
+            WHERE id=?
+        """;
+
+        return jdbc.update(sql,
+                pontos,
+                LocalDateTime.now(),
+                comentario,
+                id
+        ) > 0;
     }
 
     public boolean recusar(int id, String comentario) {
-        String sql = "UPDATE materiais_enviados SET status='recusado', data_avaliacao=?, comentario_avaliacao=? WHERE id=?";
-        try (Connection conn = ConnectionBD.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now()));
-            ps.setString(2, comentario);
-            ps.setInt(3, id);
-            return ps.executeUpdate() > 0;
-        } catch (SQLException e) {
-            throw new RuntimeException("Erro ao recusar upload", e);
-        }
+        String sql = """
+            UPDATE materiais_enviados SET
+            status='recusado',
+            data_avaliacao=?,
+            comentario_avaliacao=?
+            WHERE id=?
+        """;
+
+        return jdbc.update(sql,
+                LocalDateTime.now(),
+                comentario,
+                id
+        ) > 0;
     }
 }

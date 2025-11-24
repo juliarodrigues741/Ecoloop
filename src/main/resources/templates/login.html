@@ -1,20 +1,31 @@
-<!doctype html>
-<html lang="pt-BR">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Login - Ecoloop</title>
-<link rel="stylesheet" href="/styles.css"></head>
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <title>Entrar - Ecoloop</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
 <body>
   <div class="login-wrapper">
-    <div class="login-card card">
-      <h2>Entrar</h2>
-      <p>Usuário e senha para acessar o painel</p>
-      <form action="/login" method="post">
-        <input class="input" name="username" placeholder="Usuário" required>
-        <input class="input" name="password" type="password" placeholder="Senha" required>
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
-          <a href="#" style="font-size:13px;color:rgba(6,58,42,0.8)">Esqueceu a senha?</a>
+    <div class="login-card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+        <div>
+          <div style="font-weight:800;color:var(--green-dark);font-size:20px">Ecoloop</div>
+          <div style="color:var(--muted)">Plataforma de Reciclagem</div>
+        </div>
+      </div>
+
+      <form th:action="@{/login}" method="post">
+        <input class="input" id="username" name="username" placeholder="email" required />
+        <input class="input" id="password" name="password" placeholder="senha" type="password" required />
+        <div style="display:flex;gap:8px;justify-content:flex-end">
           <button class="btn" type="submit">Entrar</button>
         </div>
       </form>
+
+      <div style="margin-top:12px;color:#8b2a2a" th:if="${param.erro}">
+        Usuário ou senha inválidos.
+      </div>
     </div>
   </div>
 </body>

@@ -2,7 +2,9 @@ package com.ecoloop.controller;
 
 import com.ecoloop.dao.MaterialEnviadoDAO;
 import com.ecoloop.model.MaterialEnviado;
+import com.ecoloop.model.Usuario;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,10 +14,16 @@ import java.io.File;
 @Controller
 public class UploadController {
 
-    private final MaterialEnviadoDAO materialDAO = new MaterialEnviadoDAO();
+    @Autowired
+    private MaterialEnviadoDAO materialDAO;
 
     @GetMapping("/enviar")
-    public String enviarPage() {
+    public String enviarPage(HttpSession session) {
+
+        if (session.getAttribute("usuario") == null) {
+            return "redirect:/login";
+        }
+
         return "enviar";
     }
 
@@ -26,19 +34,33 @@ public class UploadController {
             HttpSession session
     ) throws Exception {
 
+        Usuario user = (Usuario) session.getAttribute("usuario");
+
+        if (user == null) {
+            return "redirect:/login";
+        }
+
         if (file.isEmpty()) {
             return "redirect:/enviar?erro=arquivo";
         }
 
-        String caminho = "src/main/resources/static/uploads/" + file.getOriginalFilename();
-        file.transferTo(new File(caminho));
+        // Diretório real para salvar arquivos
+        String uploadDir = System.getProperty("user.dir") + "/uploads";
 
-        Integer userId = ((com.ecoloop.model.Usuario) session.getAttribute("usuario")).getId();
+        File pasta = new File(uploadDir);
+        if (!pasta.exists()) pasta.mkdirs();
+
+        // Caminho completo no sistema
+        String caminhoFinal = uploadDir + "/" + file.getOriginalFilename();
+        file.transferTo(new File(caminhoFinal));
+
+        // Caminho público para acessar no navegador
+        String caminhoWeb = "/uploads/" + file.getOriginalFilename();
 
         MaterialEnviado m = new MaterialEnviado();
-        m.setUsuarioId(userId);
+        m.setUsuarioId(user.getId());
         m.setDescricao(descricao);
-        m.setCaminhoArquivo("/uploads/" + file.getOriginalFilename());
+        m.setCaminhoArquivo(caminhoWeb);
         m.setTipoArquivo(file.getContentType().startsWith("video") ? "video" : "foto");
         m.setStatus("pendente");
 
