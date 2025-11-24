@@ -1,0 +1,161 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: Arial;
+}
+
+body{
+    background:#c4e5ce;
+}
+
+.container{
+    display:flex;
+}
+
+
+/* SIDEBAR */
+
+.sidebar{
+    width:210px;
+    background:#1e492a;
+    color:white;
+    padding:25px 20px;
+    min-height:100vh;
+}
+
+.sidebar nav{
+    display:flex;
+    flex-direction:column;
+    margin-top:25px;
+}
+
+.sidebar nav a{
+    text-decoration:none;
+    padding:10px 0;
+    color:white;
+    opacity:.7;
+}
+
+.sidebar nav a.active,
+.sidebar nav a:hover{
+    opacity:1;
+}
+
+.logout{
+    margin-top:40px;
+    background:none;
+    border:0;
+    color:white;
+    cursor:pointer;
+}
+
+
+/* CONTENT */
+.content{
+    padding:40px;
+    flex:1;
+}
+
+.subtitle{
+    margin-bottom:25px;
+}
+
+
+/* POINTS BOX */
+
+.points-box{
+    background:#389959;
+    padding:25px;
+    border-radius:15px;
+    display:flex;
+    gap:20px;
+    align-items:flex-start;
+    color:white;
+    position:relative;
+}
+
+.points-box .my-points h1{
+    font-size:55px;
+}
+
+.points-box .unit{
+    font-size:18px;
+}
+
+.points-box .small{
+    background:rgba(255,255,255,.1);
+    padding:15px;
+    border-radius:8px;
+    width:200px;
+}
+
+.points-box .icon{
+    position:absolute;
+    right:25px;
+    top:25px;
+    font-size:40px;
+    opacity:.8;
+}
+
+
+/* TABS */
+.tabs{
+    margin-top:25px;
+    margin-bottom:25px;
+}
+
+.tabs button{
+    padding:8px 20px;
+    border-radius:25px;
+    border:1px solid #0b502d;
+    background:white;
+    cursor:pointer;
+    margin-right:8px;
+}
+
+.tabs button.active{
+    background:#0b502d;
+    color:white;
+}
+
+
+/* GRID */
+.grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+
+
+/* CARD */
+.card{
+    background:white;
+    padding:20px;
+    border-radius:18px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.card .tag{
+    font-size:11px;
+    padding:3px 8px;
+    border-radius:10px;
+    background:#d0ead8;
+}
+
+.card .right{
+    text-align:right;
+}
+
+.card button{
+    width:150px;
+    padding:10px;
+    border-radius:8px;
+    border:none;
+    margin-top:8px;
+    background:#2c7e47;
+    color:white;
+    cursor:pointer;
+}

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoLoop Dashboard</title>
+    <link rel="stylesheet" href="/css/dashboard.css">
+
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+
+        <h2 class="logo">EcoLoop</h2>
+        <nav>
+           <li class = "active"><a href="/dashboard" class="menu-item">Home</li>
+            <li><a href="/envios" class="menu-item">Enviar</a></li>
+            <li><a href="/beneficios" class="menu-item" >Benefícios</a></li>
+            <li><a href="/conquistas" class="menu-item" >Conquistas</a></li>
+            <li><a href = "/perfil" class = "menu-item"> Perfil</a></li>
+            <li><a href = "/configuracoes" class = "menu-item"> Configurações</a></li>
+            
+            
+        </nav>
+        <button class="logout">Sair</button>
+
+       </aside> 
+    </div>
+
+    <div class="main">
+        <h1>Dashboard</h1>
+        <p class="welcome">Bem-vindo de volta! 🌿</p>
+
+        <div class="cards-row">
+            <div class="card"><h3>Pontos Totais</h3><p>1250</p></div>
+            <div class="card"><h3>Material Reciclado</h3><p>12.5 kg</p></div>
+            <div class="card"><h3>Nível</h3><p>5</p></div>
+            <div class="card"><h3>Meta Mensal</h3><p>75%</p></div>
+        </div>
+
+        <div class="content-row">
+            <div class="panel">
+                <h3>Desafios Ativos</h3>
+
+                <p>Recicle 5kg esta semana</p>
+                <div class="bar"><div style="width:60%"></div></div>
+
+                <p>Faça 10 uploads este mês</p>
+                <div class="bar"><div style="width:40%"></div></div>
+            </div>
+
+            <div class="actions">
+                <button>Enviar Material</button>
+                <button>Ver Recompensas</button>
+                <button>Minhas Conquistas</button>
+            </div>
+        </div>
+
+        <div class="content-row">
+            <div class="panel">
+                <h3>Atividades Recentes</h3>
+                <div class="activity">Upload aprovado — Garrafas PET <span>+50</span></div>
+                <div class="activity">Resgate realizado — EcoShop <span>-150</span></div>
+                <div class="activity">Upload aprovado — Papelão <span>+30</span></div>
+            </div>
+
+            <div class="discounts">
+                <h3>Descontos Disponíveis</h3>
+                <div class="discount">Loja Verde — 10% OFF <span>100 pts</span></div>
+                <div class="discount">EcoShop — 15% OFF <span>150 pts</span></div>
+                <div class="discount">BioStore — 20% OFF <span>200 pts</span></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
