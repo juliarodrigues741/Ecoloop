@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <title>Conquista - Form</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<div class="app">
+
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo">E</div>
+      <h1>Ecoloop Admin</h1>
+    </div>
+
+    <nav class="menu">
+      <a th:href="@{/admin}">Início</a>
+      <a th:href="@{/admin/beneficios}">Benefícios</a>
+      <a class="active" th:href="@{/admin/conquistas}">Conquistas</a>
+      <a th:href="@{/admin/usuarios}">Usuários</a>
+      <a th:href="@{/admin/uploads}">Envios</a>
+      <a th:href="@{/dashboard}">Voltar ao usuário</a>
+      <a th:href="@{/logout}">Sair</a>
+    </nav>
+  </aside>
+
+  <main class="content">
+
+    <h2 th:text="${conquista.id == null ? 'Nova Conquista' : 'Editar Conquista'}"></h2>
+
+    <form class="card" method="post" th:action="@{/admin/conquistas/salvar}" th:object="${conquista}">
+      <input type="hidden" th:field="*{id}">
+
+      <label>Nome da conquista:</label>
+      <input class="input" th:field="*{nome}" required>
+
+      <label>Descrição:</label>
+      <textarea class="input" th:field="*{descricao}"></textarea>
+
+      <label>Pontos necessários:</label>
+      <input class="input" type="number" th:field="*{pontos}" required>
+
+      <div class="footer-actions">
+        <button class="btn">Salvar</button>
+      </div>
+    </form>
+
+  </main>
+
+</div>
+
+</body>
+</html>

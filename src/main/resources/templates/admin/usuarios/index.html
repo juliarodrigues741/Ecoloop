@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <title>Usuários - Admin</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<div class="app">
+
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo">E</div>
+      <h1>Ecoloop Admin</h1>
+    </div>
+
+    <nav class="menu">
+      <a th:href="@{/admin}">Início</a>
+      <a th:href="@{/admin/beneficios}">Benefícios</a>
+      <a th:href="@{/admin/conquistas}">Conquistas</a>
+      <a class="active" th:href="@{/admin/usuarios}">Usuários</a>
+      <a th:href="@{/admin/uploads}">Envios</a>
+      <a th:href="@{/dashboard}">Voltar ao usuário</a>
+      <a th:href="@{/logout}">Sair</a>
+    </nav>
+  </aside>
+
+  <main class="content">
+
+    <div class="header-row">
+      <h2>Usuários cadastrados</h2>
+      <a class="btn" th:href="@{/admin/usuarios/novo}">Novo Usuário</a>
+    </div>
+
+    <div class="card">
+      <table style="width:100%">
+        <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nome</th>
+          <th>Email</th>
+          <th>Pontos</th>
+          <th>Role</th>
+          <th>Ações</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="u : ${lista}">
+          <td th:text="${u.id}"></td>
+          <td th:text="${u.nome}"></td>
+          <td th:text="${u.email}"></td>
+          <td th:text="${u.pontos}"></td>
+          <td th:text="${u.role}"></td>
+          <td>
+            <a class="btn-outline" th:href="@{'/admin/usuarios/editar/' + ${u.id}}">Editar</a>
+            <a class="btn-outline" th:href="@{'/admin/usuarios/deletar/' + ${u.id}}">Excluir</a>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </main>
+
+</div>
+
+</body>
+</html>

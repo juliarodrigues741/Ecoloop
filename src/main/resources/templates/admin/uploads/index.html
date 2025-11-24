@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Aprovar Envios</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<div class="app">
+
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo">E</div>
+      <h1>Ecoloop Admin</h1>
+    </div>
+
+    <nav class="menu">
+      <a th:href="@{/admin}">Início</a>
+      <a th:href="@{/admin/beneficios}">Benefícios</a>
+      <a th:href="@{/admin/conquistas}">Conquistas</a>
+      <a th:href="@{/admin/usuarios}">Usuários</a>
+      <a class="active" th:href="@{/admin/uploads}">Envios</a>
+      <a th:href="@{/dashboard}">Voltar ao usuário</a>
+      <a th:href="@{/logout}">Sair</a>
+    </nav>
+  </aside>
+
+  <main class="content">
+    <h2>Materiais enviados – Aprovação</h2>
+
+    <div class="card">
+
+      <div th:each="m : ${lista}" style="border-bottom:1px solid #ccc;padding:10px 0">
+        <h3 th:text="${m.descricao}"></h3>
+
+        <p><strong>Usuário ID:</strong> <span th:text="${m.usuarioId}"></span></p>
+        <p><strong>Status:</strong> <span th:text="${m.status}"></span></p>
+
+        <a class="btn-outline" th:href="${m.caminhoArquivo}" target="_blank">Abrir arquivo</a>
+
+        <form th:action="@{/admin/uploads/aprovar}" method="post" style="margin-top:10px">
+          <input type="hidden" name="id" th:value="${m.id}">
+          <input class="input" type="number" name="pontos" placeholder="Pontos" required>
+          <button class="btn">Aprovar</button>
+        </form>
+
+        <form th:action="@{/admin/uploads/reprovar}" method="post" style="margin-top:10px">
+          <input type="hidden" name="id" th:value="${m.id}">
+          <input class="input" type="text" name="comentario" placeholder="Comentário de reprovação" required>
+          <button class="btn-outline" style="color:red;border-color:red">Reprovar</button>
+        </form>
+      </div>
+
+      <div th:if="${#lists.isEmpty(lista)}">Nenhum envio pendente.</div>
+
+    </div>
+
+  </main>
+</div>
+
+</body>
+</html>

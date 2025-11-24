@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <title>Admin - Ecoloop</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo">E</div>
+      <h1>Ecoloop Admin</h1>
+    </div>
+
+    <nav class="menu">
+      <a th:href="@{/admin}">Início</a>
+      <a th:href="@{/admin/beneficios}">Benefícios</a>
+      <a th:href="@{/admin/conquistas}">Conquistas</a>
+      <a th:href="@{/admin/usuarios}">Usuários</a>
+      <a th:href="@{/admin/uploads}">Envios Pendentes</a>
+      <a th:href="@{/dashboard}">Voltar ao usuário</a>
+      <a th:href="@{/logout}">Sair</a>
+    </nav>
+  </aside>
+
+  <main class="content">
+    <h2>Painel Administrativo</h2>
+
+    <div class="grid-3">
+      <div class="card">
+        <h3>Benefícios</h3>
+        <p>Gerenciar catálogo de resgates.</p>
+        <a class="btn" th:href="@{/admin/beneficios}">Gerenciar</a>
+      </div>
+
+      <div class="card">
+        <h3>Conquistas</h3>
+        <p>Cadastrar e editar conquistas.</p>
+        <a class="btn" th:href="@{/admin/conquistas}">Gerenciar</a>
+      </div>
+
+      <div class="card">
+        <h3>Usuários</h3>
+        <p>Criar, editar e remover contas.</p>
+        <a class="btn" th:href="@{/admin/usuarios}">Gerenciar</a>
+      </div>
+
+      <div class="card">
+        <h3>Envios</h3>
+        <p>Aprovar ou reprovar materiais enviados.</p>
+        <a class="btn" th:href="@{/admin/uploads}">Gerenciar</a>
+      </div>
+    </div>
+  </main>
+</div>
+
+</body>
+</html>

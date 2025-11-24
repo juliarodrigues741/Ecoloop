@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <title>Benefício - Form</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<div class="app">
+
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo">E</div>
+      <h1>Ecoloop Admin</h1>
+    </div>
+
+    <nav class="menu">
+      <a th:href="@{/admin}">Início</a>
+      <a class="active" th:href="@{/admin/beneficios}">Benefícios</a>
+      <a th:href="@{/admin/conquistas}">Conquistas</a>
+      <a th:href="@{/admin/usuarios}">Usuarios</a>
+      <a th:href="@{/admin/uploads}">Envios Pendentes</a>
+      <a th:href="@{/dashboard}">Voltar ao usuário</a>
+      <a th:href="@{/logout}">Sair</a>
+    </nav>
+  </aside>
+
+  <main class="content">
+
+    <h2 th:text="${beneficio.id == null ? 'Novo Benefício' : 'Editar Benefício'}"></h2>
+
+    <form class="card" th:action="@{/admin/beneficios/salvar}" method="post" th:object="${beneficio}">
+
+      <input type="hidden" th:field="*{id}">
+
+      <label>Nome:</label>
+      <input class="input" th:field="*{nome}" required>
+
+      <label>Pontos necessários:</label>
+      <input type="number" class="input" th:field="*{pontosNecessarios}" required>
+
+      <label>Categoria:</label>
+      <input class="input" th:field="*{categoria}" placeholder="Ex: Alimentação, Compras, Serviços">
+
+      <label>Imagem (URL):</label>
+      <input class="input" th:field="*{imagemUrl}" placeholder="https://...">
+
+      <label>Descrição:</label>
+      <textarea class="input" th:field="*{descricao}"></textarea>
+
+      <div class="footer-actions">
+        <button class="btn">Salvar</button>
+      </div>
+    </form>
+
+  </main>
+
+</div>
+
+</body>
+</html>
