@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <title>Conquistas - Ecoloop</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand"><div class="logo">E</div><h1>Ecoloop</h1></div>
+      <nav class="menu">
+        <a th:href="@{/dashboard}">Dashboard</a>
+        <a th:href="@{/beneficios}">Benefícios</a>
+        <a th:href="@{/conquistas}">Conquistas</a>
+        <a th:href="@{/enviar}">Enviar</a>
+        <a th:href="@{/perfil}">Perfil</a>
+        <a th:href="@{/logout}">Sair</a>
+      </nav>
+    </aside>
+
+    <main class="content">
+      <div class="header-row"><h2>Conquistas</h2></div>
+
+      <div class="grid-3">
+        <div class="card" th:each="c : ${conquistas}">
+          <h3 th:text="${c.titulo}">Título</h3>
+          <p th:text="${c.descricao}">Descrição</p>
+          <p>Pontos: <strong th:text="${c.pontosRecompensa}">0</strong></p>
+          <p>Nível: <strong th:text="${c.nivelRequerido}">—</strong></p>
+          <div th:if="${#lists.contains(obtidas, c.id)}" style="color:var(--green);font-weight:700">Conquistada</div>
+          <div th:unless="${#lists.contains(obtidas, c.id)}" style="color:var(--muted)">Não obtida</div>
+        </div>
+      </div>
+
+      <div th:if="${#lists.isEmpty(conquistas)}" class="card">Nenhuma conquista cadastrada.</div>
+    </main>
+  </div>
+</body>
+</html>

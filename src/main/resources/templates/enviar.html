@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <title>Enviar Material - Ecoloop</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand"><div class="logo">E</div><h1>Ecoloop</h1></div>
+      <nav class="menu">
+        <a th:href="@{/dashboard}">Dashboard</a>
+        <a th:href="@{/beneficios}">Benefícios</a>
+        <a th:href="@{/conquistas}">Conquistas</a>
+        <a th:href="@{/enviar}">Enviar</a>
+        <a th:href="@{/perfil}">Perfil</a>
+        <a th:href="@{/logout}">Sair</a>
+      </nav>
+    </aside>
+
+    <main class="content">
+      <div class="header-row"><h2>Enviar Material</h2></div>
+
+      <div class="card">
+        <form th:action="@{/enviar}" method="post" enctype="multipart/form-data">
+          <div style="margin-bottom:10px">
+            <label>Descrição</label><br/>
+            <input class="input" type="text" name="descricao" required />
+          </div>
+
+          <div style="margin-bottom:10px">
+            <label>Arquivo (foto ou vídeo)</label><br/>
+            <input type="file" name="file" accept="image/*,video/*" required />
+          </div>
+
+          <div style="display:flex;gap:8px;justify-content:flex-end">
+            <a th:href="@{/dashboard}" class="btn-outline">Cancelar</a>
+            <button class="btn" type="submit">Enviar</button>
+          </div>
+        </form>
+      </div>
+
+      <div th:if="${param.erro}" class="card" style="color:#8b2a2a">Erro ao enviar arquivo.</div>
+    </main>
+  </div>
+</body>
+</html>

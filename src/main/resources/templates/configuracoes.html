@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <title>Configurações - Ecoloop</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand"><div class="logo">E</div><h1>Ecoloop</h1></div>
+      <nav class="menu">
+        <a th:href="@{/dashboard}">Dashboard</a>
+        <a th:href="@{/beneficios}">Benefícios</a>
+        <a th:href="@{/conquistas}">Conquistas</a>
+        <a th:href="@{/enviar}">Enviar</a>
+        <a th:href="@{/perfil}">Perfil</a>
+        <a th:href="@{/configuracoes}">Configurações</a>
+        <a th:href="@{/logout}">Sair</a>
+      </nav>
+    </aside>
+
+    <main class="content">
+      <div class="header-row"><h2>Configurações</h2></div>
+
+      <div class="card">
+        <form th:action="@{/configuracoes}" method="post">
+          <div style="margin-bottom:10px">
+            <label>Idioma</label><br/>
+            <select name="idioma">
+              <option value="pt-BR" th:selected="${config != null and config.idioma == 'pt-BR'}">Português (pt-BR)</option>
+              <option value="en-US" th:selected="${config != null and config.idioma == 'en-US'}">Inglês (en-US)</option>
+            </select>
+          </div>
+
+          <div style="margin-bottom:10px">
+            <label><input type="checkbox" name="temaEscuro" th:checked="${config != null and config.temaEscuro}"> Tema escuro</label>
+          </div>
+
+          <div style="margin-bottom:10px">
+            <label><input type="checkbox" name="notificacaoEmail" th:checked="${config != null and config.notificacaoEmail}"> Notificações por e-mail</label>
+          </div>
+
+          <div style="display:flex;justify-content:flex-end;gap:8px">
+            <button class="btn-outline" type="button" onclick="window.location.href='/dashboard'">Cancelar</button>
+            <button class="btn" type="submit">Salvar</button>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

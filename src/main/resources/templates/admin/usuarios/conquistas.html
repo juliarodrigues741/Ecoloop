@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>Conquistas do Usuário</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<div class="app">
+
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="logo">E</div>
+            <h1>Ecoloop Admin</h1>
+        </div>
+
+        <nav class="menu">
+            <a th:href="@{/admin}">Início</a>
+            <a th:href="@{/admin/beneficios}">Benefícios</a>
+            <a th:href="@{/admin/conquistas}">Conquistas</a>
+            <a class="active" th:href="@{/admin/usuarios}">Usuários</a>
+            <a th:href="@{/admin/uploads}">Envios Pendentes</a>
+            <a th:href="@{/logout}">Sair</a>
+        </nav>
+    </aside>
+
+    <main class="content">
+
+        <h2 th:text="'Conquistas de ' + ${usuario.nome}"></h2>
+
+        <form class="card" th:action="@{'/admin/usuarios/' + ${usuario.id} + '/conquistas/salvar'}" method="post">
+
+            <div class="checkbox-list">
+                <div th:each="c : ${todas}">
+                    <label>
+                        <input type="checkbox" name="conquistas"
+                               th:value="${c.id}"
+                               th:checked="${marcadas.contains(c.id)}">
+                        <span th:text="${c.titulo}"></span>
+                    </label>
+                </div>
+            </div>
+
+            <button class="btn">Salvar</button>
+
+        </form>
+
+    </main>
+
+</div>
+
+</body>
+</html>
