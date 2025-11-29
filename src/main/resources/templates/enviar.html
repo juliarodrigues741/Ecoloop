@@ -1,48 +1,101 @@
-<!doctype html>
-<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE html>
+<html lang="pt-BR">
 <head>
-  <meta charset="utf-8">
-  <title>Enviar Material - Ecoloop</title>
-  <link rel="stylesheet" href="/styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoLoop - Enviar Material</title>
+    <link rel="stylesheet" href="enviar.css">
 </head>
 <body>
-  <div class="app">
-    <aside class="sidebar">
-      <div class="brand"><div class="logo">E</div><h1>Ecoloop</h1></div>
-      <nav class="menu">
-        <a th:href="@{/dashboard}">Dashboard</a>
-        <a th:href="@{/beneficios}">Benefícios</a>
-        <a th:href="@{/conquistas}">Conquistas</a>
-        <a th:href="@{/enviar}">Enviar</a>
-        <a th:href="@{/perfil}">Perfil</a>
-        <a th:href="@{/logout}">Sair</a>
+
+<div class="container">
+
+    <aside class="sidebar">  
+      <div class="logo-row">  
+        <div class="logo-circle"></div>  
+        <span class="logo-text">EcoLoop</span>  
+      </div>
+  
+      <nav class="nav">  
+        <button class="nav-item"><a href="/dashboard" class="menu-item">Home</a></button>
+        <button class="nav-item active"><a href="/enviar" class="menu-item">Enviar</a></button>
+        <button class="nav-item"><a href="/beneficios" class="menu-item">Benefícios</a></button>
+        <button class="nav-item"><a href="/conquistas" class="menu-item">Conquistas</a></button>
+        <button class="nav-item"><a href="/perfil" class="menu-item">Perfil</a></button>
+        <button class="nav-item"><a href="/configuracoes" class="menu-item">Configurações</a></button>
+        <button class="nav-item"><a href="/uploads" class="menu-item">Uploads</a></button>  
       </nav>
+
+      <button class="nav-item"><a href="/login" class="menu-item">Sair</a></button>
     </aside>
 
     <main class="content">
-      <div class="header-row"><h2>Enviar Material</h2></div>
 
-      <div class="card">
-        <form th:action="@{/enviar}" method="post" enctype="multipart/form-data">
-          <div style="margin-bottom:10px">
-            <label>Descrição</label><br/>
-            <input class="input" type="text" name="descricao" required />
-          </div>
+        <h1>Enviar Material</h1>
+        <p class="subtitle">Envie fotos ou vídeos dos seus materiais recicláveis</p>
 
-          <div style="margin-bottom:10px">
-            <label>Arquivo (foto ou vídeo)</label><br/>
-            <input type="file" name="file" accept="image/*,video/*" required />
-          </div>
+        <!-- Form para envio -->
+        <form action="/enviar" method="post" enctype="multipart/form-data">
 
-          <div style="display:flex;gap:8px;justify-content:flex-end">
-            <a th:href="@{/dashboard}" class="btn-outline">Cancelar</a>
-            <button class="btn" type="submit">Enviar</button>
-          </div>
+            <section class="uploadBox">
+
+                <div class="upload-area">
+                    <div class="upload-icon">⬆</div>
+                    <span>Arraste suas fotos ou vídeos aqui</span>
+
+                    <div class="upload-buttons">
+                        <label class="camera-btn">
+                            Tirar Foto
+                            <input type="file" accept="image/*" capture="camera" name="files">
+                        </label>
+
+                        <label class="camera-btn">
+                            Gravar Vídeo
+                            <input type="file" accept="video/*" capture="camcorder" name="files">
+                        </label>
+                    </div>
+
+                    <label class="fileInput">
+                        <input type="file" name="files" multiple>
+                        Escolher Arquivos
+                    </label>
+                </div>
+
+                <div class="material-box">
+                    <label>Tipo de Material</label>
+                    <select name="material" required>
+                        <option value="">Selecione o tipo</option>
+                        <option value="Plástico">Plástico</option>
+                        <option value="Papel">Papel</option>
+                        <option value="Vidro">Vidro</option>
+                        <option value="Metal">Metal</option>
+                        <option value="Eletrônicos">Eletrônicos</option>
+                    </select>
+
+                    <ul class="tips">
+                        <li>Tire fotos claras dos materiais</li>
+                        <li>Separe por tipo de material</li>
+                        <li>Vídeos podem ganhar pontos extras</li>
+                        <li>Materiais limpos são melhor avaliados</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="descriptionBox">
+                <label>Descrição (Opcional)</label>
+                <textarea name="descricao"
+                    placeholder="Ex: 5 garrafas PET, 3 latas de alumínio…"></textarea>
+            </section>
+
+            <!-- Envia o ID do usuário -->
+            <input type="hidden" name="usuarioId" value="${usuario.id}">
+
+            <button class="send-btn" type="submit">Enviar Material</button>
         </form>
-      </div>
 
-      <div th:if="${param.erro}" class="card" style="color:#8b2a2a">Erro ao enviar arquivo.</div>
     </main>
-  </div>
+
+</div>
+
 </body>
 </html>

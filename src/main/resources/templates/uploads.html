@@ -1,55 +1,67 @@
 <!doctype html>
-<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta charset="utf-8">
-  <title>Uploads - Ecoloop</title>
-  <link rel="stylesheet" href="/styles.css">
-</head>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Uploads - Ecoloop</title>
+<link rel="stylesheet" href="/styles.css"></head>
 <body>
+  
   <div class="app">
-    <aside class="sidebar">
-      <div class="brand"><div class="logo">E</div><h1>Ecoloop</h1></div>
-      <nav class="menu">
-        <a th:href="@{/dashboard}">Dashboard</a>
-        <a th:href="@{/logout}">Sair</a>
+  
+  <aside class="sidebar">  
+      <div class="logo-row">  
+        <div class="logo-circle"></div>  
+        <span class="logo-text">EcoLoop</span>  
+      </div>
+  
+      <nav class="nav">  
+        <button class="nav-item">  
+          <span ><a href="/dashboard" class="menu-item">Home</a></span> 
+        </button>  
+        <button class="nav-item">  
+          <span ><a href="/enviar" class="menu-item">Enviar</a></span> 
+        </button>  
+        <button class="nav-item">  
+          <span ><a href="/beneficios" class="menu-item">Benefícios</a></span>   
+        </button>  
+        <button class="nav-item">  
+          <span ><a href="/conquistas" class="menu-item">Conquistas</a></span>  
+        </button>  
+        <button class="nav-item">  
+          <span ><a href="/perfil" class="menu-item">Perfil</a></span>   
+        </button>  
+        <button class="nav-item">  
+          <span ><a href="/configuracoes" class="menu-item">Configurações</a></span>   
+        </button>  
+        <button class="nav-item active">  
+          <span ><a href="/uploads" class="menu-item">Uploads</a></span>   
+        </button>  
       </nav>
+  
+      <button class="nav-item">
+        <span ><a href="/login" class="menu-item">Sair</a></span> 
+      </button>  
     </aside>
 
     <main class="content">
-      <div class="header-row"><h2>Uploads</h2></div>
+      <h2>Gerenciamento de uploads</h2>
+	  <div class="card">
+	      <div style="display:flex;flex-direction:column;gap:10px">
 
-      <div class="card">
-        <table style="width:100%;border-collapse:collapse">
-          <thead>
-            <tr style="text-align:left;color:var(--muted)">
-              <th>ID</th>
-              <th>Usuário</th>
-              <th>Arquivo</th>
-              <th>Descrição</th>
-              <th>Data</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
+	          <th:block th:each="uploads : ${uploads}">
+	              <div style="display:flex;justify-content:space-between;align-items:center">
+	                  <div>
+	                      <span th:text="${uploads.descricao}"></span> -
+	                      <a th:href="${uploads.caminhoArquivo}" target="_blank">Abrir</a>
+	                  </div>
 
-            <!-- LOOP CORRIGIDO -->
-            <tr th:each="m : ${uploads}">
-              <td th:text="${m.id}"></td>
-              <td th:text="${m.usuarioId}"></td>
-              <td><a th:href="@{${m.caminhoArquivo}}" target="_blank">Ver</a></td>
-              <td th:text="${m.descricao}"></td>
-              <td th:text="${#temporals.format(m.dataEnvio, 'dd/MM/yyyy HH:mm')}"></td>
-              <td th:text="${m.status}"></td>
-            </tr>
+	                  <div>
+	                      <span th:text="${uploads.status}"></span>
+	                  </div>
+	              </div>
+	          </th:block>
 
-            <!-- MENSAGEM QUANDO VAZIO -->
-            <tr th:if="${#lists.isEmpty(uploads)}">
-              <td colspan="6">Nenhum envio pendente.</td>
-            </tr>
+	      </div>
+	  </div>
 
-          </tbody>
-        </table>
-      </div>
     </main>
   </div>
 </body>

@@ -1,80 +1,119 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="utf-8">
-  <title>Benefícios - Ecoloop</title>
-  <link rel="stylesheet" href="/styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pontos & Benefícios</title>
+    <link rel="stylesheet" href="/beneficios.css">
 </head>
 <body>
-  <div class="app">
-    <aside class="sidebar">
-      <div class="brand"><div class="logo">E</div><h1>Ecoloop</h1></div>
-      <nav class="menu">
-        <a th:href="@{/dashboard}">Dashboard</a>
-        <a class="active" th:href="@{/beneficios}">Benefícios</a>
-        <a th:href="@{/conquistas}">Conquistas</a>
-        <a th:href="@{/enviar}">Enviar</a>
-        <a th:href="@{/perfil}">Perfil</a>
-        <a th:href="@{/logout}">Sair</a>
-      </nav>
+
+<div class="app">
+
+    <aside class="sidebar">  
+        <div class="logo-row">  
+            <div class="logo-circle"></div>  
+            <span class="logo-text">EcoLoop</span>  
+        </div>
+
+        <nav class="nav">  
+            <button class="nav-item"><a href="/dashboard" class="menu-item">Home</a></button>  
+            <button class="nav-item"><a href="/enviar" class="menu-item">Enviar</a></button>  
+            <button class="nav-item active"><a href="/beneficios" class="menu-item">Benefícios</a></button>
+            <button class="nav-item"><a href="/conquistas" class="menu-item">Conquistas</a></button>  
+            <button class="nav-item"><a href="/perfil" class="menu-item">Perfil</a></button>  
+            <button class="nav-item"><a href="/configuracoes" class="menu-item">Configurações</a></button>  
+            <button class="nav-item"><a href="/uploads" class="menu-item">Uploads</a></button>
+        </nav>
+
+        <button class="nav-item"><a href="/login" class="menu-item">Sair</a></button>
+
     </aside>
+
 
     <main class="content">
 
-      <!-- 🔵 INFORMAÇÕES DO USUÁRIO -->
-      <div class="card" style="margin-bottom: 20px;">
-        <h3>Seus Pontos</h3>
-		<p>Seus pontos: <strong th:text="${usuario.pontos}"></strong></p>
-		<p>Seu nível: <strong th:text="${usuario.nivel}"></strong></p>
-      </div>
+        <h1>Pontos e Recompensas</h1>
+        <p class="subtitle">Resgate seus pontos por benefícios incríveis</p>
 
-	  <div class="header-row">
-		<h2>Benefícios Disponíveis</h2>
 
-		<div class="grid-3">
-		  <div th:each="b : ${disponiveis}" class="card">
-		    <h3 th:text="${b.nome}"></h3>
-		    <p th:text="${b.descricao}"></p>
-		    <p><strong>Pontos:</strong> <span th:text="${b.pontosNecessarios}"></span></p>
+        <!-- BOX PRINCIPAL -->
+        <section class="points-box">
 
-		    <a class="btn"
-		       th:href="@{'/beneficios/resgatar/' + ${b.id}}"
-		       th:if="${usuario.pontos >= b.pontosNecessarios}">
-		       Resgatar
-		    </a>
+            <div class="my-points">
+                <span class="label">Seus Pontos Disponíveis</span>
+                <h1 th:text="${usuario.pontos}">0</h1>
+                <span class="unit">pontos</span>
+            </div>
 
-		    <button class="btn-outline" disabled
-		       th:if="${usuario.pontos < b.pontosNecessarios}">
-		       Pontos insuficientes
-		    </button>
-		  </div>
-		</div>
+            <div class="box small">
+                <span>Este Mês</span>
+                <h3>+375</h3>
+            </div>
 
-		<hr>
+            <div class="box small">
+                <span>Gastos</span>
+                <h3>-125</h3>
+            </div>
 
-		<h2>Benefícios Resgatados</h2>
+            <div class="icon">✨</div>
 
-		<div class="grid-3">
-		  <div th:each="b : ${resgatados}" class="card resgatado">
-		    <h3 th:text="${b.nome}"></h3>
-		    <p th:text="${b.descricao}"></p>
-		    <p><strong>Pontos gastos:</strong> <span th:text="${b.pontosNecessarios}"></span></p>
-		    <span class="badge">Resgatado</span>
-		  </div>
-		</div>
+        </section>
 
-		<div th:if="${#lists.isEmpty(resgatados)}" class="card">
-		  Você ainda não resgatou nenhum benefício.
-		</div>
 
-	  </div>
-      </div>
+        <!-- LOJAS / BENEFÍCIOS DISPONÍVEIS -->
+        <section class="grid">
 
-      <div th:if="${#lists.isEmpty(beneficios)}" class="card">
-        Nenhum benefício disponível.
-      </div>
+            <th:block th:each="b : ${disponiveis}">
+                <div class="card">
+
+                    <div>
+                        <h3 th:text="${b.nome}">Nome</h3>
+                        <span class="tag" th:text="${b.categoria}">Categoria</span>
+                        <p th:text="${b.descricao}">Descrição do benefício</p>
+                    </div>
+
+                    <div class="right">
+                        <h4 th:text="${b.valorExibicao}">Valor</h4>
+                        <span th:text="${b.pontosNecessarios} + ' pts'"></span>
+
+                        <a th:href="@{/beneficios/resgatar/{id}(id=${b.id})}">
+                            <button>Resgatar</button>
+                        </a>
+
+                    </div>
+                </div>
+            </th:block>
+
+        </section>
+
+
+        <!-- BENEFÍCIOS JÁ RESGATADOS -->
+        <h2 style="margin-top:30px">Benefícios Resgatados</h2>
+
+        <section class="grid">
+
+            <th:block th:each="r : ${resgatados}">
+                <div class="card" style="opacity:0.5">
+
+                    <div>
+                        <h3 th:text="${r.nome}"></h3>
+                        <span class="tag" th:text="${r.categoria}"></span>
+                        <p th:text="${r.descricao}"></p>
+                    </div>
+
+                    <div class="right">
+                        <h4>Resgatado</h4>
+                    </div>
+
+                </div>
+            </th:block>
+
+        </section>
 
     </main>
-  </div>
+
+</div>
+
 </body>
 </html>

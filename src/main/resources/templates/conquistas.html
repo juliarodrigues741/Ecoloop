@@ -1,39 +1,144 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="utf-8">
-  <title>Conquistas - Ecoloop</title>
-  <link rel="stylesheet" href="/styles.css">
+  <meta charset="UTF-8" />
+  <title>Conquistas - EcoLoop</title>
+  <link rel="stylesheet" href="conquistas.css" />
 </head>
 <body>
   <div class="app">
+
+    <!-- SIDEBAR -->
     <aside class="sidebar">
-      <div class="brand"><div class="logo">E</div><h1>Ecoloop</h1></div>
-      <nav class="menu">
-        <a th:href="@{/dashboard}">Dashboard</a>
-        <a th:href="@{/beneficios}">Benefícios</a>
-        <a th:href="@{/conquistas}">Conquistas</a>
-        <a th:href="@{/enviar}">Enviar</a>
-        <a th:href="@{/perfil}">Perfil</a>
-        <a th:href="@{/logout}">Sair</a>
-      </nav>
-    </aside>
-
-    <main class="content">
-      <div class="header-row"><h2>Conquistas</h2></div>
-
-      <div class="grid-3">
-        <div class="card" th:each="c : ${conquistas}">
-          <h3 th:text="${c.titulo}">Título</h3>
-          <p th:text="${c.descricao}">Descrição</p>
-          <p>Pontos: <strong th:text="${c.pontosRecompensa}">0</strong></p>
-          <p>Nível: <strong th:text="${c.nivelRequerido}">—</strong></p>
-          <div th:if="${#lists.contains(obtidas, c.id)}" style="color:var(--green);font-weight:700">Conquistada</div>
-          <div th:unless="${#lists.contains(obtidas, c.id)}" style="color:var(--muted)">Não obtida</div>
-        </div>
+      <div class="logo-row">
+        <div class="logo-circle"></div>
+        <span class="logo-text">EcoLoop</span>
       </div>
 
-      <div th:if="${#lists.isEmpty(conquistas)}" class="card">Nenhuma conquista cadastrada.</div>
+      <nav class="nav">
+        <button class="nav-item"><span><a href="/dashboard">Home</a></span></button>
+        <button class="nav-item"><span><a href="/enviar">Enviar</a></span></button>
+        <button class="nav-item"><span><a href="/beneficios">Benefícios</a></span></button>
+        <button class="nav-item active"><span><a href="/conquistas">Conquistas</a></span></button>
+        <button class="nav-item"><span><a href="/perfil">Perfil</a></span></button>
+        <button class="nav-item"><span><a href="/configuracoes">Configurações</a></span></button>
+        <button class="nav-item"><span><a href="/uploads">Uploads</a></span></button>
+      </nav>
+
+      <button class="nav-item">
+        <span><a href="/login">Sair</a></span>
+      </button>
+    </aside>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="main">
+      <header class="page-header">
+        <h1>Conquistas</h1>
+        <p>Acompanhe suas conquistas e posição no ranking</p>
+      </header>
+
+      <!-- CARDS RESUMO -->
+      <section class="summary-row">
+
+        <!-- TOTAL DE CONQUISTAS -->
+        <div class="summary-card">
+          <div>
+            <p class="summary-label">Conquistas</p>
+            <p class="summary-value" th:text="${conquistasObtidas} + '/' + ${totalConquistas}">0/0</p>
+          </div>
+          <div class="summary-icon trophy"></div>
+        </div>
+
+        <!-- POSIÇÃO NO RANKING -->
+        <div class="summary-card">
+          <div>
+            <p class="summary-label">Posição no Ranking</p>
+            <p class="summary-value" th:text="'#' + ${minhaPosicao}">#0</p>
+          </div>
+          <div class="summary-icon trend"></div>
+        </div>
+
+        <!-- TOTAL DE JOGADORES -->
+        <div class="summary-card">
+          <div>
+            <p class="summary-label">Total de Jogadores</p>
+            <p class="summary-value" th:text="${ranking.size()}">0</p>
+          </div>
+          <div class="summary-icon users"></div>
+        </div>
+
+      </section>
+
+      <!-- ÁREA CENTRAL -->
+      <section class="content-row">
+
+        <!-- CONQUISTAS -->
+        <div class="achievements-area">
+
+          <div class="tabs-bar">
+            <button class="tab active" th:text="'Desbloqueadas (' + ${conquistasObtidas} + ')'"></button>
+            <button class="tab" th:text="'Bloqueadas (' + (${totalConquistas} - ${conquistasObtidas}) + ')'"></button>
+          </div>
+
+          <!-- GRID -->
+          <div class="achievements-grid">
+
+            <!-- LOOP CONQUISTAS -->
+            <article class="achievement-card"
+                     th:each="c : ${conquistas}"
+                     th:classappend="${obtidas.contains(c.id)} ? '' : ' bloqueada'">
+
+              <div class="ach-icon plant"></div>
+
+              <div class="ach-middle">
+                <h3 th:text="${c.nome}">Nome</h3>
+                <p th:text="${c.descricao}">Descrição</p>
+                <span class="points-pill" th:text="'+' + ${c.pontos} + ' pts'">+0 pts</span>
+              </div>
+
+              <!-- DATA (só aparece se for desbloqueada) -->
+              <span class="ach-date"
+                    th:if="${minhasConquistas.?[conquistaId == c.id].size() > 0}"
+                    th:text="${minhasConquistas.?[conquistaId == c.id][0].data}">
+              </span>
+            </article>
+
+          </div>
+        </div>
+
+        <!-- RANKING -->
+        <aside class="ranking-area">
+          <div class="ranking-card">
+            <h2>Ranking Local</h2>
+
+            <div class="ranking-list">
+
+              <div class="ranking-item"
+                   th:each="r, i : ${ranking}"
+                   th:classappend="${r.id} == ${session.usuario.id} ? ' me'">
+
+                <div class="rk-left">
+                  <span class="rk-pos" th:text="${i.index + 1} + '°'">1°</span>
+                  <div class="rk-avatar"></div>
+
+                  <div>
+                    <p class="rk-name" th:text="${r.nome}">Nome</p>
+                    <p class="rk-level" th:text="'Nível ' + ${r.nivel}">Nível 0</p>
+                  </div>
+                </div>
+
+                <div class="rk-right">
+                  <span class="rk-points" th:text="${r.pontos}">0</span>
+                  <span class="rk-pts-label">pts</span>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+        </aside>
+
+      </section>
     </main>
   </div>
 </body>

@@ -1,53 +1,99 @@
-<!doctype html>
-<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta charset="utf-8">
-  <title>Configurações - Ecoloop</title>
-  <link rel="stylesheet" href="/styles.css">
-</head>
-<body>
-  <div class="app">
-    <aside class="sidebar">
-      <div class="brand"><div class="logo">E</div><h1>Ecoloop</h1></div>
-      <nav class="menu">
-        <a th:href="@{/dashboard}">Dashboard</a>
-        <a th:href="@{/beneficios}">Benefícios</a>
-        <a th:href="@{/conquistas}">Conquistas</a>
-        <a th:href="@{/enviar}">Enviar</a>
-        <a th:href="@{/perfil}">Perfil</a>
-        <a th:href="@{/configuracoes}">Configurações</a>
-        <a th:href="@{/logout}">Sair</a>
-      </nav>
-    </aside>
-
-    <main class="content">
-      <div class="header-row"><h2>Configurações</h2></div>
-
-      <div class="card">
-        <form th:action="@{/configuracoes}" method="post">
-          <div style="margin-bottom:10px">
-            <label>Idioma</label><br/>
-            <select name="idioma">
-              <option value="pt-BR" th:selected="${config != null and config.idioma == 'pt-BR'}">Português (pt-BR)</option>
-              <option value="en-US" th:selected="${config != null and config.idioma == 'en-US'}">Inglês (en-US)</option>
-            </select>
-          </div>
-
-          <div style="margin-bottom:10px">
-            <label><input type="checkbox" name="temaEscuro" th:checked="${config != null and config.temaEscuro}"> Tema escuro</label>
-          </div>
-
-          <div style="margin-bottom:10px">
-            <label><input type="checkbox" name="notificacaoEmail" th:checked="${config != null and config.notificacaoEmail}"> Notificações por e-mail</label>
-          </div>
-
-          <div style="display:flex;justify-content:flex-end;gap:8px">
-            <button class="btn-outline" type="button" onclick="window.location.href='/dashboard'">Cancelar</button>
-            <button class="btn" type="submit">Salvar</button>
-          </div>
-        </form>
+<!DOCTYPE html>  
+<html lang="pt-BR">  
+<head>  
+  <meta charset="UTF-8" />  
+  <title>Configurações - EcoLoop</title>  
+  <link rel="stylesheet" href="configuracoes.css" />  
+</head>  
+<body>  
+  <div class="app">  
+    <!-- SIDEBAR -->  
+    <!-- SIDEBAR -->  
+    <aside class="sidebar">  
+      <div class="logo-row">  
+        <div class="logo-circle"></div>  
+        <span class="logo-text">EcoLoop</span>  
       </div>
-    </main>
-  </div>
-</body>
+  
+      <nav class="nav">  
+        <button class="nav-item">  
+          <span ><a href="/dashboard" class="menu-item">Home</a></span> 
+        </button>  
+        <button class="nav-item">  
+          <span ><a href="/enviar" class="menu-item">Enviar</a></span> 
+        </button>  
+        <button class="nav-item">  
+          <span ><a href="/beneficios" class="menu-item">Benefícios</a></span>   
+        </button>  
+        <button class="nav-item">  
+          <span ><a href="/conquistas" class="menu-item">Conquistas</a></span>  
+        </button>  
+        <button class="nav-item">  
+          <span ><a href="/perfil" class="menu-item">Perfil</a></span>   
+        </button>  
+        <button class="nav-item active">  
+          <span ><a href="/configuracoes" class="menu-item">Configurações</a></span>   
+        </button>  
+        <button class="nav-item">  
+          <span ><a href="/uploads" class="menu-item">Uploads</a></span>   
+        </button>  
+      </nav>
+  
+      <button class="nav-item">
+        <span ><a href="/login" class="menu-item">Sair</a></span> 
+      </button>  
+    </aside>
+  
+    <!-- CONTEÚDO PRINCIPAL -->  
+    <main class="main">  
+      <header class="page-header">  
+        <h1>Configurações</h1>  
+        <p>Gerencie suas preferências e conta</p>  
+      </header>
+  
+      <!-- CARD GRANDE DE PERFIL -->  
+      <section class="settings-card">  
+        <header class="settings-header">  
+          <div class="settings-icon"></div>  
+          <span class="settings-title">Perfil</span>  
+        </header>
+  
+        <form class="settings-form">  
+          <div class="form-group">  
+            <label for="username">Nome de usuário</label>  
+            <input  
+              id="username"  
+              type="text"  
+              value="anna beatriz Martins"  
+            />  
+          </div>
+  
+          <div class="form-group">  
+            <label for="email">Email</label>  
+            <input  
+              id="email"  
+              type="email"  
+              value="anna beatriz Martins@email.com"  
+            />  
+          </div>
+  
+          <div class="form-group">  
+            <label for="password">Alterar senha</label>  
+            <input  
+              id="password"  
+              type="password"  
+              placeholder="Nova senha"  
+            />  
+          </div>
+  
+          <div class="form-footer">  
+            <button type="submit" class="btn-save">  
+              Salvar alterações  
+            </button>  
+          </div>  
+        </form>  
+      </section>  
+    </main>  
+  </div>  
+</body>  
 </html>

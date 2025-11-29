@@ -23,35 +23,50 @@ public class NotificacaoDAO {
         no.setMensagem(rs.getString("mensagem"));
         no.setTipo(rs.getString("tipo"));
         no.setLida(rs.getBoolean("lida"));
-        no.setDataEnvio(rs.getTimestamp("data_envio").toLocalDateTime());
+        if (rs.getTimestamp("data_envio") != null)
+            no.setDataEnvio(rs.getTimestamp("data_envio").toLocalDateTime());
         return no;
     };
 
+    // ===========================
+    // CREATE
+    // ===========================
     public Integer create(Notificacao n) {
         String sql = """
-            INSERT INTO notificacoes (usuario_id, mensagem, tipo, lida)
-            VALUES (?, ?, ?, ?)
+            INSERT INTO notificacoes (usuario_id, mensagem, tipo, lida, data_envio)
+            VALUES (?, ?, ?, ?, ?)
         """;
-
         jdbc.update(sql,
                 n.getUsuarioId(),
                 n.getMensagem(),
                 n.getTipo(),
-                n.getLida()
+                n.getLida(),
+                n.getDataEnvio()
         );
-
         return jdbc.queryForObject("SELECT LAST_INSERT_ID()", Integer.class);
     }
 
+    // ===========================
+    // FINDERS
+    // ===========================
+    public List<Notificacao> findByUsuario(int usuarioId) {
+        return jdbc.query(
+                "SELECT * FROM notificacoes WHERE usuario_id=? ORDER BY data_envio DESC",
+                mapper, usuarioId
+        );
+    }
+
+    // ===========================
+    // UPDATE
+    // ===========================
     public boolean marcarComoLida(int id) {
         return jdbc.update("UPDATE notificacoes SET lida=1 WHERE id=?", id) > 0;
     }
 
-    public List<Notificacao> findByUsuario(int usuarioId) {
-        return jdbc.query(
-                "SELECT * FROM notificacoes WHERE usuario_id=? ORDER BY data_envio DESC",
-                mapper,
-                usuarioId
-        );
+    // ===========================
+    // DELETE
+    // ===========================
+    public boolean delete(int id) {
+        return jdbc.update("DELETE FROM notificacoes WHERE id=?", id) > 0;
     }
 }

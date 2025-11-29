@@ -15,16 +15,19 @@ public class AuthController {
         this.usuarioDAO = usuarioDAO;
     }
 
+    // Página inicial -> agora abre o novo index.html
     @GetMapping("/")
     public String home() {
-        return "login";
+        return "index";   // templates/index.html
     }
 
+    // Página de login
     @GetMapping("/login")
     public String loginPage() {
         return "login";
     }
 
+    // Processar login
     @PostMapping("/login")
     public String login(
             @RequestParam String username,
@@ -39,15 +42,16 @@ public class AuthController {
             session.setAttribute("usuario", u);
 
             if ("ADMIN".equalsIgnoreCase(u.getRole())) {
-                return "redirect:/admin";      
+                return "redirect:/admin";
             } else {
-                return "redirect:/dashboard";  
+                return "redirect:/dashboard";
             }
         }
 
         return "redirect:/login?erro=true";
     }
 
+    // Logout
     @GetMapping("/logout")
     public String logout(HttpSession s) {
         s.invalidate();

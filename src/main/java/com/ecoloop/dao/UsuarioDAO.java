@@ -16,7 +16,7 @@ public class UsuarioDAO {
         this.jdbc = jdbc;
     }
 
-    private RowMapper<Usuario> mapper = (rs, n) -> {
+    private final RowMapper<Usuario> mapper = (rs, rowNum) -> {
         Usuario u = new Usuario();
         u.setId(rs.getInt("id"));
         u.setNome(rs.getString("nome"));
@@ -25,16 +25,15 @@ public class UsuarioDAO {
         u.setFotoPerfil(rs.getString("foto_perfil"));
         u.setNivel(rs.getString("nivel"));
         u.setPontos(rs.getInt("pontos"));
-
-        if (rs.getTimestamp("data_cadastro") != null)
-            u.setDataCadastro(rs.getTimestamp("data_cadastro").toLocalDateTime());
-
         u.setRole(rs.getString("role"));
+        if (rs.getTimestamp("data_cadastro") != null) {
+            u.setDataCadastro(rs.getTimestamp("data_cadastro").toLocalDateTime());
+        }
         return u;
     };
 
     // =====================
-    // LOGIN
+    // LOGIN / BUSCAS
     // =====================
     public Usuario findByEmail(String email) {
         List<Usuario> list = jdbc.query(
@@ -45,9 +44,6 @@ public class UsuarioDAO {
         return list.isEmpty() ? null : list.get(0);
     }
 
-    // =====================
-    // SELECTS
-    // =====================
     public Usuario findById(Integer id) {
         List<Usuario> list = jdbc.query(
                 "SELECT * FROM usuarios WHERE id=?",
@@ -58,35 +54,20 @@ public class UsuarioDAO {
     }
 
     public List<Usuario> findAll() {
-        return jdbc.query(
-                "SELECT * FROM usuarios ORDER BY id DESC",
-                mapper
-        );
+        return jdbc.query("SELECT * FROM usuarios ORDER BY id DESC", mapper);
     }
 
     public int countAll() {
-        return jdbc.queryForObject(
-                "SELECT COUNT(*) FROM usuarios",
-                Integer.class
-        );
+        return jdbc.queryForObject("SELECT COUNT(*) FROM usuarios", Integer.class);
     }
 
     // =====================
-    // CREATE
+    // CREATE / UPDATE / DELETE
     // =====================
     public boolean create(Usuario u) {
-
-        if (u.getNivel() == null || u.getNivel().isBlank()) {
-            u.setNivel("Bronze");
-        }
-
-        if (u.getPontos() == null) {
-            u.setPontos(0);
-        }
-
-        if (u.getRole() == null || u.getRole().isBlank()) {
-            u.setRole("USER");
-        }
+        if (u.getNivel() == null || u.getNivel().isBlank()) u.setNivel("Bronze");
+        if (u.getPontos() == null) u.setPontos(0);
+        if (u.getRole() == null || u.getRole().isBlank()) u.setRole("USER");
 
         String sql = """
             INSERT INTO usuarios (nome, email, senha_hash, foto_perfil, role, nivel, pontos)
@@ -104,10 +85,6 @@ public class UsuarioDAO {
         ) > 0;
     }
 
-
-    // =====================
-    // UPDATE
-    // =====================
     public boolean update(Usuario u) {
         String sql = """
             UPDATE usuarios 
@@ -127,15 +104,8 @@ public class UsuarioDAO {
         ) > 0;
     }
 
-
-    // =====================
-    // DELETE
-    // =====================
     public boolean delete(Integer id) {
-        return jdbc.update(
-                "DELETE FROM usuarios WHERE id=?",
-                id
-        ) > 0;
+        return jdbc.update("DELETE FROM usuarios WHERE id=?", id) > 0;
     }
 
     public boolean addPoints(int userId, int pontos) {

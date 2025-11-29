@@ -1,44 +1,163 @@
-<!doctype html>
-<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta charset="utf-8">
-  <title>Meu Perfil - Ecoloop</title>
-  <link rel="stylesheet" href="/styles.css">
-</head>
-<body>
-  <div class="app">
-    <aside class="sidebar">
-      <div class="brand"><div class="logo">E</div><h1>Ecoloop</h1></div>
-      <nav class="menu">
-        <a th:href="@{/dashboard}">Dashboard</a>
-        <a th:href="@{/beneficios}">Benefícios</a>
-        <a th:href="@{/conquistas}">Conquistas</a>
-        <a th:href="@{/enviar}">Enviar</a>
-        <a th:href="@{/perfil}">Perfil</a>
-        <a th:href="@{/logout}">Sair</a>
+<!DOCTYPE html>  
+<html lang="pt-BR">  
+<head>  
+  <meta charset="UTF-8" />  
+  <title>Perfil - EcoLoop</title>  
+  <link rel="stylesheet" href="perfil.css" />  
+</head>  
+<body>  
+  <div class="app">  
+
+    <!-- SIDEBAR -->  
+    <aside class="sidebar">  
+      <div class="logo-row">  
+        <div class="logo-circle"></div>  
+        <span class="logo-text">EcoLoop</span>  
+      </div>
+  
+      <nav class="nav">  
+        <button class="nav-item" onclick="location.href='/dashboard'">  
+          <span><a href="/dashboard" class="menu-item">Home</a></span> 
+        </button>  
+        <button class="nav-item" onclick="location.href='/enviar'">  
+          <span><a href="/enviar" class="menu-item">Enviar</a></span> 
+        </button>  
+        <button class="nav-item" onclick="location.href='/beneficios'">  
+          <span><a href="/beneficios" class="menu-item">Benefícios</a></span>   
+        </button>  
+        <button class="nav-item" onclick="location.href='/conquistas'">  
+          <span><a href="/conquistas" class="menu-item">Conquistas</a></span>  
+        </button>  
+        <button class="nav-item active" onclick="location.href='/perfil'">  
+          <span><a href="/perfil" class="menu-item">Perfil</a></span>   
+        </button>  
+        <button class="nav-item" onclick="location.href='/configuracoes'">  
+          <span><a href="/configuracoes" class="menu-item">Configurações</a></span>   
+        </button>  
+        <button class="nav-item" onclick="location.href='/uploads'">  
+          <span><a href="/uploads" class="menu-item">Uploads</a></span>   
+        </button>  
       </nav>
+  
+      <button class="nav-item" onclick="location.href='/login'">
+        <span><a href="/login" class="menu-item">Sair</a></span> 
+      </button>  
     </aside>
 
-    <main class="content">
-      <div class="header-row">
-        <h2>Meu Perfil</h2>
-        <div class="chips">
-          <div class="chip">Nível: <strong th:text="${usuario.nivel}">Bronze</strong></div>
-          <div class="chip">Pontos: <strong th:text="${usuario.pontos}">0</strong></div>
-        </div>
-      </div>
+    <!-- CONTEÚDO -->  
+    <main class="main">  
+      <header class="main-header">  
+        <h1>Perfil</h1>  
+        <p>Gerencie suas informações e veja suas estatísticas</p>  
+      </header>
+  
+      <section class="content-grid">  
 
-      <div class="card profile-row">
-        <div class="avatar" th:if="${usuario.fotoPerfil == null}"> <span th:text="${usuario.nome.substring(0,1)}">U</span> </div>
-        <img th:if="${usuario.fotoPerfil != null}" th:src="${usuario.fotoPerfil}" alt="foto" style="width:72px;height:72px;border-radius:50%"/>
+        <!-- COLUNA ESQUERDA -->  
+        <div class="left-col">  
 
-        <div>
-          <p><strong th:text="${usuario.nome}">Nome</strong></p>
-          <p th:text="${usuario.email}">email@exemplo.com</p>
-          <p>Cadastrado: <span th:text="${#temporals.format(usuario.dataCadastro, 'dd/MM/yyyy')}"></span></p>
+          <!-- CARD PERFIL -->  
+          <div class="card profile-card">  
+            <div class="profile-top">  
+
+              <div class="avatar">  
+                <span th:text="${usuario.nome.substring(0,1)}">D</span>  
+                <div class="camera"></div>  
+              </div>
+
+              <div class="info">  
+                <div class="email-row">  
+                  <span class="email-main" th:text="${usuario.email}"></span>  
+                  <button class="edit-icon" onclick="location.href='/editar-perfil'"></button>  
+                </div>  
+
+                <p class="email-sec" th:text="${usuario.nome}">Nome usuário</p>
+
+                <div class="badge-row">  
+                  <span class="badge level">Nível <span th:text="${usuario.nivel}">5</span></span>  
+                  <span class="badge eco">⭐ <span th:text="${usuario.conquistaPrincipal}">Eco Guerreiro</span></span>  
+                </div>
+
+                <div class="progress-area">  
+                  <div class="progress-labels">  
+                    <span>Progresso para Nível 6</span>  
+                    <span th:text="${usuario.pontos + ' pts'}"></span> 
+                  </div>  
+
+                  <div class="progress-bar">  
+                    <div class="progress-fill" th:style="'width:' + ${usuario.pontos} + '%'"></div>  
+                  </div>  
+                </div>  
+              </div>  
+            </div>
+
+            <div class="profile-actions">  
+              <button class="btn primary" onclick="location.href='/configuracoes'">Editar Perfil</button>  
+              <button class="btn outline" onclick="location.href='/conquistas'">  
+                <span class="icon-medal"></span>  
+                Ver Conquistas  
+              </button>  
+            </div>
+          </div>
+
+          <!-- CARD ESTATÍSTICAS -->  
+          <div class="card stats-card">  
+            <h3>Estatísticas</h3>
+
+            <div class="stat-item">  
+              <div class="stat-icon total"></div>  
+              <div class="stat-text">  
+                <span class="stat-label">Total Reciclado</span>  
+                <span class="stat-value" th:text="${usuario.totalKg + ' kg'}">12.8 kg</span>  
+              </div>  
+            </div>
+
+            <div class="stat-item">  
+              <div class="stat-icon uploads"></div>  
+              <div class="stat-text">  
+                <span class="stat-label">Uploads Aprovados</span>  
+                <span class="stat-value" th:text="${usuario.totalUploadsAprovados}">24</span>  
+              </div>  
+            </div>
+
+            <div class="stat-item">  
+              <div class="stat-icon co2"></div>  
+              <div class="stat-text">  
+                <span class="stat-label">CO₂ Economizado</span>  
+                <span class="stat-value" th:text="${usuario.co2 + ' kg'}">45 kg</span>  
+              </div>  
+            </div>
+
+            <div class="stat-item">  
+              <div class="stat-icon tree"></div>  
+              <div class="stat-text">  
+                <span class="stat-label">Árvores Salvas</span>  
+                <span class="stat-value" th:text="${usuario.arvores}">3</span>  
+              </div>  
+            </div>
+          </div>  
         </div>
-      </div>
-    </main>
-  </div>
-</body>
+
+        <!-- COLUNA DIREITA -->  
+        <div class="right-col">  
+          <!-- ABAS -->  
+          <div class="tabs">  
+            <button class="tab active" onclick="location.href='/perfil?aba=reciclagens'">Reciclagens</button>  
+            <button class="tab" onclick="location.href='/perfil?aba=resgates'">Resgates</button>  
+          </div>
+
+          <!-- HISTÓRICO -->  
+          <div class="card history-card">  
+            <h3>Histórico de Reciclagens</h3>
+
+            <div class="history-list">  
+              <!-- Aqui você futuramente fará um th:each -->
+            </div>  
+          </div>  
+        </div>  
+
+      </section>  
+    </main>  
+  </div>  
+</body>  
 </html>

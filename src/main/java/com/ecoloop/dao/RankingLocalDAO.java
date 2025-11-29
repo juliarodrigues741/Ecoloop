@@ -15,6 +15,11 @@ public class RankingLocalDAO {
     public RankingLocalDAO(JdbcTemplate jdbc) {
         this.jdbc = jdbc;
     }
+    
+    public List<RankingLocal> getRankingLocal() {
+        String sql = "SELECT * FROM ranking_local ORDER BY pontos DESC";
+        return jdbc.query(sql, mapper);
+    }
 
     private RowMapper<RankingLocal> mapper = (rs, n) -> {
         RankingLocal r = new RankingLocal();

@@ -17,7 +17,7 @@ public class MaterialEnviadoDAO {
         this.jdbc = jdbc;
     }
 
-    private RowMapper<MaterialEnviado> mapper = (rs, n) -> {
+    private final RowMapper<MaterialEnviado> mapper = (rs, n) -> {
         MaterialEnviado m = new MaterialEnviado();
         m.setId(rs.getInt("id"));
         m.setUsuarioId(rs.getInt("usuario_id"));
@@ -35,63 +35,52 @@ public class MaterialEnviadoDAO {
             m.setDataAvaliacao(rs.getTimestamp("data_avaliacao").toLocalDateTime());
 
         m.setComentarioAvaliacao(rs.getString("comentario_avaliacao"));
+
+        // peso_kg pode ser null → tratar corretamente:
+        Double peso = rs.getObject("peso_kg", Double.class);
+        m.setPesoKg(peso != null ? peso : 0.0);
+
+        // tipo_material (novo campo)
+        m.setTipoMaterial(rs.getString("tipo_material"));
+
         return m;
     };
 
-    // ===========================
-    // CRIAÇÃO
-    // ===========================
+    // =====================================
+    // CREATE
+    // =====================================
     public Integer create(MaterialEnviado m) {
+
         String sql = """
-                INSERT INTO materiais_enviados
-                (usuario_id, descricao, tipo_arquivo, caminho_arquivo, pontos_gerados, status, comentario_avaliacao)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
-                """;
+            INSERT INTO materiais_enviados
+            (usuario_id, descricao, tipo_arquivo, caminho_arquivo, tipo_material,
+             pontos_gerados, status, comentario_avaliacao, peso_kg, data_envio)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """;
 
         jdbc.update(sql,
                 m.getUsuarioId(),
                 m.getDescricao(),
                 m.getTipoArquivo(),
                 m.getCaminhoArquivo(),
+                m.getTipoMaterial(),
                 m.getPontosGerados(),
                 m.getStatus(),
-                m.getComentarioAvaliacao()
+                m.getComentarioAvaliacao(),
+                m.getPesoKg(),
+                LocalDateTime.now()
         );
 
         return jdbc.queryForObject("SELECT LAST_INSERT_ID()", Integer.class);
     }
 
-    // ===========================
-    // UPDATE GERAL
-    // ===========================
-    public boolean update(MaterialEnviado m) {
-        String sql = """
-                UPDATE materiais_enviados SET
-                descricao=?, tipo_arquivo=?, caminho_arquivo=?, pontos_gerados=?,
-                status=?, data_avaliacao=?, comentario_avaliacao=?
-                WHERE id=?
-                """;
-
-        return jdbc.update(sql,
-                m.getDescricao(),
-                m.getTipoArquivo(),
-                m.getCaminhoArquivo(),
-                m.getPontosGerados(),
-                m.getStatus(),
-                m.getDataAvaliacao(),
-                m.getComentarioAvaliacao(),
-                m.getId()
-        ) > 0;
-    }
-
-    // ===========================
-    // BUSCAS
-    // ===========================
+    // =====================================
+    // FINDERS
+    // =====================================
     public MaterialEnviado findById(int id) {
         List<MaterialEnviado> list = jdbc.query(
                 "SELECT * FROM materiais_enviados WHERE id=?",
-                mapper,
-                id
+                mapper, id
         );
         return list.isEmpty() ? null : list.get(0);
     }
@@ -103,34 +92,6 @@ public class MaterialEnviadoDAO {
         );
     }
 
-    public List<MaterialEnviado> findAll() {
-        return jdbc.query("SELECT * FROM materiais_enviados ORDER BY data_envio DESC", mapper);
-    }
-
-    public List<MaterialEnviado> findAll(int limit, int offset) {
-        return jdbc.query(
-                "SELECT * FROM materiais_enviados ORDER BY data_envio DESC LIMIT ? OFFSET ?",
-                mapper, limit, offset
-        );
-    }
-
-    // ===========================
-    // DELETE
-    // ===========================
-    public boolean delete(int id) {
-        return jdbc.update("DELETE FROM materiais_enviados WHERE id=?", id) > 0;
-    }
-
-    // ===========================
-    // ADMIN — PENDENTES
-    // ===========================
-    public int countPendentes() {
-        return jdbc.queryForObject(
-                "SELECT COUNT(*) FROM materiais_enviados WHERE status='pendente'",
-                Integer.class
-        );
-    }
-
     public List<MaterialEnviado> findAllPendentes() {
         return jdbc.query(
                 "SELECT * FROM materiais_enviados WHERE status='pendente' ORDER BY data_envio ASC",
@@ -138,55 +99,36 @@ public class MaterialEnviadoDAO {
         );
     }
 
-    // ===========================
-    // ADMIN — APROVAR MATERIAL
-    // ===========================
-    public boolean aprovar(int id, int pontosGerados) {
-        String sql = """
-                UPDATE materiais_enviados SET
-                status='aprovado',
-                pontos_gerados=?,
-                data_avaliacao=?,
-                comentario_avaliacao=NULL
-                WHERE id=?
-                """;
-
-        return jdbc.update(sql,
-                pontosGerados,
-                LocalDateTime.now(),
-                id
-        ) > 0;
+    public int countPendentes() {
+        return jdbc.queryForObject(
+                "SELECT COUNT(*) FROM materiais_enviados WHERE status='pendente'",
+                Integer.class
+        );
     }
 
-    // ===========================
-    // ADMIN — REPROVAR MATERIAL
-    // ===========================
-    public boolean reprovar(int id, String comentario) {
-        String sql = """
-                UPDATE materiais_enviados SET
-                status='recusado',
-                comentario_avaliacao=?,
-                data_avaliacao=?
-                WHERE id=?
-                """;
-
-        return jdbc.update(sql,
-                comentario,
-                LocalDateTime.now(),
-                id
-        ) > 0;
+    public Double sumKgByUsuario(int usuarioId) {
+        Double valor = jdbc.queryForObject(
+                "SELECT SUM(peso_kg) FROM materiais_enviados WHERE usuario_id=? AND status='aprovado'",
+                Double.class, usuarioId
+        );
+        return valor != null ? valor : 0.0;
     }
-    
+
+    // =====================================
+    // UPDATE STATUS
+    // =====================================
     public boolean aprovar(int id, int pontos, String comentario) {
         String sql = """
             UPDATE materiais_enviados
             SET status='aprovado',
                 pontos_gerados=?,
                 comentario_avaliacao=?,
-                data_avaliacao=NOW()
+                data_avaliacao=?,
+                peso_kg=peso_kg
             WHERE id=?
         """;
-        return jdbc.update(sql, pontos, comentario, id) > 0;
+
+        return jdbc.update(sql, pontos, comentario, LocalDateTime.now(), id) > 0;
     }
 
     public boolean recusar(int id, String comentario) {
@@ -194,10 +136,18 @@ public class MaterialEnviadoDAO {
             UPDATE materiais_enviados
             SET status='recusado',
                 comentario_avaliacao=?,
-                data_avaliacao=NOW()
+                data_avaliacao=?,
+                peso_kg=0
             WHERE id=?
         """;
-        return jdbc.update(sql, comentario, id) > 0;
+
+        return jdbc.update(sql, comentario, LocalDateTime.now(), id) > 0;
     }
 
+    // =====================================
+    // DELETE
+    // =====================================
+    public boolean delete(int id) {
+        return jdbc.update("DELETE FROM materiais_enviados WHERE id=?", id) > 0;
+    }
 }

@@ -17,7 +17,7 @@ public class UsuarioConquistaDAO {
         this.jdbc = jdbc;
     }
 
-    private RowMapper<UsuarioConquista> mapper = (rs, n) -> {
+    private final RowMapper<UsuarioConquista> mapper = (rs, n) -> {
         UsuarioConquista uc = new UsuarioConquista();
         uc.setUsuarioId(rs.getInt("usuario_id"));
         uc.setConquistaId(rs.getInt("conquista_id"));
@@ -25,46 +25,61 @@ public class UsuarioConquistaDAO {
         return uc;
     };
 
+    // Listar IDs de conquistas de um usuário
+    public List<Integer> listarIdsConquistasPorUsuario(int usuarioId) {
+        String sql = "SELECT conquista_id FROM usuarios_conquistas WHERE usuario_id=?";
+        return jdbc.queryForList(sql, Integer.class, usuarioId);
+    }
+
+    // Adicionar conquista a um usuário
     public boolean addConquista(int usuarioId, int conquistaId) {
-        return jdbc.update("""
+        String sql = """
             INSERT INTO usuarios_conquistas (usuario_id, conquista_id)
             VALUES (?, ?)
-        """, usuarioId, conquistaId) > 0;
+        """;
+        return jdbc.update(sql, usuarioId, conquistaId) > 0;
     }
 
+    // Remover conquista de um usuário
     public boolean removeConquista(int usuarioId, int conquistaId) {
-        return jdbc.update("""
+        String sql = """
             DELETE FROM usuarios_conquistas 
             WHERE usuario_id=? AND conquista_id=?
-        """, usuarioId, conquistaId) > 0;
+        """;
+        return jdbc.update(sql, usuarioId, conquistaId) > 0;
     }
 
+    // Buscar conquistas completas de um usuário
     public List<UsuarioConquista> findByUsuario(int usuarioId) {
-        return jdbc.query("""
+        String sql = """
             SELECT *
             FROM usuarios_conquistas
             WHERE usuario_id=?
             ORDER BY data_conquista DESC
-        """, mapper, usuarioId);
+        """;
+        return jdbc.query(sql, mapper, usuarioId);
     }
 
-    // 🔥 MÉTODOS QUE FALTAVAM
-
+    // Listar IDs de conquistas de forma alternativa
     public List<Integer> findConquistaIdsByUsuario(int usuarioId) {
-        return jdbc.query("""
+        String sql = """
             SELECT conquista_id
             FROM usuarios_conquistas
             WHERE usuario_id=?
-        """, (rs, n) -> rs.getInt("conquista_id"), usuarioId);
+        """;
+        return jdbc.query(sql, (rs, n) -> rs.getInt("conquista_id"), usuarioId);
     }
 
+    // Deletar todas conquistas de um usuário
     public void deleteAllByUsuario(int usuarioId) {
-        jdbc.update("""
+        String sql = """
             DELETE FROM usuarios_conquistas
             WHERE usuario_id=?
-        """, usuarioId);
+        """;
+        jdbc.update(sql, usuarioId);
     }
-    
+
+    // Buscar conquistas completas com detalhes
     public List<ConquistaDoUsuario> findConquistasCompletasByUsuario(int usuarioId) {
         String sql = """
             SELECT c.id, c.titulo, c.descricao, c.imagem_url,
@@ -88,6 +103,4 @@ public class UsuarioConquistaDAO {
             return dto;
         }, usuarioId);
     }
-
 }
-

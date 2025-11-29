@@ -1,114 +1,195 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="utf-8">
-  <title>Dashboard - Ecoloop</title>
-  <link rel="stylesheet" href="/styles.css">
+  <meta charset="UTF-8" />
+  <title>Dashboard - EcoLoop</title>
+  <link rel="stylesheet" href="dashboard.css" />
 </head>
 <body>
-  <div class="app">
-    <aside class="sidebar">
-      <div class="brand">
-        <div class="logo">E</div>
-        <h1>Ecoloop</h1>
-      </div>
 
-      <nav class="menu">
-        <a th:href="@{/dashboard}">Dashboard</a>
-        <a th:href="@{/beneficios}">Benefícios</a>
-        <a th:href="@{/conquistas}">Conquistas</a>
-        <a th:href="@{/enviar}">Enviar</a>
-        <a th:href="@{/perfil}">Perfil</a>
-        <a th:href="@{/configuracoes}">Configurações</a>
-        <a th:href="@{/admin}" th:if="${session.usuario != null and session.usuario.role == 'ADMIN'}">Admin</a>
-        <a th:href="@{/logout}">Sair</a>
-      </nav>
-    </aside>
+<div class="app">
 
-    <main class="content">
-      <div class="header-row">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="logo-row">
+      <div class="logo-circle"></div>
+      <span class="logo-text">EcoLoop</span>
+    </div>
+
+    <nav class="nav">
+      <button class="nav-item active">
+        <span><a href="/dashboard" class="menu-item">Home</a></span>
+      </button>
+      <button class="nav-item">
+        <span><a href="/enviar" class="menu-item">Enviar</a></span>
+      </button>
+      <button class="nav-item">
+        <span><a href="/beneficios" class="menu-item">Benefícios</a></span>
+      </button>
+      <button class="nav-item">
+        <span><a href="/conquistas" class="menu-item">Conquistas</a></span>
+      </button>
+      <button class="nav-item">
+        <span><a href="/perfil" class="menu-item">Perfil</a></span>
+      </button>
+      <button class="nav-item">
+        <span><a href="/configuracoes" class="menu-item">Configurações</a></span>
+      </button>
+      <button class="nav-item">
+        <span><a href="/uploads" class="menu-item">Uploads</a></span>
+      </button>
+    </nav>
+
+    <button class="nav-item">
+      <span><a href="/logout" class="menu-item">Sair</a></span>
+    </button>
+  </aside>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="main">
+
+    <!-- HEADER -->
+    <header class="page-header">
+      <h1>Dashboard</h1>
+      <p>
+        Bem-vindo de volta,
+        <span th:text="${usuario.email}">email</span>! 👋
+      </p>
+    </header>
+
+    <!-- LINHA DE CARDS RESUMO -->
+    <section class="summary-row">
+
+      <article class="summary-card">
         <div>
-          <h2>Olá, <span th:text="${usuario.nome}">Usuário</span></h2>
-          <div style="color:var(--muted)">Bem-vindo ao painel</div>
+          <p class="summary-label">Pontos Totais</p>
+          <p class="summary-value" th:text="${usuario.pontos}">1250</p>
         </div>
-        <div class="chips">
-          <div class="chip">Pontos: <strong th:text="${usuario.pontos}">0</strong></div>
-          <div class="chip">Nível: <strong th:text="${usuario.nivel}">Bronze</strong></div>
+        <div class="summary-icon circle"></div>
+      </article>
+
+      <article class="summary-card">
+        <div>
+          <p class="summary-label">Material Reciclado</p>
+          <p class="summary-value" th:text="${usuario.totalKg} + ' kg'">12.5 kg</p>
         </div>
-      </div>
+        <div class="summary-icon leaf"></div>
+      </article>
 
-      <div class="grid-3">
-
-        <!-- NOTIFICAÇÕES -->
-        <div class="card">
-          <h3>Notificações</h3>
-          <ul>
-            <li th:each="n : ${notificacoes}">
-              <div><strong th:text="${n.mensagem}">Mensagem</strong></div>
-              <div style="font-size:12px;color:var(--muted)">
-                <span th:text="${n.dataEnvio != null ? #temporals.format(n.dataEnvio, 'dd/MM/yyyy HH:mm') : '—'}"></span>
-              </div>
-            </li>
-            <li th:if="${#lists.isEmpty(notificacoes)}">Sem notificações</li>
-          </ul>
+      <article class="summary-card">
+        <div>
+          <p class="summary-label">Nível</p>
+          <p class="summary-value" th:text="${usuario.nivel}">5</p>
         </div>
+        <div class="summary-icon up"></div>
+      </article>
 
-        <!-- UPLOADS -->
-        <div class="card">
-          <h3>Últimos uploads</h3>
-          <div class="upload-box">
-            <div th:each="m : ${uploads}">
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-                <div>
-                  <a th:href="${m.caminhoArquivo}" target="_blank" th:text="${m.descricao}">Arquivo</a>
-                  <div style="font-size:12px;color:var(--muted)">
-                    <span th:text="${m.dataEnvio != null ? #temporals.format(m.dataEnvio, 'dd/MM/yyyy HH:mm') : '—'}"></span>
-                  </div>
-                </div>
-                <div><span class="chip" th:text="${m.status}">pendente</span></div>
-              </div>
+      <article class="summary-card">
+        <div>
+          <p class="summary-label">Meta Mensal</p>
+          <p class="summary-value"
+             th:text="${usuario.metaMensalProgresso} + '%'">75%</p>
+        </div>
+        <div class="summary-icon target"></div>
+      </article>
+
+    </section>
+
+    <!-- GRID PRINCIPAL -->
+    <section class="content-grid">
+
+      <!-- COLUNA ESQUERDA -->
+      <div class="left-col">
+
+        <!-- DESAFIOS ATIVOS -->
+        <article class="card challenges-card">
+          <h2>Desafios Ativos</h2>
+
+          <div class="challenge" th:each="desafio : ${usuario.desafios}">
+            <div class="challenge-header">
+              <span th:text="${desafio.nome}">Recicle 5kg esta semana</span>
+              <span class="challenge-points" th:text="'+' + desafio.pontos + ' pts'">+100 pts</span>
             </div>
-            <div th:if="${#lists.isEmpty(uploads)}">Nenhum envio</div>
+
+            <div class="progress-bar">
+              <div class="progress-fill"
+                   th:style="'width:' + desafio.progresso + '%'"></div>
+            </div>
+
+            <span class="progress-text"
+                  th:text="${desafio.progresso} + '% completo'">60% completo</span>
           </div>
-        </div>
 
-        <!-- CONQUISTAS -->
-		<div class="card">
-		  <h3>Conquistas</h3>
+        </article>
 
-		  <div class="conquistas-grid" th:if="${not #lists.isEmpty(conquistas)}">
-		    <div class="conquista-item" th:each="c : ${conquistas}">
-		      <img class="conquista-img" th:src="${c.imagemUrl}" alt="Icone conquista">
+        <!-- ATIVIDADES RECENTES -->
+        <article class="card activity-card">
+          <h2>Atividades Recentes</h2>
 
-		      <div class="conquista-info">
-		        <strong class="conquista-titulo" th:text="${c.titulo}">Título</strong>
-		        <p class="conquista-descricao" th:text="${c.descricao}">Descrição</p>
+          <div class="activity-item" th:each="a : ${notificacoes}">
+            <div>
+              <p class="activity-title" th:text="${a.titulo}">Upload aprovado</p>
+              <p class="activity-sub"   th:text="${a.descricao}">Garrafas PET</p>
+            </div>
 
-		        <span class="conquista-data">
-		          Conquistado em:
-		          <strong th:text="${#temporals.format(c.dataConquista, 'dd/MM/yyyy HH:mm')}"></strong>
-		        </span>
-		      </div>
-		    </div>
-		  </div>
+            <div class="activity-right">
+              <span class="activity-points"
+                    th:text="${a.pontos > 0 ? '+' + a.pontos : a.pontos}"
+                    th:classappend="${a.pontos < 0} ? ' negative' : ''">+50</span>
 
-		  <div th:if="${#lists.isEmpty(conquistas)}">
-		    <p style="color:var(--muted)">Sem conquistas ainda.</p>
-		  </div>
-		</div>
+              <span class="activity-time"
+                    th:text="${a.hora}">
+                14:32
+              </span>
+            </div>
+          </div>
 
+        </article>
 
       </div>
 
-      <div class="card">
-        <h3>Atalhos</h3>
-        <div style="display:flex;gap:10px">
-          <a class="btn" th:href="@{/enviar}">Enviar material</a>
-          <a class="btn-outline" th:href="@{/beneficios}">Ver benefícios</a>
-          <a class="btn-outline" th:href="@{/conquistas}">Ver conquistas</a>
-        </div>
+      <!-- COLUNA DIREITA -->
+      <div class="right-col">
+
+        <!-- AÇÕES RÁPIDAS -->
+        <article class="quick-actions">
+          <h2>Ações Rápidas</h2>
+
+          <button class="quick-btn primary" onclick="window.location='/enviar'">
+            <span>📸 Enviar Material</span>
+          </button>
+
+          <button class="quick-btn" onclick="window.location='/beneficios'">
+            <span>🎁 Ver Recompensas</span>
+          </button>
+
+          <button class="quick-btn" onclick="window.location='/conquistas'">
+            <span>🏅 Minhas Conquistas</span>
+          </button>
+        </article>
+
+        <!-- DESCONTOS DISPONÍVEIS -->
+        <article class="card discounts-card">
+          <h2>Descontos Disponíveis</h2>
+
+          <div class="discount-item" th:each="b : ${beneficios}">
+            <div>
+              <p class="discount-name" th:text="${b.nome}">Loja Verde</p>
+              <p class="discount-sub" th:text="${b.desconto + '% OFF'}">10% OFF</p>
+            </div>
+            <div class="discount-right">
+              <span class="discount-points" th:text="${b.custo + ' pts'}">100 pts</span>
+            </div>
+          </div>
+
+        </article>
+
       </div>
-    </main>
-  </div>
+
+    </section>
+
+  </main>
+</div>
+
 </body>
 </html>

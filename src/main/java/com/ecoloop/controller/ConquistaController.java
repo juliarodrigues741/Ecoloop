@@ -1,8 +1,10 @@
 package com.ecoloop.controller;
 
 import com.ecoloop.dao.ConquistaDAO;
+import com.ecoloop.dao.RankingLocalDAO;
 import com.ecoloop.dao.UsuarioConquistaDAO;
 import com.ecoloop.model.Conquista;
+import com.ecoloop.model.RankingLocal;
 import com.ecoloop.model.Usuario;
 import com.ecoloop.model.UsuarioConquista;
 import jakarta.servlet.http.HttpSession;
@@ -19,10 +21,15 @@ public class ConquistaController {
 
     private final ConquistaDAO conquistaDAO;
     private final UsuarioConquistaDAO usuarioConquistaDAO;
+    private final RankingLocalDAO rankingLocalDAO; // <-- agora final
 
-    public ConquistaController(ConquistaDAO conquistaDAO, UsuarioConquistaDAO usuarioConquistaDAO) {
+    // ⬅️ ADICIONE O rankingLocalDAO ao construtor sem mudar a estrutura
+    public ConquistaController(ConquistaDAO conquistaDAO, 
+                               UsuarioConquistaDAO usuarioConquistaDAO,
+                               RankingLocalDAO rankingLocalDAO) {
         this.conquistaDAO = conquistaDAO;
         this.usuarioConquistaDAO = usuarioConquistaDAO;
+        this.rankingLocalDAO = rankingLocalDAO; // <-- agora funciona
     }
 
     @GetMapping("/conquistas")
@@ -44,9 +51,30 @@ public class ConquistaController {
                 .map(UsuarioConquista::getConquistaId)
                 .collect(Collectors.toSet());
 
+        // Quantidade — para exibir "4/8"
+        model.addAttribute("totalConquistas", todas.size());
+        model.addAttribute("conquistasObtidas", idsObtidos.size());
+
+        // Para mostrar datas das conquistas no card
+        model.addAttribute("minhasConquistas", minhas);
+
+        // Ranking Local
+        List<RankingLocal> ranking = rankingLocalDAO.getRankingLocal();
+        model.addAttribute("ranking", ranking);
+
+        // Encontrar posição do usuário
+        int posicao = ranking.stream()
+                .map(RankingLocal::getUsuarioId) // <-- CORRIGIDO
+                .toList()
+                .indexOf(usuario.getId()) + 1;
+
+        model.addAttribute("minhaPosicao", posicao);
+
+        // Enviar conquistas para a view
         model.addAttribute("conquistas", todas);
         model.addAttribute("obtidas", idsObtidos);
 
         return "conquistas";
     }
+
 }
