@@ -30,7 +30,7 @@ public class UploadController {
             return "redirect:/enviar?erro=arquivo";
         }
 
-        String caminho = "src/main/resources/static/uploads/" + file.getOriginalFilename();
+        String caminho = "src/main/resources/templates/uploads/" + file.getOriginalFilename();
         file.transferTo(new File(caminho));
 
         Integer userId = ((com.ecoloop.model.Usuario) session.getAttribute("usuario")).getId();
