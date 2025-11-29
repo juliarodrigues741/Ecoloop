@@ -1,40 +1,99 @@
-<!doctype html>
-<html lang="pt-BR">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Configurações - Ecoloop</title>
-<link rel="stylesheet" href="/styles.css"></head>
-<body>
-  <div class="app">
-    
-<nav class="sidebar">
-  <div class="brand">
-    <div class="logo">E</div>
-    <h1>Ecoloop</h1>
-  </div>
-  <div class="menu">
-    <a href="/dashboard">Home</a>
-    <a href="/enviar">Enviar</a>
-    <a href="/beneficios">Benefícios</a>
-    <a href="/conquistas">Conquistas</a>
-    <a href="/perfil">Perfil</a>
-    <a href="/configuracoes">Configurações</a>
-    <a href="/uploads">Gerenciar Uploads</a>
-    <a href="#">Sair</a>
-  </div>
-</nav>
-
-    <main class="content">
-      <h2>Configurações</h2>
-      <div class="card">
-        <label>Nome</label>
-        <input class="input" value="Maria">
-        <label>Email</label>
-        <input class="input" value="maria@example.com">
-        <div style="margin-top:12px;display:flex;gap:8px">
-          <button class="btn">Salvar</button>
-          <button class="btn-outline">Sair da conta</button>
-        </div>
+<!DOCTYPE html>  
+<html lang="pt-BR">  
+<head>  
+  <meta charset="UTF-8" />  
+  <title>Configurações - EcoLoop</title>  
+  <link rel="stylesheet" href="configuracoes.css" />  
+</head>  
+<body>  
+  <div class="app">  
+    <!-- SIDEBAR -->  
+    <!-- SIDEBAR -->  
+    <aside class="sidebar">  
+      <div class="logo-row">  
+        <div class="logo-circle"></div>  
+        <span class="logo-text">EcoLoop</span>  
       </div>
-    </main>
-  </div>
-</body>
+  
+      <nav class="nav">  
+        <button class="nav-item">  
+          <span ><a href="/dashboard" class="menu-item">Home</a></span> 
+        </button>  
+        <button class="nav-item">  
+          <span ><a href="/enviar" class="menu-item">Enviar</a></span> 
+        </button>  
+        <button class="nav-item">  
+          <span ><a href="/beneficios" class="menu-item">Benefícios</a></span>   
+        </button>  
+        <button class="nav-item">  
+          <span ><a href="/conquistas" class="menu-item">Conquistas</a></span>  
+        </button>  
+        <button class="nav-item">  
+          <span ><a href="/perfil" class="menu-item">Perfil</a></span>   
+        </button>  
+        <button class="nav-item active">  
+          <span ><a href="/configuracoes" class="menu-item">Configurações</a></span>   
+        </button>  
+        <button class="nav-item">  
+          <span ><a href="/uploads" class="menu-item">Uploads</a></span>   
+        </button>  
+      </nav>
+  
+      <button class="nav-item">
+        <span ><a href="/login" class="menu-item">Sair</a></span> 
+      </button>  
+    </aside>
+  
+    <!-- CONTEÚDO PRINCIPAL -->  
+    <main class="main">  
+      <header class="page-header">  
+        <h1>Configurações</h1>  
+        <p>Gerencie suas preferências e conta</p>  
+      </header>
+  
+      <!-- CARD GRANDE DE PERFIL -->  
+      <section class="settings-card">  
+        <header class="settings-header">  
+          <div class="settings-icon"></div>  
+          <span class="settings-title">Perfil</span>  
+        </header>
+  
+        <form class="settings-form">  
+          <div class="form-group">  
+            <label for="username">Nome de usuário</label>  
+            <input  
+              id="username"  
+              type="text"  
+              value="anna beatriz Martins"  
+            />  
+          </div>
+  
+          <div class="form-group">  
+            <label for="email">Email</label>  
+            <input  
+              id="email"  
+              type="email"  
+              value="anna beatriz Martins@email.com"  
+            />  
+          </div>
+  
+          <div class="form-group">  
+            <label for="password">Alterar senha</label>  
+            <input  
+              id="password"  
+              type="password"  
+              placeholder="Nova senha"  
+            />  
+          </div>
+  
+          <div class="form-footer">  
+            <button type="submit" class="btn-save">  
+              Salvar alterações  
+            </button>  
+          </div>  
+        </form>  
+      </section>  
+    </main>  
+  </div>  
+</body>  
 </html>

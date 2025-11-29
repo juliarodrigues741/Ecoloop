@@ -1,48 +1,223 @@
-<!doctype html>
-<html lang="pt-BR">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Perfil - Ecoloop</title>
-<link rel="stylesheet" href="/styles.css"></head>
-<body>
-  <div class="app">
-    
-<nav class="sidebar">
-  <div class="brand">
-    <div class="logo">E</div>
-    <h1>Ecoloop</h1>
-  </div>
-  <div class="menu">
-      <a href="/dashboard">Home</a>
-      <a href="/enviar">Enviar</a>
-      <a href="/beneficios">Benefícios</a>
-      <a href="/conquistas">Conquistas</a>
-      <a href="/perfil">Perfil</a>
-      <a href="/configuracoes">Configurações</a>
-      <a href="/uploads">Gerenciar Uploads</a>
-      <a href="#">Sair</a>
-    </div>
-</nav>
-
-    <main class="content">
-      <h2>Perfil</h2>
-      <div class="card profile-row">
-        <div class="avatar">M</div>
-        <div>
-          <h3>Maria</h3>
-          <p>Total de pontos: <strong>1250</strong></p>
-        </div>
-        <div style="margin-left:auto">
-          <button class="btn">Configurações da conta</button>
-        </div>
+<!DOCTYPE html>  
+<html lang="pt-BR">  
+<head>  
+  <meta charset="UTF-8" />  
+  <title>Perfil - EcoLoop</title>  
+  <link rel="stylesheet" href="perfil.css" />  
+</head>  
+<body>  
+  <div class="app">  
+   <!-- SIDEBAR -->  
+    <aside class="sidebar">  
+      <div class="logo-row">  
+        <div class="logo-circle"></div>  
+        <span class="logo-text">EcoLoop</span>  
       </div>
-      <div class="card">
-        <h4>Suas Reciclagens</h4>
-        <div style="display:flex;gap:10px;margin-top:10px">
-          <div class="card" style="width:140px;height:80px"></div>
-          <div class="card" style="width:140px;height:80px"></div>
-          <div class="card" style="width:140px;height:80px"></div>
+  
+      <nav class="nav">  
+        <button class="nav-item">  
+          <span ><a href="/dashboard" class="menu-item">Home</a></span> 
+        </button>  
+        <button class="nav-item">  
+          <span ><a href="/enviar" class="menu-item">Enviar</a></span> 
+        </button>  
+        <button class="nav-item">  
+          <span ><a href="/beneficios" class="menu-item">Benefícios</a></span>   
+        </button>  
+        <button class="nav-item">  
+          <span ><a href="/conquistas" class="menu-item">Conquistas</a></span>  
+        </button>  
+        <button class="nav-item active">  
+          <span ><a href="/perfil" class="menu-item">Perfil</a></span>   
+        </button>  
+        <button class="nav-item">  
+          <span ><a href="/configuracoes" class="menu-item">Configurações</a></span>   
+        </button>  
+        <button class="nav-item">  
+          <span ><a href="/uploads" class="menu-item">Uploads</a></span>   
+        </button>  
+      </nav>
+  
+      <button class="nav-item">
+        <span ><a href="/login" class="menu-item">Sair</a></span> 
+      </button>  
+    </aside>
+    <!-- CONTEÚDO -->  
+    <main class="main">  
+      <header class="main-header">  
+        <h1>Perfil</h1>  
+        <p>Gerencie suas informações e veja suas estatísticas</p>  
+      </header>
+  
+      <section class="content-grid">  
+        <!-- COLUNA ESQUERDA -->  
+        <div class="left-col">  
+          <!-- CARD PERFIL -->  
+          <div class="card profile-card">  
+            <div class="profile-top">  
+              <div class="avatar">  
+                <span>D</span>  
+                <div class="camera"></div>  
+              </div>
+  
+              <div class="info">  
+                <div class="email-row">  
+                  <span class="email-main">delucaerick@gmail.com</span>  
+                  <button class="edit-icon"></button>  
+                </div>  
+                <p class="email-sec">delucaerick@gmail.com@email.com</p>
+  
+                <div class="badge-row">  
+                  <span class="badge level">Nível 5</span>  
+                  <span class="badge eco">⭐ Eco Guerreiro</span>  
+                </div>
+  
+                <div class="progress-area">  
+                  <div class="progress-labels">  
+                    <span>Progresso para Nível 6</span>  
+                    <span>750 pts</span>  
+                  </div>  
+                  <div class="progress-bar">  
+                    <div class="progress-fill" style="width: 75%"></div>  
+                  </div>  
+                </div>  
+              </div>  
+            </div>
+  
+            <div class="profile-actions">  
+              <button class="btn primary">Editar Perfil</button>  
+              <button class="btn outline">  
+                <span class="icon-medal"></span>  
+                Ver Conquistas  
+              </button>  
+            </div>  
+          </div>
+  
+          <!-- CARD ESTATÍSTICAS -->  
+          <div class="card stats-card">  
+            <h3>Estatísticas</h3>
+  
+            <div class="stat-item">  
+              <div class="stat-icon total"></div>  
+              <div class="stat-text">  
+                <span class="stat-label">Total Reciclado</span>  
+                <span class="stat-value">12.8 kg</span>  
+              </div>  
+            </div>
+  
+            <div class="stat-item">  
+              <div class="stat-icon uploads"></div>  
+              <div class="stat-text">  
+                <span class="stat-label">Uploads Aprovados</span>  
+                <span class="stat-value">24</span>  
+              </div>  
+            </div>
+  
+            <div class="stat-item">  
+              <div class="stat-icon co2"></div>  
+              <div class="stat-text">  
+                <span class="stat-label">CO₂ Economizado</span>  
+                <span class="stat-value">45 kg</span>  
+              </div>  
+            </div>
+  
+            <div class="stat-item">  
+              <div class="stat-icon tree"></div>  
+              <div class="stat-text">  
+                <span class="stat-label">Árvores Salvas</span>  
+                <span class="stat-value">3</span>  
+              </div>  
+            </div>  
+          </div>  
         </div>
-      </div>
-    </main>
-  </div>
-</body>
+  
+        <!-- COLUNA DIREITA -->  
+        <div class="right-col">  
+          <!-- ABAS -->  
+          <div class="tabs">  
+            <button class="tab active">Reciclagens</button>  
+            <button class="tab">Resgates</button>  
+          </div>
+  
+          <!-- HISTÓRICO -->  
+          <div class="card history-card">  
+            <h3>Histórico de Reciclagens</h3>
+  
+            <div class="history-list">  
+              <div class="history-item">  
+                <div class="item-left">  
+                  <div class="circle-icon plastico"></div>  
+                  <div>  
+                    <p class="item-title">Plástico</p>  
+                    <p class="item-sub">2.5 kg • 2025-10-29</p>  
+                  </div>  
+                </div>  
+                <div class="item-right">  
+                  <span class="status approved">Aprovado</span>  
+                  <span class="points">+50 pts</span>  
+                </div>  
+              </div>
+  
+              <div class="history-item">  
+                <div class="item-left">  
+                  <div class="circle-icon papel"></div>  
+                  <div>  
+                    <p class="item-title">Papel</p>  
+                    <p class="item-sub">5 kg • 2025-10-27</p>  
+                  </div>  
+                </div>  
+                <div class="item-right">  
+                  <span class="status approved">Aprovado</span>  
+                  <span class="points">+30 pts</span>  
+                </div>  
+              </div>
+  
+              <div class="history-item">  
+                <div class="item-left">  
+                  <div class="circle-icon vidro"></div>  
+                  <div>  
+                    <p class="item-title">Vidro</p>  
+                    <p class="item-sub">3 kg • 2025-10-25</p>  
+                  </div>  
+                </div>  
+                <div class="item-right">  
+                  <span class="status pending">Pendente</span>  
+                  <span class="points">+40 pts</span>  
+                </div>  
+              </div>
+  
+              <div class="history-item">  
+                <div class="item-left">  
+                  <div class="circle-icon metal"></div>  
+                  <div>  
+                    <p class="item-title">Metal</p>  
+                    <p class="item-sub">1.5 kg • 2025-10-23</p>  
+                  </div>  
+                </div>  
+                <div class="item-right">  
+                  <span class="status approved">Aprovado</span>  
+                  <span class="points">+60 pts</span>  
+                </div>  
+              </div>
+  
+              <div class="history-item">  
+                <div class="item-left">  
+                  <div class="circle-icon eletronico"></div>  
+                  <div>  
+                    <p class="item-title">Eletrônicos</p>  
+                    <p class="item-sub">0.8 kg • 2025-10-20</p>  
+                  </div>  
+                </div>  
+                <div class="item-right">  
+                  <span class="status approved">Aprovado</span>  
+                  <span class="points">+100 pts</span>  
+                </div>  
+              </div>  
+            </div>  
+          </div>  
+        </div>  
+      </section>  
+    </main>  
+  </div>  
+</body>  
 </html>

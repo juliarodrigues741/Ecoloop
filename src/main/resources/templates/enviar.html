@@ -1,47 +1,120 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Enviar - Ecoloop</title>
-<link rel="stylesheet" href="/styles.css"><script src="../js/scripts.js" defer></script></head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoLoop - Enviar Material</title>
+    <link rel="stylesheet" href="enviar.css">
+</head>
 <body>
-  <div class="app">
-    
-<nav class="sidebar">
-  <div class="brand">
-    <div class="logo">E</div>
-    <h1>Ecoloop</h1>
-  </div>
-  <div class="menu">
-      <a href="/dashboard">Home</a>
-      <a href="/enviar">Enviar</a>
-      <a href="/beneficios">Benefícios</a>
-      <a href="/conquistas">Conquistas</a>
-      <a href="/perfil">Perfil</a>
-      <a href="/configuracoes">Configurações</a>
-      <a href="/uploads">Gerenciar Uploads</a>
-      <a href="#">Sair</a>
-    </div>
-</nav>
+
+<div class="container">
+
+    <aside class="sidebar">  
+      <div class="logo-row">  
+        <div class="logo-circle"></div>  
+        <span class="logo-text">EcoLoop</span>  
+      </div>
+  
+      <nav class="nav">  
+        <button class="nav-item">  
+          <span ><a href="/dashboard" class="menu-item">Home</a></span> 
+        </button>  
+        <button class="nav-item active">  
+          <span ><a href="/enviar" class="menu-item">Enviar</a></span> 
+        </button>  
+        <button class="nav-item">  
+          <span ><a href="/beneficios" class="menu-item">Benefícios</a></span>   
+        </button>  
+        <button class="nav-item">  
+          <span ><a href="/conquistas" class="menu-item">Conquistas</a></span>  
+        </button>  
+        <button class="nav-item">  
+          <span ><a href="/perfil" class="menu-item">Perfil</a></span>   
+        </button>  
+        <button class="nav-item">  
+          <span ><a href="/configuracoes" class="menu-item">Configurações</a></span>   
+        </button>  
+        <button class="nav-item">  
+          <span ><a href="/uploads" class="menu-item">Uploads</a></span>   
+        </button>  
+      </nav>
+  
+      <button class="nav-item">
+        <span ><a href="/login" class="menu-item">Sair</a></span> 
+      </button>  
+    </aside>
 
     <main class="content">
-      <h2>Enviar Material para Reciclagem</h2>
-      <div class="card">
-        <div class="dropzone">
-          <form action="/upload" method="post">
-            <p><strong>Arraste sua Foto ou Vídeo Aqui</strong></p>
-            <input type="file" name="file" accept="image/*,video/*">
-            <p id="file-info" style="margin-top:10px;font-size:13px;color:var(--muted)">Nenhum arquivo selecionado</p>
-            <div style="margin-top:12px;display:flex;gap:8px">
-              <button class="btn" type="submit">Enviar e Ganhar Pontos</button>
-              <button class="btn-outline" type="button">Gerar Vídeo</button>
-            </div>
-          </form>
-        </div>
-        <div style="margin-top:12px">
-          <label>Descreva os Materiais</label>
-          <input class="input" placeholder="Ex: Garrafa PET, Vidro...">
-        </div>
-      </div>
+
+        <h1>Enviar Material</h1>
+        <p class="subtitle">Envie fotos ou vídeos dos seus materiais recicláveis</p>
+
+
+        <form action="/upload" method="post" enctype="multipart/form-data">
+
+            <section class="uploadBox">
+
+                <div class="upload-area">
+
+                    <div class="upload-icon">⬆</div>
+                    <span>Arraste suas fotos ou vídeos aqui</span>
+
+                    <div class="upload-buttons">
+                        <label class="camera-btn">
+                            Tirar Foto
+                            <input type="file" accept="image/*" capture="camera" name="files">
+                        </label>
+
+                        <label class="camera-btn">
+                            Gravar Vídeo
+                            <input type="file" accept="video/*" capture="camcorder" name="files">
+                        </label>
+                    </div>
+
+                    <label class="fileInput">
+                        <input type="file" multiple name="files">
+                        Escolher Arquivos
+                    </label>
+                </div>
+
+
+                <div class="material-box">
+
+                    <label>Tipo de Material</label>
+                    <select name="material">
+                        <option>Selecione o tipo</option>
+                        <option>Plástico</option>
+                        <option>Papel</option>
+                        <option>Vidro</option>
+                        <option>Metal</option>
+                        <option>Eletrônicos</option>
+                    </select>
+
+                    <ul class="tips">
+                        <li>Tire fotos claras dos materiais</li>
+                        <li>Separe por tipo de material</li>
+                        <li>Vídeos podem ganhar pontos extras</li>
+                        <li>Materiais limpos são melhor avaliados</li>
+                    </ul>
+
+                </div>
+            </section>
+
+
+            <section class="descriptionBox">
+                <label>Descrição (Opcional)</label>
+                <textarea name="descricao"
+                    placeholder="Ex: 5 garrafas PET, 3 latas de alumínio…"></textarea>
+            </section>
+
+            <button class="send-btn" type="submit">Enviar Material</button>
+
+        </form>
+
     </main>
-  </div>
+
+</div>
+
 </body>
 </html>

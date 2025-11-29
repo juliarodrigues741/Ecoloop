@@ -1,66 +1,137 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Benefícios - Ecoloop</title>
-
-    <!-- Caminho correto no Spring Boot -->
-    <link rel="stylesheet" href="/styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pontos & Benefícios</title>
+    <link rel="stylesheet" href="/beneficios.css">
 </head>
 <body>
-<div class="app">
 
-    <!-- Sidebar -->
-    <nav class="sidebar">
-        <div class="brand">
-            <div class="logo">E</div>
-            <h1>Ecoloop</h1>
-        </div>
+ <div class="container"> 
+    <aside class="sidebar"> 
+      <h2 class="logo">EcoLoop</h2>
+    <nav>
+    <ul class="menu">
+        <li class="active"><a href="/dashboard" class="menu-item">Home</a></li>
+        <li><a href="/enviar" class="menu-item">Enviar</a></li>
+        <li><a href="/beneficios" class="menu-item">Benefícios</a></li>
+        <li><a href="/conquistas" class="menu-item">Conquistas</a></li>
+        <li><a href="/perfil" class="menu-item">Perfil</a></li>
+        <li><a href="/configuracoes" class="menu-item">Configurações</a></li>
+        <li><a href="/uploads" class="menu-item">Gerenciar uploads</a></li>
+        <li><a href="/login" class="menu-item">Sair</a></li>
+    </ul>
+  </aside>
+  </div>
+</nav>
 
-        <div class="menu">
-            <a href="/dashboard">Home</a>
-            <a href="/enviar">Enviar</a>
-            <a href="/beneficios">Benefícios</a>
-            <a href="/conquistas">Conquistas</a>
-            <a href="/perfil">Perfil</a>
-            <a href="/configuracoes">Configurações</a>
-            <a href="/uploads">Gerenciar Uploads</a>
-            <a href="/logout">Sair</a>
-        </div>
-    </nav>
-
-    <!-- Conteúdo -->
     <main class="content">
-        <h2>Benefícios</h2>
 
-        <div class="card">
+        <h1>Pontos e Recompensas</h1>
+        <p class="subtitle">Resgate seus pontos por benefícios incríveis</p>
 
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <div>
-                    <h3>Total de Pontos</h3>
-                    <div style="font-size:28px; font-weight:700;">
-                        <!-- Exemplo de uso com Thymeleaf: -->
-                        <!-- <span th:text="${usuario.pontos}"></span> -->
-                        1250 pontos
-                    </div>
-                </div>
 
-                <div>
-                    <button class="btn">Resgatar</button>
-                </div>
+        <!-- Box Principal -->
+        <section class="points-box">
+
+            <div class="my-points">
+                <span class="label">Seus Pontos Disponíveis</span>
+                <h1>1250</h1>
+                <span class="unit">pontos</span>
             </div>
 
-            <div style="margin-top:12px" class="grid-4">
-                <div class="card">Desconto em Loja A</div>
-                <div class="card">Desconto em Loja B</div>
-                <div class="card">Produto Sustentável 1</div>
-                <div class="card">Produto Sustentável 2</div>
+            <div class="box small">
+                <span>Este Mês</span>
+                <h3>+375</h3>
             </div>
 
+            <div class="box small">
+                <span>Gastos</span>
+                <h3>-125</h3>
+            </div>
+
+            <div class="icon">✨</div>
+
+        </section>
+
+
+        <!-- MENU ABA -->
+        <div class="tabs">
+            <button class="active">Lojas Parceiras</button>
+            <button>Produtos</button>
+            <button>Histórico</button>
         </div>
+
+
+
+        <!-- CARDS DE LOJAS -->
+        <section class="grid">
+
+            <div class="card">
+                <div>
+                    <h3>EcoStore</h3>
+                    <span class="tag">Vestuário</span>
+                    <p>Desconto em toda loja de roupas sustentáveis</p>
+                </div>
+
+                <div class="right">
+                    <h4>10% OFF</h4>
+                    <span>100 pts</span>
+                    <button>Resgatar</button>
+                </div>
+            </div>
+
+
+            <div class="card">
+                <div>
+                    <h3>GreenMarket</h3>
+                    <span class="tag">Alimentos</span>
+                    <p>Produtos orgânicos e naturais</p>
+                </div>
+
+                <div class="right">
+                    <h4>15% OFF</h4>
+                    <span>150 pts</span>
+                    <button>Resgatar</button>
+                </div>
+            </div>
+
+
+            <div class="card">
+                <div>
+                    <h3>NatureShop</h3>
+                    <span class="tag">Casa</span>
+                    <p>Itens de decoração ecológicos</p>
+                </div>
+
+                <div class="right">
+                    <h4>20% OFF</h4>
+                    <span>200 pts</span>
+                    <button>Resgatar</button>
+                </div>
+            </div>
+
+
+            <div class="card">
+                <div>
+                    <h3>BioBazar</h3>
+                    <span class="tag">Beleza</span>
+                    <p>Cosméticos naturais e veganos</p>
+                </div>
+
+                <div class="right">
+                    <h4>R$ 50 OFF</h4>
+                    <span>250 pts</span>
+                    <button>Resgatar</button>
+                </div>
+            </div>
+
+        </section>
+
     </main>
 
 </div>
+
 </body>
 </html>

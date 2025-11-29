@@ -1,48 +1,255 @@
-<!doctype html>
-<html lang="pt-BR">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Conquistas - Ecoloop</title>
-<link rel="stylesheet" href="/styles.css"></head>
-<body>
-  <div class="app">
-    
-<nav class="sidebar">
-  <div class="brand">
-    <div class="logo">E</div>
-    <h1>Ecoloop</h1>
-  </div>
-  <div class="menu">
-      <a href="/dashboard">Home</a>
-      <a href="/enviar">Enviar</a>
-      <a href="/beneficios">Benefícios</a>
-      <a href="/conquistas">Conquistas</a>
-      <a href="/perfil">Perfil</a>
-      <a href="/configuracoes">Configurações</a>
-      <a href="/uploads">Gerenciar Uploads</a>
-      <a href="#">Sair</a>
-    </div>
-</nav>
-
-    <main class="content">
-      <h2>Conquistas</h2>
-      <div class="card grid-2">
-        <div>
-          <h3>Próximo Nível: Ouro</h3>
-          <p>Faltam 250 pontos</p>
-        </div>
-        <div>
-          <h3>Ranking Local</h3>
-          <p>Top 10</p>
-        </div>
+<!DOCTYPE html>  
+<html lang="pt-BR">  
+<head>  
+  <meta charset="UTF-8" />  
+  <title>Conquistas - EcoLoop</title>  
+  <link rel="stylesheet" href="conquistas.css" />  
+</head>  
+<body>  
+  <div class="app">  
+    <!-- SIDEBAR -->  
+    <aside class="sidebar">  
+      <div class="logo-row">  
+        <div class="logo-circle"></div>  
+        <span class="logo-text">EcoLoop</span>  
       </div>
-      <div class="card">
-        <h4>Suas Conquistas</h4>
-        <div style="display:flex;gap:10px;margin-top:8px">
-          <div class="card" style="width:100px;height:100px"></div>
-          <div class="card" style="width:100px;height:100px"></div>
-          <div class="card" style="width:100px;height:100px"></div>
+  
+      <nav class="nav">  
+        <button class="nav-item">  
+          <span ><a href="/dashboard" class="menu-item">Home</a></span> 
+        </button>  
+        <button class="nav-item">  
+          <span ><a href="/enviar" class="menu-item">Enviar</a></span> 
+        </button>  
+        <button class="nav-item">  
+          <span ><a href="/beneficios" class="menu-item">Benefícios</a></span>   
+        </button>  
+        <button class="nav-item active">  
+          <span ><a href="/conquistas" class="menu-item">Conquistas</a></span>  
+        </button>  
+        <button class="nav-item">  
+          <span ><a href="/perfil" class="menu-item">Perfil</a></span>   
+        </button>  
+        <button class="nav-item">  
+          <span ><a href="/configuracoes" class="menu-item">Configurações</a></span>   
+        </button>  
+        <button class="nav-item">  
+          <span ><a href="/uploads" class="menu-item">Uploads</a></span>   
+        </button>  
+      </nav>
+  
+      <button class="nav-item">
+        <span ><a href="/login" class="menu-item">Sair</a></span> 
+      </button>  
+    </aside>
+  
+    <!-- CONTEÚDO PRINCIPAL -->  
+    <main class="main">  
+      <header class="page-header">  
+        <h1>Conquistas</h1>  
+        <p>Acompanhe suas conquistas e posição no ranking</p>  
+      </header>
+  
+      <!-- LINHA DOS 3 CARDS RESUMO -->  
+      <section class="summary-row">  
+        <div class="summary-card">  
+          <div>  
+            <p class="summary-label">Conquistas</p>  
+            <p class="summary-value">4/8</p>  
+          </div>  
+          <div class="summary-icon trophy"></div>  
         </div>
-      </div>
-    </main>
-  </div>
-</body>
+  
+        <div class="summary-card">  
+          <div>  
+            <p class="summary-label">Posição no Ranking</p>  
+            <p class="summary-value">#4</p>  
+          </div>  
+          <div class="summary-icon trend"></div>  
+        </div>
+  
+        <div class="summary-card">  
+          <div>  
+            <p class="summary-label">Total de Jogadores</p>  
+            <p class="summary-value">147</p>  
+          </div>  
+          <div class="summary-icon users"></div>  
+        </div>  
+      </section>
+  
+      <!-- ÁREA CENTRAL: CONQUISTAS + RANKING -->  
+      <section class="content-row">  
+        <!-- CONQUISTAS -->  
+        <div class="achievements-area">  
+          <!-- "ABAS" -->  
+          <div class="tabs-bar">  
+            <button class="tab active">Desbloqueadas (4)</button>  
+            <button class="tab">Bloqueadas (4)</button>  
+          </div>
+  
+          <!-- GRID DE CARDS -->  
+          <div class="achievements-grid">  
+            <!-- Card 1 -->  
+            <article class="achievement-card">  
+              <div class="ach-icon plant"></div>  
+              <div class="ach-middle">  
+                <h3>Primeiro Passo</h3>  
+                <p>Faça seu primeiro upload</p>  
+                <span class="points-pill">+50 pts</span>  
+              </div>  
+              <span class="ach-date">2025-10-15</span>  
+            </article>
+  
+            <!-- Card 2 -->  
+            <article class="achievement-card">  
+              <div class="ach-icon sword"></div>  
+              <div class="ach-middle">  
+                <h3>Eco Guerreiro</h3>  
+                <p>Complete 10 uploads</p>  
+                <span class="points-pill">+100 pts</span>  
+              </div>  
+              <span class="ach-date">2025-10-20</span>  
+            </article>
+  
+            <!-- Card 3 -->  
+            <article class="achievement-card">  
+              <div class="ach-icon shield"></div>  
+              <div class="ach-middle">  
+                <h3>Protetor Ambiental</h3>  
+                <p>Recicle 5kg de materiais</p>  
+                <span class="points-pill">+150 pts</span>  
+              </div>  
+              <span class="ach-date">2025-10-25</span>  
+            </article>
+  
+            <!-- Card 4 -->  
+            <article class="achievement-card">  
+              <div class="ach-icon recycle"></div>  
+              <div class="ach-middle">  
+                <h3>Reciclador Dedicado</h3>  
+                <p>Use o app por 7 dias seguidos</p>  
+                <span class="points-pill">+200 pts</span>  
+              </div>  
+              <span class="ach-date">2025-10-27</span>  
+            </article>  
+          </div>  
+        </div>
+  
+        <!-- RANKING LOCAL -->  
+        <aside class="ranking-area">  
+          <div class="ranking-card">  
+            <h2>Ranking Local</h2>
+  
+            <div class="ranking-list">  
+              <div class="ranking-item">  
+                <div class="rk-left">  
+                  <span class="rk-pos">1°</span>  
+                  <div class="rk-avatar medal gold"></div>  
+                  <div>  
+                    <p class="rk-name">Maria Silva</p>  
+                    <p class="rk-level">Nível 15</p>  
+                  </div>  
+                </div>  
+                <div class="rk-right">  
+                  <span class="rk-points">2450</span>  
+                  <span class="rk-pts-label">pts</span>  
+                </div>  
+              </div>
+  
+              <div class="ranking-item">  
+                <div class="rk-left">  
+                  <span class="rk-pos">2°</span>  
+                  <div class="rk-avatar medal silver"></div>  
+                  <div>  
+                    <p class="rk-name">João Santos</p>  
+                    <p class="rk-level">Nível 13</p>  
+                  </div>  
+                </div>  
+                <div class="rk-right">  
+                  <span class="rk-points">2100</span>  
+                  <span class="rk-pts-label">pts</span>  
+                </div>  
+              </div>
+  
+              <div class="ranking-item">  
+                <div class="rk-left">  
+                  <span class="rk-pos">3°</span>  
+                  <div class="rk-avatar medal bronze"></div>  
+                  <div>  
+                    <p class="rk-name">Ana Costa</p>  
+                    <p class="rk-level">Nível 12</p>  
+                  </div>  
+                </div>  
+                <div class="rk-right">  
+                  <span class="rk-points">1890</span>  
+                  <span class="rk-pts-label">pts</span>  
+                </div>  
+              </div>
+  
+              <div class="ranking-item me">  
+                <div class="rk-left">  
+                  <span class="rk-pos">4°</span>  
+                  <div class="rk-avatar"></div>  
+                  <div>  
+                    <p class="rk-name">delucaerick@gmail.com</p>  
+                    <p class="rk-level">Nível 5</p>  
+                  </div>  
+                </div>  
+                <div class="rk-right">  
+                  <span class="rk-points">1250</span>  
+                  <span class="rk-pts-label">pts</span>  
+                </div>  
+              </div>
+  
+              <div class="ranking-item">  
+                <div class="rk-left">  
+                  <span class="rk-pos">5°</span>  
+                  <div class="rk-avatar"></div>  
+                  <div>  
+                    <p class="rk-name">Pedro Lima</p>  
+                    <p class="rk-level">Nível 8</p>  
+                  </div>  
+                </div>  
+                <div class="rk-right">  
+                  <span class="rk-points">980</span>  
+                  <span class="rk-pts-label">pts</span>  
+                </div>  
+              </div>
+  
+              <div class="ranking-item">  
+                <div class="rk-left">  
+                  <span class="rk-pos">6°</span>  
+                  <div class="rk-avatar"></div>  
+                  <div>  
+                    <p class="rk-name">Carla Dias</p>  
+                    <p class="rk-level">Nível 7</p>  
+                  </div>  
+                </div>  
+                <div class="rk-right">  
+                  <span class="rk-points">850</span>  
+                  <span class="rk-pts-label">pts</span>  
+                </div>  
+              </div>
+  
+              <div class="ranking-item">  
+                <div class="rk-left">  
+                  <span class="rk-pos">7°</span>  
+                  <div class="rk-avatar"></div>  
+                  <div>  
+                    <p class="rk-name">Lucas Souza</p>  
+                    <p class="rk-level">Nível 6</p>  
+                  </div>  
+                </div>  
+                <div class="rk-right">  
+                  <span class="rk-points">720</span>  
+                  <span class="rk-pts-label">pts</span>  
+                </div>  
+              </div>  
+            </div>  
+          </div>  
+        </aside>  
+      </section>  
+    </main>  
+  </div>  
+</body>  
 </html>
