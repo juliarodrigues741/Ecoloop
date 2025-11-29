@@ -1,0 +1,176 @@
+:root{
+  --green-dark: #0e5a36;
+  --green: #12a24f;
+  --mint: #cdeecc;
+  --bg: linear-gradient(180deg,#dff3e7,#bfeccf);
+  --card: rgba(255,255,255,0.9);
+  --muted: #2b6b56;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family: 'Inter', Arial, Helvetica, sans-serif;background:var(--bg);color:#0b3b2a}
+a{color:inherit;text-decoration:none}
+
+body {
+    background: #c2e8cf;
+    display: flex;
+}
+
+.container{
+    display: flex;
+}
+
+.sidebar {
+    width: 230px;
+    height: 100vh;
+    background: #0b5a36;
+    color: white;
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    font-family: Arial, sans-serif;
+}
+
+/* Título */
+.sidebar h1 {
+    font-size: 22px;
+    margin: 0;
+    font-weight: bold;
+}
+
+.menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+/* Espaçamento entre os itens */
+.menu li {
+    margin: 15px 0;
+}
+
+/* estilo dos links */
+.menu-item {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    display: block;  /* faz o item ocupar a linha toda */
+    padding: 8px 0;
+}
+
+.sidebar a:hover {
+  color: #fff;
+  margin-left: 6px;
+}
+/* Efeito de hover */
+.menu-item:hover {
+    opacity: 0.8;
+}
+
+.content{
+    padding:40px;
+    flex:1;
+}
+
+.subtitle{
+    margin-bottom:25px;
+}
+
+
+/* POINTS BOX */
+
+.points-box{
+    background:#389959;
+    padding:25px;
+    border-radius:15px;
+    display:flex;
+    gap:20px;
+    align-items:flex-start;
+    color:white;
+    position:relative;
+}
+
+.points-box .my-points h1{
+    font-size:55px;
+}
+
+.points-box .unit{
+    font-size:18px;
+}
+
+.points-box .small{
+    background:rgba(255,255,255,.1);
+    padding:15px;
+    border-radius:8px;
+    width:200px;
+}
+
+.points-box .icon{
+    position:absolute;
+    right:25px;
+    top:25px;
+    font-size:40px;
+    opacity:.8;
+}
+
+
+/* TABS */
+.tabs{
+    margin-top:25px;
+    margin-bottom:25px;
+}
+
+.tabs button{
+    padding:8px 20px;
+    border-radius:25px;
+    border:1px solid #0b502d;
+    background:white;
+    cursor:pointer;
+    margin-right:8px;
+}
+
+.tabs button.active{
+    background:#0b502d;
+    color:white;
+}
+
+
+/* GRID */
+.grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+
+
+/* CARD */
+.card{
+    background:white;
+    padding:20px;
+    border-radius:18px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.card .tag{
+    font-size:11px;
+    padding:3px 8px;
+    border-radius:10px;
+    background:#d0ead8;
+}
+
+.card .right{
+    text-align:right;
+}
+
+.card button{
+    width:150px;
+    padding:10px;
+    border-radius:8px;
+    border:none;
+    margin-top:8px;
+    background:#2c7e47;
+    color:white;
+    cursor:pointer;
+}
