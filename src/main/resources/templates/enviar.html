@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EcoLoop - Enviar Material</title>
-    <link rel="stylesheet" href="enviar.css">
+
+    <!-- Corrigido para Thymeleaf -->
+    <link rel="stylesheet" th:href="@{/enviar.css}">
 </head>
 <body>
 
@@ -87,8 +89,8 @@
                     placeholder="Ex: 5 garrafas PET, 3 latas de alumínio…"></textarea>
             </section>
 
-            <!-- Envia o ID do usuário -->
-            <input type="hidden" name="usuarioId" value="${usuario.id}">
+            <!-- Corrigido para Thymeleaf -->
+            <input type="hidden" name="usuarioId" th:value="${usuario.id}">
 
             <button class="send-btn" type="submit">Enviar Material</button>
         </form>
