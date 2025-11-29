@@ -1,0 +1,259 @@
+/* configuracoes-full.css */  
+* {  
+  margin: 0;  
+  padding: 0;  
+  box-sizing: border-box;  
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;  
+}
+  
+body {  
+  background: #a9ddba;  
+}
+  
+/* LAYOUT GERAL */  
+.app {  
+  display: grid;  
+  grid-template-columns: 240px minmax(0, 1fr);  
+  min-height: 100vh;          /* ocupa a tela inteira */  
+}
+  
+/* SIDEBAR */  
+.sidebar {  
+  background: #1f5a34;  
+  color: #ecfff1;  
+  padding: 20px 18px;  
+  display: flex;  
+  flex-direction: column;  
+}
+  
+.logo-row {  
+  display: flex;  
+  align-items: center;  
+  gap: 10px;  
+  margin-bottom: 28px;  
+}
+  
+.logo-circle {  
+  width: 32px;  
+  height: 32px;  
+  border-radius: 50%;  
+  background: #f3fffb;  
+}
+  
+.logo-text {  
+  font-weight: 600;  
+  font-size: 18px;  
+}
+  
+.nav {  
+  display: flex;  
+  flex-direction: column;  
+  gap: 4px;  
+  margin-bottom: auto;  
+}
+
+.menu li {
+    margin: 15px 0;
+}
+
+/* estilo dos links */
+.menu-item {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    display: block;  /* faz o item ocupar a linha toda */
+    padding: 8px 0;
+}
+  
+.nav-item {  
+  border: none;  
+  background: transparent;  
+  border-radius: 999px;  
+  padding: 9px 14px;  
+  text-align: left;  
+  color: #e5f8ea;  
+  cursor: pointer;  
+  font-size: 14px;  
+}
+  
+.nav-item.active,  
+.nav-item:hover {  
+  background: #1a4c2b;  
+}
+  
+.exit-btn {  
+  margin-top: 24px;  
+  border: none;  
+  background: transparent;  
+  color: #f7fffb;  
+  font-size: 14px;  
+  cursor: pointer;  
+}
+  
+.top-title h1 {  
+  font-size: 26px;  
+  margin-bottom: 4px;  
+}
+  
+.top-title p {  
+  color: #335f36;  
+  font-size: 14px;  
+  margin-bottom: 20px;  
+}
+  
+.layout {  
+  display: grid;  
+  grid-template-columns: 340px 1fr;  
+  gap: 20px;  
+}
+  
+/* MAIN */  
+.main {  
+  padding: 26px 36px;  
+  color: #22452c;  
+  display: flex;  
+  flex-direction: column;  
+  gap: 18px;  
+}
+  
+.page-header h1 {  
+  font-size: 26px;  
+  margin-bottom: 4px;  
+}
+  
+.page-header p {  
+  font-size: 14px;  
+  color: #4c7556;  
+}
+  
+/* CARD DE CONFIGURAÇÕES */  
+.settings-card {  
+  margin-top: 8px;  
+  background: #f6fff9;  
+  border-radius: 18px;  
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);  
+  padding: 20px 26px 24px;  
+  max-width: 1150px;  
+}
+  
+/* cabeçalho do card */  
+.settings-header {  
+  display: flex;  
+  align-items: center;  
+  gap: 10px;  
+  margin-bottom: 18px;  
+}
+  
+.settings-icon {  
+  width: 26px;  
+  height: 26px;  
+  border-radius: 50%;  
+  background: #e0f4e6;  
+  position: relative;  
+}
+  
+/* ícone "usuário" simplificado */  
+.settings-icon::before {  
+  content: "";  
+  position: absolute;  
+  top: 5px;  
+  left: 8px;  
+  width: 10px;  
+  height: 10px;  
+  border-radius: 50%;  
+  background: #2f8f3c;  
+}  
+.settings-icon::after {  
+  content: "";  
+  position: absolute;  
+  bottom: 4px;  
+  left: 5px;  
+  width: 16px;  
+  height: 8px;  
+  border-radius: 10px 10px 0 0;  
+  background: #2f8f3c;  
+}
+  
+.settings-title {  
+  font-size: 16px;  
+  font-weight: 600;  
+}
+  
+/* FORMULÁRIO */  
+.settings-form {  
+  display: flex;  
+  flex-direction: column;  
+  gap: 16px;  
+}
+  
+.form-group {  
+  display: flex;  
+  flex-direction: column;  
+  gap: 6px;  
+}
+  
+.form-group label {  
+  font-size: 14px;  
+  color: #3f5a43;  
+}
+  
+.form-group input {  
+  border-radius: 6px;  
+  border: 1px solid #e0ece4;  
+  padding: 10px 12px;  
+  font-size: 14px;  
+  background: #fbfffd;  
+}
+  
+.form-group input:focus {  
+  outline: none;  
+  border-color: #2f8f3c;  
+  box-shadow: 0 0 0 2px rgba(47, 143, 60, 0.15);  
+}
+  
+/* RODAPÉ DO FORM */  
+.form-footer {  
+  margin-top: 6px;  
+}
+  
+.btn-save {  
+  border: none;  
+  border-radius: 999px;  
+  padding: 10px 24px;  
+  font-size: 14px;  
+  font-weight: 500;  
+  background: #2f8f3c;  
+  color: #ffffff;  
+  cursor: pointer;  
+}
+  
+.btn-save:hover {  
+  background: #277733;  
+}
+  
+/* RESPONSIVO */  
+@media (max-width: 900px) {  
+  .app {  
+    grid-template-columns: 1fr;  
+  }
+  
+  .sidebar {  
+    flex-direction: row;  
+    align-items: center;  
+    justify-content: space-between;  
+  }
+  
+  .menu {  
+    flex-direction: row;  
+    flex-wrap: wrap;  
+    gap: 6px;  
+  }
+  
+  .main {  
+    padding: 18px 16px;  
+  }
+  
+  .settings-card {  
+    padding: 18px 16px 20px;  
+  }  
+}
