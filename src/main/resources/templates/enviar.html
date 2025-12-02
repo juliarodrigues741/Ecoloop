@@ -63,24 +63,33 @@
                     </label>
                 </div>
 
-                <div class="material-box">
-                    <label>Tipo de Material</label>
-                    <select name="material" required>
-                        <option value="">Selecione o tipo</option>
-                        <option value="Plástico">Plástico</option>
-                        <option value="Papel">Papel</option>
-                        <option value="Vidro">Vidro</option>
-                        <option value="Metal">Metal</option>
-                        <option value="Eletrônicos">Eletrônicos</option>
-                    </select>
+				<div class="material-box">
+				    <label>Tipo de Material</label>
+				    <select name="material" required>
+				        <option value="">Selecione o tipo</option>
+				        <option value="Plástico">Plástico</option>
+				        <option value="Papel">Papel</option>
+				        <option value="Vidro">Vidro</option>
+				        <option value="Metal">Metal</option>
+				        <option value="Eletrônicos">Eletrônicos</option>
+				    </select>
 
-                    <ul class="tips">
-                        <li>Tire fotos claras dos materiais</li>
-                        <li>Separe por tipo de material</li>
-                        <li>Vídeos podem ganhar pontos extras</li>
-                        <li>Materiais limpos são melhor avaliados</li>
-                    </ul>
-                </div>
+				    <!-- ➕ CAMPO DE PESO -->
+				    <label style="margin-top: 15px;">Peso (em Kg)</label>
+				    <input type="number" 
+				           name="pesoKg" 
+				           step="0.01" 
+				           min="0" 
+				           placeholder="Ex: 1.25" 
+				           required>
+
+				    <ul class="tips">
+				        <li>Tire fotos claras dos materiais</li>
+				        <li>Separe por tipo de material</li>
+				        <li>Vídeos podem ganhar pontos extras</li>
+				        <li>Materiais limpos são melhor avaliados</li>
+				    </ul>
+				</div>
             </section>
 
             <section class="descriptionBox">

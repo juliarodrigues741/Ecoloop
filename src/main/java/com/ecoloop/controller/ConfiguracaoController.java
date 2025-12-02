@@ -1,6 +1,7 @@
 package com.ecoloop.controller;
 
 import com.ecoloop.dao.ConfiguracoesUsuarioDAO;
+import com.ecoloop.dao.UsuarioDAO;
 import com.ecoloop.model.ConfiguracoesUsuario;
 import com.ecoloop.model.Usuario;
 import jakarta.servlet.http.HttpSession;
@@ -12,24 +13,26 @@ import org.springframework.web.bind.annotation.*;
 public class ConfiguracaoController {
 
     private final ConfiguracoesUsuarioDAO configDAO;
+    private final UsuarioDAO usuarioDAO;
 
-    public ConfiguracaoController(ConfiguracoesUsuarioDAO configDAO) {
+    public ConfiguracaoController(ConfiguracoesUsuarioDAO configDAO, UsuarioDAO usuarioDAO) {
         this.configDAO = configDAO;
+        this.usuarioDAO = usuarioDAO;
     }
 
     @GetMapping("/configuracoes")
     public String configuracoes(HttpSession session, Model model) {
-
         Usuario usuario = (Usuario) session.getAttribute("usuario");
+        if (usuario == null) return "redirect:/login";
 
-        if (usuario == null) {
-            return "redirect:/login";
+        ConfiguracoesUsuario config = configDAO.findByUsuarioId(usuario.getId());
+        if (config == null) {
+            config = new ConfiguracoesUsuario();
+            config.setUsuario(usuario); // associa a configuração ao usuário
         }
 
-        ConfiguracoesUsuario config =
-                configDAO.findByUsuarioId(usuario.getId());
-
         model.addAttribute("config", config);
+        model.addAttribute("usuario", usuario);
 
         return "configuracoes";
     }
@@ -41,17 +44,56 @@ public class ConfiguracaoController {
             @RequestParam(required = false) boolean notificacaoEmail,
             HttpSession session
     ) {
-
         Usuario usuario = (Usuario) session.getAttribute("usuario");
         if (usuario == null) return "redirect:/login";
 
         ConfiguracoesUsuario c = configDAO.findByUsuarioId(usuario.getId());
+        if (c == null) {
+            c = new ConfiguracoesUsuario();
+            c.setUsuario(usuario);
+        }
+
         c.setIdioma(idioma);
         c.setTemaEscuro(temaEscuro);
         c.setNotificacaoEmail(notificacaoEmail);
 
-        configDAO.update(c);
+        configDAO.saveOrUpdate(c); // insere ou atualiza conforme necessário
 
         return "redirect:/configuracoes?sucesso=true";
+    }
+
+    @PostMapping("/configuracoes/alterar-email")
+    public String alterarEmail(
+            @RequestParam String novoEmail,
+            HttpSession session
+    ) {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        if (usuario == null) return "redirect:/login";
+
+        usuario.setEmail(novoEmail);
+        usuarioDAO.update(usuario);
+        session.setAttribute("usuario", usuario);
+
+        return "redirect:/configuracoes?emailAlterado=true";
+    }
+
+    @PostMapping("/configuracoes/alterar-senha")
+    public String alterarSenha(
+            @RequestParam String senhaAtual,
+            @RequestParam String novaSenha,
+            HttpSession session
+    ) {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        if (usuario == null) return "redirect:/login";
+
+        if (!usuario.getSenhaHash().equals(senhaAtual)) {
+            return "redirect:/configuracoes?erroSenha=true";
+        }
+
+        usuario.setSenhaHash(novaSenha);
+        usuarioDAO.update(usuario);
+        session.setAttribute("usuario", usuario);
+
+        return "redirect:/configuracoes?senhaAlterada=true";
     }
 }

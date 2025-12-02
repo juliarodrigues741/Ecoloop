@@ -9,6 +9,12 @@ public class Notificacao {
     private String tipo;
     private Boolean lida;
     private LocalDateTime dataEnvio;
+    private Integer pontos;
+    
+    
+    public Integer getPontos() { return pontos; }
+    public void setPontos(Integer pontos) { this.pontos = pontos; }
+
 
     // getters/setters
     public Integer getId() { return id; }

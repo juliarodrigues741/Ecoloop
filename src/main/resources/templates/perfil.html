@@ -1,163 +1,174 @@
-<!DOCTYPE html>  
-<html lang="pt-BR">  
-<head>  
-  <meta charset="UTF-8" />  
-  <title>Perfil - EcoLoop</title>  
-  <link rel="stylesheet" href="perfil.css" />  
-</head>  
-<body>  
-  <div class="app">  
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Perfil - EcoLoop</title>
+  <link rel="stylesheet" href="/perfil.css" />
+</head>
+<body>
+  <div class="app">
 
-    <!-- SIDEBAR -->  
-    <aside class="sidebar">  
-      <div class="logo-row">  
-        <div class="logo-circle"></div>  
-        <span class="logo-text">EcoLoop</span>  
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="logo-row">
+        <div class="logo-circle"></div>
+        <span class="logo-text">EcoLoop</span>
       </div>
-  
-      <nav class="nav">  
-        <button class="nav-item" onclick="location.href='/dashboard'">  
-          <span><a href="/dashboard" class="menu-item">Home</a></span> 
-        </button>  
-        <button class="nav-item" onclick="location.href='/enviar'">  
-          <span><a href="/enviar" class="menu-item">Enviar</a></span> 
-        </button>  
-        <button class="nav-item" onclick="location.href='/beneficios'">  
-          <span><a href="/beneficios" class="menu-item">Benefícios</a></span>   
-        </button>  
-        <button class="nav-item" onclick="location.href='/conquistas'">  
-          <span><a href="/conquistas" class="menu-item">Conquistas</a></span>  
-        </button>  
-        <button class="nav-item active" onclick="location.href='/perfil'">  
-          <span><a href="/perfil" class="menu-item">Perfil</a></span>   
-        </button>  
-        <button class="nav-item" onclick="location.href='/configuracoes'">  
-          <span><a href="/configuracoes" class="menu-item">Configurações</a></span>   
-        </button>  
-        <button class="nav-item" onclick="location.href='/uploads'">  
-          <span><a href="/uploads" class="menu-item">Uploads</a></span>   
-        </button>  
+
+      <nav class="nav">
+        <button class="nav-item"><span><a href="/dashboard">Home</a></span></button>
+        <button class="nav-item"><span><a href="/enviar">Enviar</a></span></button>
+        <button class="nav-item"><span><a href="/beneficios">Benefícios</a></span></button>
+        <button class="nav-item active"><span><a href="/conquistas">Conquistas</a></span></button>
+        <button class="nav-item"><span><a href="/perfil">Perfil</a></span></button>
+        <button class="nav-item"><span><a href="/configuracoes">Configurações</a></span></button>
+        <button class="nav-item"><span><a href="/uploads">Uploads</a></span></button>
       </nav>
-  
-      <button class="nav-item" onclick="location.href='/login'">
-        <span><a href="/login" class="menu-item">Sair</a></span> 
-      </button>  
+
+      <button class="nav-item">
+        <span><a href="/login">Sair</a></span>
+      </button>
     </aside>
 
-    <!-- CONTEÚDO -->  
-    <main class="main">  
-      <header class="main-header">  
-        <h1>Perfil</h1>  
-        <p>Gerencie suas informações e veja suas estatísticas</p>  
+    <!-- CONTEÚDO -->
+    <main class="main">
+      <header class="main-header">
+        <h1>Perfil</h1>
+        <p>Gerencie suas informações e veja suas estatísticas</p>
       </header>
-  
-      <section class="content-grid">  
 
-        <!-- COLUNA ESQUERDA -->  
-        <div class="left-col">  
+      <section class="content-grid">
 
-          <!-- CARD PERFIL -->  
-          <div class="card profile-card">  
-            <div class="profile-top">  
+        <!-- COLUNA ESQUERDA -->
+        <div class="left-col">
 
-              <div class="avatar">  
-                <span th:text="${usuario.nome.substring(0,1)}">D</span>  
-                <div class="camera"></div>  
-              </div>
+          <!-- CARD PERFIL -->
+          <div class="card profile-card">
+            <div class="profile-top">
 
-              <div class="info">  
-                <div class="email-row">  
-                  <span class="email-main" th:text="${usuario.email}"></span>  
-                  <button class="edit-icon" onclick="location.href='/editar-perfil'"></button>  
-                </div>  
+				<div class="avatar">  
+				  <span th:text="${usuario.nome.substring(0,1)}">D</span>  
+				  <div class="camera"></div>  
+				</div>
+				
+              <div class="info">
+                <div class="email-row">
+                  <span class="email-main" th:text="${usuario.email}"></span>
+                  <button class="edit-icon" onclick="location.href='/editar-perfil'"></button>
+                </div>
 
                 <p class="email-sec" th:text="${usuario.nome}">Nome usuário</p>
 
-                <div class="badge-row">  
-                  <span class="badge level">Nível <span th:text="${usuario.nivel}">5</span></span>  
-                  <span class="badge eco">⭐ <span th:text="${usuario.conquistaPrincipal}">Eco Guerreiro</span></span>  
+                <div class="badge-row">
+                  <span class="badge level">Nível <span th:text="${usuario.nivel}">5</span></span>
+                  <span class="badge eco">⭐ <span th:text="${usuario.conquistaPrincipal}">Eco Guerreiro</span></span>
                 </div>
 
-                <div class="progress-area">  
-                  <div class="progress-labels">  
-                    <span>Progresso para Nível 6</span>  
-                    <span th:text="${usuario.pontos + ' pts'}"></span> 
-                  </div>  
+                <div class="progress-area">
+                  <div class="progress-labels">
+                    <span>Progresso para Nível 6</span>
+                    <span th:text="${usuario.pontos + ' pts'}"></span>
+                  </div>
 
-                  <div class="progress-bar">  
-                    <div class="progress-fill" th:style="'width:' + ${usuario.pontos} + '%'"></div>  
-                  </div>  
-                </div>  
-              </div>  
+                  <div class="progress-bar">
+                    <div class="progress-fill" th:style="'width:' + ${usuario.pontos} + '%'"></div>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <div class="profile-actions">  
-              <button class="btn primary" onclick="location.href='/configuracoes'">Editar Perfil</button>  
-              <button class="btn outline" onclick="location.href='/conquistas'">  
-                <span class="icon-medal"></span>  
-                Ver Conquistas  
-              </button>  
+            <div class="profile-actions">
+              <button class="btn primary" onclick="location.href='/configuracoes'">Editar Perfil</button>
+              <button class="btn outline" onclick="location.href='/conquistas'">
+                <span class="icon-medal"></span>
+                Ver Conquistas
+              </button>
             </div>
           </div>
 
-          <!-- CARD ESTATÍSTICAS -->  
-          <div class="card stats-card">  
+          <!-- CARD ESTATÍSTICAS -->
+          <div class="card stats-card">
             <h3>Estatísticas</h3>
 
-            <div class="stat-item">  
-              <div class="stat-icon total"></div>  
-              <div class="stat-text">  
-                <span class="stat-label">Total Reciclado</span>  
-                <span class="stat-value" th:text="${usuario.totalKg + ' kg'}">12.8 kg</span>  
-              </div>  
+            <div class="stat-item">
+              <div class="stat-icon total"></div>
+              <div class="stat-text">
+                <span class="stat-label">Total Reciclado</span>
+				<span class="stat-value" th:text="${totalKg + ' kg'}"></span>
+              </div>
             </div>
 
-            <div class="stat-item">  
-              <div class="stat-icon uploads"></div>  
-              <div class="stat-text">  
-                <span class="stat-label">Uploads Aprovados</span>  
-                <span class="stat-value" th:text="${usuario.totalUploadsAprovados}">24</span>  
-              </div>  
+            <div class="stat-item">
+              <div class="stat-icon uploads"></div>
+              <div class="stat-text">
+                <span class="stat-label">Uploads Aprovados</span>
+				<span class="stat-value" th:text="${totalUploadsAprovados}">0</span>
+              </div>
             </div>
 
-            <div class="stat-item">  
-              <div class="stat-icon co2"></div>  
-              <div class="stat-text">  
-                <span class="stat-label">CO₂ Economizado</span>  
-                <span class="stat-value" th:text="${usuario.co2 + ' kg'}">45 kg</span>  
-              </div>  
+            <div class="stat-item">
+              <div class="stat-icon co2"></div>
+              <div class="stat-text">
+                <span class="stat-label">CO₂ Economizado</span>
+				<span class="stat-value" th:text="${co2Economizado + ' kg'}">0 kg</span>
+              </div>
             </div>
 
-            <div class="stat-item">  
-              <div class="stat-icon tree"></div>  
-              <div class="stat-text">  
-                <span class="stat-label">Árvores Salvas</span>  
-                <span class="stat-value" th:text="${usuario.arvores}">3</span>  
-              </div>  
+            <div class="stat-item">
+              <div class="stat-icon tree"></div>
+              <div class="stat-text">
+                <span class="stat-label">Árvores Salvas</span>
+				<span class="stat-value" th:text="${arvoresSalvas}">0</span>
+              </div>
             </div>
-          </div>  
+          </div>
         </div>
 
-        <!-- COLUNA DIREITA -->  
-        <div class="right-col">  
-          <!-- ABAS -->  
-          <div class="tabs">  
-            <button class="tab active" onclick="location.href='/perfil?aba=reciclagens'">Reciclagens</button>  
-            <button class="tab" onclick="location.href='/perfil?aba=resgates'">Resgates</button>  
+        <!-- COLUNA DIREITA -->
+        <div class="right-col">
+
+          <!-- ABAS -->
+          <div class="tabs">
+            <button class="tab"
+                    th:classappend="${aba == 'reciclagens' ? 'active' : ''}"
+                    onclick="location.href='/perfil?aba=reciclagens'">Reciclagens</button>
+
+            <button class="tab"
+                    th:classappend="${aba == 'resgates' ? 'active' : ''}"
+                    onclick="location.href='/perfil?aba=resgates'">Resgates</button>
           </div>
 
-          <!-- HISTÓRICO -->  
-          <div class="card history-card">  
-            <h3>Histórico de Reciclagens</h3>
+          <!-- HISTÓRICO -->
+          <div class="card history-card">
+            <h3 th:text="${aba == 'reciclagens' ? 'Histórico de Reciclagens' : 'Histórico de Resgates'}"></h3>
 
-            <div class="history-list">  
-              <!-- Aqui você futuramente fará um th:each -->
-            </div>  
-          </div>  
-        </div>  
+            <div class="history-list">
 
-      </section>  
-    </main>  
-  </div>  
-</body>  
+              <!-- Aba Reciclagens -->
+              <div th:if="${aba == 'reciclagens'}">
+                <div th:each="m : ${reciclagens}" class="history-item">
+                  <span th:text="${#temporals.format(m.dataEnvio, 'dd/MM/yyyy HH:mm')}"></span>
+                  <span class="history-desc" th:text="${m.descricao}"></span>
+                  <span class="history-points" th:text="${m.pontosGerados + ' pts'}"></span>
+                </div>
+                <div th:if="${#lists.isEmpty(reciclagens)}">Nenhuma reciclagem registrada.</div>
+              </div>
+
+              <!-- Aba Resgates (CORRIGIDO) -->
+              <div th:if="${aba == 'resgates'}">
+                <div th:each="b : ${resgates}" class="history-item">
+                  <span th:text="${#temporals.format(b.dataResgate, 'dd/MM/yyyy HH:mm')}"></span>
+                  <span class="history-desc" th:text="${b.nome}"></span>
+                </div>
+                <div th:if="${#lists.isEmpty(resgates)}">Nenhum resgate realizado.</div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </section>
+    </main>
+  </div>
+</body>
 </html>

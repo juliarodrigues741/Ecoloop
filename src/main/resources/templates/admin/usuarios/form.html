@@ -25,58 +25,66 @@
         </nav>
     </aside>
 
-    <main class="content">
+	<!doctype html>
 
-        <h2 th:text="${usuario.id == null ? 'Novo Usuário' : 'Editar Usuário'}"></h2>
+	<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+	<head>
+	    <meta charset="utf-8">
+	    <title>Usuário - Admin</title>
+	    <link rel="stylesheet" href="/styles.css">
+	</head>
+	<body>
+	<div class="app">
+	    <aside class="sidebar">
+	        <div class="brand">
+	            <div class="logo">E</div>
+	            <h1>Ecoloop Admin</h1>
+	        </div>
+	        <nav class="menu">
+	            <a th:href="@{/admin}">Início</a>
+	            <a th:href="@{/admin/beneficios}">Benefícios</a>
+	            <a th:href="@{/admin/conquistas}">Conquistas</a>
+	            <a class="active" th:href="@{/admin/usuarios}">Usuários</a>
+	            <a th:href="@{/admin/uploads}">Envios</a>
+	            <a th:href="@{/logout}">Sair</a>
+	        </nav>
+	    </aside>
 
-        <!-- IMPORTANTE: enctype habilita upload -->
-        <form class="card"
-              th:action="@{/admin/usuarios/salvar}"
-              method="post"
-              enctype="multipart/form-data"
-              th:object="${usuario}">
+	<main class="content">
+	    <h2 th:text="${usuario.id == null ? 'Novo Usuário' : 'Editar Usuário'}"></h2>
+	    <form class="card" th:action="@{/admin/usuarios/salvar}" method="post" enctype="multipart/form-data" th:object="${usuario}">
+	        <input type="hidden" th:field="*{id}">
+	        <label>Nome:</label>
+	        <input class="input" th:field="*{nome}" required>
+	        <label>Email:</label>
+	        <input class="input" type="email" th:field="*{email}" required>
+	        <label>Senha (hash ou nova):</label>
+	        <input class="input" type="password" th:field="*{senhaHash}" placeholder="••••••">
+	        <div th:if="${usuario.fotoPerfil != null}">
+	            <label>Foto atual:</label><br>
+	            <img th:src="${usuario.fotoPerfil}" style="width:100px;border-radius:10px;margin-bottom:10px">
+	        </div>
+	        <label>Foto de Perfil (upload):</label>
+	        <input class="input" type="file" name="foto" accept="image/*">
+	        <label>Nível:</label>
+	        <input class="input" th:field="*{nivel}" placeholder="ex.: Bronze, Prata, Ouro">
+	        <label>Pontos:</label>
+	        <input class="input" type="number" th:field="*{pontos}">
+	        <label>Role:</label>
+	        <select class="input" th:field="*{role}">
+	            <option value="USER">Usuário</option>
+	            <option value="ADMIN">Administrador</option>
+	        </select>
+	        <div class="footer-actions">
+	            <button class="btn">Salvar</button>
+	        </div>
+	    </form>
+	</main>	
 
-            <input type="hidden" th:field="*{id}">
+	</div>
+	</body>
+	</html>
 
-            <label>Nome:</label>
-            <input class="input" th:field="*{nome}" required>
-
-            <label>Email:</label>
-            <input class="input" type="email" th:field="*{email}" required>
-
-            <label>Senha (hash ou nova):</label>
-            <input class="input" type="password" th:field="*{senhaHash}" placeholder="••••••">
-
-            <!-- Mostrar foto atual -->
-            <div th:if="${usuario.fotoPerfil != null}">
-                <label>Foto atual:</label><br>
-                <img th:src="${usuario.fotoPerfil}"
-                     style="width:100px;border-radius:10px;margin-bottom:10px">
-            </div>
-
-            <!-- Upload -->
-            <label>Foto de Perfil (upload):</label>
-            <input class="input" type="file" name="foto" accept="image/*">
-
-            <label>Nível:</label>
-            <input class="input" th:field="*{nivel}" placeholder="ex.: Bronze, Prata, Ouro">
-
-            <label>Pontos:</label>
-            <input class="input" type="number" th:field="*{pontos}">
-
-            <label>Role:</label>
-            <select class="input" th:field="*{role}">
-                <option value="USER">Usuário</option>
-                <option value="ADMIN">Administrador</option>
-            </select>
-
-            <div class="footer-actions">
-                <button class="btn">Salvar</button>
-            </div>
-
-        </form>
-
-    </main>
 
 </div>
 

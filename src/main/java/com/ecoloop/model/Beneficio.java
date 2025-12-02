@@ -5,7 +5,7 @@ public class Beneficio {
     private String nome;
     private String descricao;
     private String categoria;
-    private Integer pontosNecessarios;
+    private Integer pontos_necessarios;
     private String imagemUrl;
 
     public Integer getId() { return id; }
@@ -20,8 +20,8 @@ public class Beneficio {
     public String getCategoria() { return categoria; }
     public void setCategoria(String categoria) { this.categoria = categoria; }
 
-    public Integer getPontosNecessarios() { return pontosNecessarios; }
-    public void setPontosNecessarios(Integer pontosNecessarios) { this.pontosNecessarios = pontosNecessarios; }
+    public Integer getPontosNecessarios() { return pontos_necessarios; }
+    public void setPontosNecessarios(Integer pontos_necessarios) { this.pontos_necessarios = pontos_necessarios; }
 
     public String getImagemUrl() { return imagemUrl; }
     public void setImagemUrl(String imagemUrl) { this.imagemUrl = imagemUrl; }

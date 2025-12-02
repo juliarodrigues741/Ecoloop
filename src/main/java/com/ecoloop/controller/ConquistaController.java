@@ -21,15 +21,14 @@ public class ConquistaController {
 
     private final ConquistaDAO conquistaDAO;
     private final UsuarioConquistaDAO usuarioConquistaDAO;
-    private final RankingLocalDAO rankingLocalDAO; // <-- agora final
+    private final RankingLocalDAO rankingLocalDAO;
 
-    // ⬅️ ADICIONE O rankingLocalDAO ao construtor sem mudar a estrutura
-    public ConquistaController(ConquistaDAO conquistaDAO, 
+    public ConquistaController(ConquistaDAO conquistaDAO,
                                UsuarioConquistaDAO usuarioConquistaDAO,
                                RankingLocalDAO rankingLocalDAO) {
         this.conquistaDAO = conquistaDAO;
         this.usuarioConquistaDAO = usuarioConquistaDAO;
-        this.rankingLocalDAO = rankingLocalDAO; // <-- agora funciona
+        this.rankingLocalDAO = rankingLocalDAO;
     }
 
     @GetMapping("/conquistas")
@@ -40,41 +39,43 @@ public class ConquistaController {
             return "redirect:/login";
         }
 
-        // Todas as conquistas
+        // Todas as conquistas disponíveis
         List<Conquista> todas = conquistaDAO.findAll();
 
-        // Conquistas do usuário
+        // Conquistas obtidas pelo usuário
         List<UsuarioConquista> minhas = usuarioConquistaDAO.findByUsuario(usuario.getId());
-
-        // IDs das conquistas já obtidas
         Set<Integer> idsObtidos = minhas.stream()
                 .map(UsuarioConquista::getConquistaId)
                 .collect(Collectors.toSet());
 
-        // Quantidade — para exibir "4/8"
+        // Quantidade para exibição "X/Y"
         model.addAttribute("totalConquistas", todas.size());
         model.addAttribute("conquistasObtidas", idsObtidos.size());
-
-        // Para mostrar datas das conquistas no card
         model.addAttribute("minhasConquistas", minhas);
 
-        // Ranking Local
+        // Ranking: já vem ordenado do DAO
         List<RankingLocal> ranking = rankingLocalDAO.getRankingLocal();
+
+        // Atribui posições (1, 2, 3...)
+        for (int i = 0; i < ranking.size(); i++) {
+            ranking.get(i).setPosicao(i + 1);
+        }
+
         model.addAttribute("ranking", ranking);
 
-        // Encontrar posição do usuário
-        int posicao = ranking.stream()
-                .map(RankingLocal::getUsuarioId) // <-- CORRIGIDO
-                .toList()
-                .indexOf(usuario.getId()) + 1;
+        // Descobre posição do usuário no ranking
+        int minhaPosicao = ranking.stream()
+                .filter(r -> r.getUsuarioId() != null && r.getUsuarioId().equals(usuario.getId()))
+                .map(RankingLocal::getPosicao)
+                .findFirst()
+                .orElse(0);
 
-        model.addAttribute("minhaPosicao", posicao);
+        model.addAttribute("minhaPosicao", minhaPosicao);
 
-        // Enviar conquistas para a view
+        // Envia conquistas para a view
         model.addAttribute("conquistas", todas);
         model.addAttribute("obtidas", idsObtidos);
 
         return "conquistas";
     }
-
 }

@@ -15,9 +15,20 @@ public class RankingLocalDAO {
     public RankingLocalDAO(JdbcTemplate jdbc) {
         this.jdbc = jdbc;
     }
-    
+
     public List<RankingLocal> getRankingLocal() {
-        String sql = "SELECT * FROM ranking_local ORDER BY pontos DESC";
+
+        String sql = """
+            SELECT 
+                r.id,
+                r.usuario_id,
+                r.pontos,
+                u.nome AS nome_usuario
+            FROM ranking_local r
+            JOIN usuarios u ON u.id = r.usuario_id
+            ORDER BY r.pontos DESC
+        """;
+
         return jdbc.query(sql, mapper);
     }
 
@@ -25,8 +36,12 @@ public class RankingLocalDAO {
         RankingLocal r = new RankingLocal();
         r.setId(rs.getInt("id"));
         r.setUsuarioId(rs.getInt("usuario_id"));
-        r.setPosicao(rs.getInt("posicao"));
         r.setPontos(rs.getInt("pontos"));
+        r.setPosicao(null);
+
+        // ➕ nome do usuário vindo do JOIN
+        r.setNomeUsuario(rs.getString("nome_usuario"));
+
         return r;
     };
 
@@ -59,21 +74,37 @@ public class RankingLocalDAO {
     }
 
     public RankingLocal findByUsuarioId(int usuarioId) {
-        List<RankingLocal> list = jdbc.query(
-                "SELECT * FROM ranking_local WHERE usuario_id=?",
-                mapper,
-                usuarioId
-        );
 
+        String sql = """
+            SELECT 
+                r.id,
+                r.usuario_id,
+                r.pontos,
+                u.nome AS nome_usuario
+            FROM ranking_local r
+            JOIN usuarios u ON u.id = r.usuario_id
+            WHERE r.usuario_id = ?
+        """;
+
+        List<RankingLocal> list = jdbc.query(sql, mapper, usuarioId);
         return list.isEmpty() ? null : list.get(0);
     }
 
     public List<RankingLocal> topN(int n) {
-        return jdbc.query(
-                "SELECT * FROM ranking_local ORDER BY pontos DESC LIMIT ?",
-                mapper,
-                n
-        );
+
+        String sql = """
+            SELECT 
+                r.id,
+                r.usuario_id,
+                r.pontos,
+                u.nome AS nome_usuario
+            FROM ranking_local r
+            JOIN usuarios u ON u.id = r.usuario_id
+            ORDER BY r.pontos DESC
+            LIMIT ?
+        """;
+
+        return jdbc.query(sql, mapper, n);
     }
 
     public boolean delete(int id) {

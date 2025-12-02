@@ -1,7 +1,6 @@
 package com.ecoloop.model;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 public class UsuarioDesafio {
 
@@ -9,57 +8,23 @@ public class UsuarioDesafio {
     private int desafioId;
     private LocalDateTime dataConclusao;
     
-    private List<Desafio> desafios;
+    private double progresso; // progresso do usuário
+    private Desafio desafio; // o desafio completo
 
-    // Getters e Setters
-    public List<Desafio> getDesafios() {
-        return desafios;
-    }
+    // GETTERS E SETTERS
 
-    public void setDesafios(List<Desafio> desafios) {
-        this.desafios = desafios;
-    }
+    public int getUsuarioId() { return usuarioId; }
+    public void setUsuarioId(int usuarioId) { this.usuarioId = usuarioId; }
 
-    public UsuarioDesafio() {
-    }
+    public int getDesafioId() { return desafioId; }
+    public void setDesafioId(int desafioId) { this.desafioId = desafioId; }
 
-    public UsuarioDesafio(int usuarioId, int desafioId, LocalDateTime dataConclusao) {
-        this.usuarioId = usuarioId;
-        this.desafioId = desafioId;
-        this.dataConclusao = dataConclusao;
-    }
+    public LocalDateTime getDataConclusao() { return dataConclusao; }
+    public void setDataConclusao(LocalDateTime dataConclusao) { this.dataConclusao = dataConclusao; }
 
-    // Getters e Setters
-    public int getUsuarioId() {
-        return usuarioId;
-    }
+    public double getProgresso() { return progresso; }
+    public void setProgresso(double progresso) { this.progresso = progresso; }
 
-    public void setUsuarioId(int usuarioId) {
-        this.usuarioId = usuarioId;
-    }
-
-    public int getDesafioId() {
-        return desafioId;
-    }
-
-    public void setDesafioId(int desafioId) {
-        this.desafioId = desafioId;
-    }
-
-    public LocalDateTime getDataConclusao() {
-        return dataConclusao;
-    }
-
-    public void setDataConclusao(LocalDateTime dataConclusao) {
-        this.dataConclusao = dataConclusao;
-    }
-
-    @Override
-    public String toString() {
-        return "UsuarioDesafio{" +
-                "usuarioId=" + usuarioId +
-                ", desafioId=" + desafioId +
-                ", dataConclusao=" + dataConclusao +
-                '}';
-    }
+    public Desafio getDesafio() { return desafio; }
+    public void setDesafio(Desafio desafio) { this.desafio = desafio; }
 }

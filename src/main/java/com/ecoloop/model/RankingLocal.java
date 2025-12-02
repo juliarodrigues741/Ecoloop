@@ -5,8 +5,12 @@ public class RankingLocal {
     private Integer usuarioId;
     private Integer posicao;
     private Integer pontos;
+    private String nomeUsuario;
 
     // getters/setters
+
+    public String getNomeUsuario() { return nomeUsuario; }
+    public void setNomeUsuario(String nomeUsuario) { this.nomeUsuario = nomeUsuario; }
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
     public Integer getUsuarioId() { return usuarioId; }

@@ -1,99 +1,122 @@
-<!DOCTYPE html>  
-<html lang="pt-BR">  
-<head>  
-  <meta charset="UTF-8" />  
-  <title>Configurações - EcoLoop</title>  
-  <link rel="stylesheet" href="configuracoes.css" />  
-</head>  
-<body>  
-  <div class="app">  
-    <!-- SIDEBAR -->  
-    <!-- SIDEBAR -->  
-    <aside class="sidebar">  
-      <div class="logo-row">  
-        <div class="logo-circle"></div>  
-        <span class="logo-text">EcoLoop</span>  
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Configurações - EcoLoop</title>
+  <link rel="stylesheet" href="configuracoes.css" />
+</head>
+<body>
+  <div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="logo-row">
+        <div class="logo-circle"></div>
+        <span class="logo-text">EcoLoop</span>
       </div>
-  
-      <nav class="nav">  
-        <button class="nav-item">  
-          <span ><a href="/dashboard" class="menu-item">Home</a></span> 
-        </button>  
-        <button class="nav-item">  
-          <span ><a href="/enviar" class="menu-item">Enviar</a></span> 
-        </button>  
-        <button class="nav-item">  
-          <span ><a href="/beneficios" class="menu-item">Benefícios</a></span>   
-        </button>  
-        <button class="nav-item">  
-          <span ><a href="/conquistas" class="menu-item">Conquistas</a></span>  
-        </button>  
-        <button class="nav-item">  
-          <span ><a href="/perfil" class="menu-item">Perfil</a></span>   
-        </button>  
-        <button class="nav-item active">  
-          <span ><a href="/configuracoes" class="menu-item">Configurações</a></span>   
-        </button>  
-        <button class="nav-item">  
-          <span ><a href="/uploads" class="menu-item">Uploads</a></span>   
-        </button>  
+
+      <nav class="nav">
+        <button class="nav-item"><a href="/dashboard" class="menu-item">Home</a></button>
+        <button class="nav-item"><a href="/enviar" class="menu-item">Enviar</a></button>
+        <button class="nav-item"><a href="/beneficios" class="menu-item">Benefícios</a></button>
+        <button class="nav-item"><a href="/conquistas" class="menu-item">Conquistas</a></button>
+        <button class="nav-item"><a href="/perfil" class="menu-item">Perfil</a></button>
+        <button class="nav-item active"><a href="/configuracoes" class="menu-item">Configurações</a></button>
+        <button class="nav-item"><a href="/uploads" class="menu-item">Uploads</a></button>
       </nav>
-  
+
       <button class="nav-item">
-        <span ><a href="/login" class="menu-item">Sair</a></span> 
-      </button>  
+        <a href="/login" class="menu-item">Sair</a>
+      </button>
     </aside>
-  
-    <!-- CONTEÚDO PRINCIPAL -->  
-    <main class="main">  
-      <header class="page-header">  
-        <h1>Configurações</h1>  
-        <p>Gerencie suas preferências e conta</p>  
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="main">
+      <header class="page-header">
+        <h1>Configurações</h1>
+        <p>Gerencie suas preferências e conta</p>
       </header>
-  
-      <!-- CARD GRANDE DE PERFIL -->  
-      <section class="settings-card">  
-        <header class="settings-header">  
-          <div class="settings-icon"></div>  
-          <span class="settings-title">Perfil</span>  
+
+      <section class="settings-card">
+        <header class="settings-header">
+          <div class="settings-icon"></div>
+          <span class="settings-title">Perfil</span>
         </header>
-  
-        <form class="settings-form">  
-          <div class="form-group">  
-            <label for="username">Nome de usuário</label>  
-            <input  
-              id="username"  
-              type="text"  
-              value="anna beatriz Martins"  
-            />  
+
+        <!-- FORM - ALTERAR EMAIL -->
+        <form class="settings-form" method="post" action="/configuracoes/alterar-email">
+
+          <div class="form-group">
+            <label for="username">Nome de usuário</label>
+            <input id="username" type="text" th:value="${usuario.nome}" readonly />
           </div>
-  
-          <div class="form-group">  
-            <label for="email">Email</label>  
-            <input  
-              id="email"  
-              type="email"  
-              value="anna beatriz Martins@email.com"  
-            />  
+
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input id="email" type="email" name="novoEmail" th:value="${usuario.email}" required />
           </div>
-  
-          <div class="form-group">  
-            <label for="password">Alterar senha</label>  
-            <input  
-              id="password"  
-              type="password"  
-              placeholder="Nova senha"  
-            />  
+
+          <div class="form-footer">
+            <button type="submit" class="btn-save">Alterar Email</button>
           </div>
-  
-          <div class="form-footer">  
-            <button type="submit" class="btn-save">  
-              Salvar alterações  
-            </button>  
-          </div>  
-        </form>  
-      </section>  
-    </main>  
-  </div>  
-</body>  
+        </form>
+
+        <hr />
+
+        <!-- FORM - ALTERAR SENHA -->
+        <form class="settings-form" method="post" action="/configuracoes/alterar-senha">
+
+          <div class="form-group">
+            <label for="senhaAtual">Senha atual</label>
+            <input id="senhaAtual" type="password" name="senhaAtual" required />
+          </div>
+
+          <div class="form-group">
+            <label for="novaSenha">Nova senha</label>
+            <input id="novaSenha" type="password" name="novaSenha" required />
+          </div>
+
+          <div class="form-footer">
+            <button type="submit" class="btn-save">Alterar Senha</button>
+          </div>
+        </form>
+
+        <hr />
+
+        <!-- FORM - CONFIGURAÇÕES DO SISTEMA -->
+        <form class="settings-form" method="post" action="/configuracoes">
+
+          <div class="form-group">
+            <label for="idioma">Idioma</label>
+            <select id="idioma" name="idioma">
+              <option value="pt" th:selected="${config != null and config.idioma == 'pt'}">Português</option>
+              <option value="en" th:selected="${config != null and config.idioma == 'en'}">Inglês</option>
+              <option value="es" th:selected="${config != null and config.idioma == 'es'}">Espanhol</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>
+              <input type="checkbox" name="temaEscuro" th:checked="${config != null and config.temaEscuro}" />
+              Tema escuro
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label>
+              <input type="checkbox" name="notificacaoEmail" th:checked="${config != null and config.notificacaoEmail}" />
+              Receber notificações por email
+            </label>
+          </div>
+
+          <div class="form-footer">
+            <button type="submit" class="btn-save">Salvar Preferências</button>
+          </div>
+
+        </form>
+
+      </section>
+    </main>
+  </div>
+</body>
 </html>

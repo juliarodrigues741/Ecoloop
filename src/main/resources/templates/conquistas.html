@@ -91,9 +91,9 @@
               <div class="ach-icon plant"></div>
 
               <div class="ach-middle">
-                <h3 th:text="${c.nome}">Nome</h3>
+                <h3 th:text="${c.titulo}">Nome</h3>
                 <p th:text="${c.descricao}">Descrição</p>
-                <span class="points-pill" th:text="'+' + ${c.pontos} + ' pts'">+0 pts</span>
+                <span class="points-pill" th:text="'+' + ${c.pontosRecompensa} + ' pts'"></span>
               </div>
 
               <!-- DATA (só aparece se for desbloqueada) -->
@@ -106,40 +106,91 @@
           </div>
         </div>
 
-        <!-- RANKING -->
-        <aside class="ranking-area">
-          <div class="ranking-card">
-            <h2>Ranking Local</h2>
+		<!-- RANKING -->
+		<aside class="ranking-area">
+		  <div class="ranking-card">
+		    <h2>Ranking Local</h2>
 
-            <div class="ranking-list">
+		    <div class="ranking-list">
 
-              <div class="ranking-item"
-                   th:each="r, i : ${ranking}"
-                   th:classappend="${r.id} == ${session.usuario.id} ? ' me'">
+				<div class="ranking-item"
+				     th:each="r, stat : ${ranking}"
+				     th:classappend="${r.usuarioId} == session.usuario.id ? ' me' : ''">
 
-                <div class="rk-left">
-                  <span class="rk-pos" th:text="${i.index + 1} + '°'">1°</span>
-                  <div class="rk-avatar"></div>
+				  <div class="rk-left">
 
-                  <div>
-                    <p class="rk-name" th:text="${r.nome}">Nome</p>
-                    <p class="rk-level" th:text="'Nível ' + ${r.nivel}">Nível 0</p>
-                  </div>
-                </div>
+				    <span class="rk-pos" th:text="${stat.index + 1} + '°'">1°</span>
 
-                <div class="rk-right">
-                  <span class="rk-points" th:text="${r.pontos}">0</span>
-                  <span class="rk-pts-label">pts</span>
-                </div>
+				    <div class="rk-avatar"></div>
 
-              </div>
+				    <div>
+				      <p class="rk-name"
+				         th:text="${r.nomeUsuario != null} ? r.nomeUsuario : ('Usuário ' + r.usuarioId)">
+				        Usuário
+				      </p>
 
-            </div>
-          </div>
-        </aside>
+				      <p class="rk-level">—</p>
+				    </div>
+				  </div>
+
+				  <div class="rk-right">
+				    <span class="rk-points" th:text="${r.pontos}">0</span>
+				    <span class="rk-pts-label">pts</span>
+				  </div>
+				</div>
+
+
+		    </div>
+		  </div>
+		</aside>
+
+
 
       </section>
     </main>
   </div>
+  <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const tabs = Array.from(document.querySelectorAll(".tab"));
+    const cards = Array.from(document.querySelectorAll(".achievement-card"));
+
+    // Função utilitária para checar se um card é bloqueado (tolerante a espaços)
+    const isBloqueada = (card) => {
+      const cls = card.className || "";
+      return cls.split(/\s+/).includes("bloqueada");
+    };
+
+    // Mostra somente desbloqueadas (cards sem classe 'bloqueada')
+    const mostrarDesbloqueadas = () => {
+      tabs.forEach((t, idx) => t.classList.toggle("active", idx === 0));
+      cards.forEach(card => {
+        card.style.display = isBloqueada(card) ? "none" : "flex";
+      });
+    };
+
+    // Mostra somente bloqueadas (cards com classe 'bloqueada')
+    const mostrarBloqueadas = () => {
+      tabs.forEach((t, idx) => t.classList.toggle("active", idx === 1));
+      cards.forEach(card => {
+        card.style.display = isBloqueada(card) ? "flex" : "none";
+      });
+    };
+
+    // Conectar os eventos aos botões. Se houver mais/menos tabs, protegemos por índice.
+    if (tabs[0]) tabs[0].addEventListener("click", mostrarDesbloqueadas);
+    if (tabs[1]) tabs[1].addEventListener("click", mostrarBloqueadas);
+
+    // Estado inicial: se a primeira tab já tiver "active", mostrar desbloqueadas;
+    // se a segunda tiver "active", mostrar bloqueadas; caso contrário, padrão -> desbloqueadas.
+    if (tabs[0] && tabs[0].classList.contains("active")) {
+      mostrarDesbloqueadas();
+    } else if (tabs[1] && tabs[1].classList.contains("active")) {
+      mostrarBloqueadas();
+    } else {
+      // Força padrão (Desbloqueadas)
+      mostrarDesbloqueadas();
+    }
+  });
+  </script>
 </body>
 </html>

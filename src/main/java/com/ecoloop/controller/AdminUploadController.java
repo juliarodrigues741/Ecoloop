@@ -40,10 +40,17 @@ public class AdminUploadController {
     }
 
     @PostMapping("/aprovar")
-    public String aprovar(@RequestParam int id, @RequestParam int pontos, HttpSession session) {
+    public String aprovar(
+            @RequestParam int id,
+            @RequestParam int pontos,
+            @RequestParam(required = false) String comentario,
+            @RequestParam(required = false) Double pesoKg,
+            HttpSession session
+    ) {
         if (!isAdmin(session)) return "redirect:/login";
 
-        materialDAO.aprovar(id, pontos, "Aprovado pelo administrador");
+        materialDAO.aprovar(id, pontos, comentario, pesoKg);
+
         var m = materialDAO.findById(id);
         usuarioDAO.addPoints(m.getUsuarioId(), pontos);
 
@@ -57,6 +64,7 @@ public class AdminUploadController {
 
         return "redirect:/admin/uploads";
     }
+
 
     @PostMapping("/reprovar")
     public String reprovar(@RequestParam int id, @RequestParam String comentario, HttpSession session) {

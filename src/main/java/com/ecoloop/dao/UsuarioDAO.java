@@ -26,6 +26,7 @@ public class UsuarioDAO {
         u.setNivel(rs.getString("nivel"));
         u.setPontos(rs.getInt("pontos"));
         u.setRole(rs.getString("role"));
+
         if (rs.getTimestamp("data_cadastro") != null) {
             u.setDataCadastro(rs.getTimestamp("data_cadastro").toLocalDateTime());
         }
@@ -35,6 +36,7 @@ public class UsuarioDAO {
     // =====================
     // LOGIN / BUSCAS
     // =====================
+
     public Usuario findByEmail(String email) {
         List<Usuario> list = jdbc.query(
                 "SELECT * FROM usuarios WHERE email=?",
@@ -64,7 +66,9 @@ public class UsuarioDAO {
     // =====================
     // CREATE / UPDATE / DELETE
     // =====================
+
     public boolean create(Usuario u) {
+
         if (u.getNivel() == null || u.getNivel().isBlank()) u.setNivel("Bronze");
         if (u.getPontos() == null) u.setPontos(0);
         if (u.getRole() == null || u.getRole().isBlank()) u.setRole("USER");
@@ -113,5 +117,14 @@ public class UsuarioDAO {
                 "UPDATE usuarios SET pontos = pontos + ? WHERE id=?",
                 pontos, userId
         ) > 0;
+    }
+
+    // =====================
+    // ATUALIZAR NÍVEL — MÉTODO QUE FALTAVA
+    // =====================
+
+    public boolean atualizarNivel_requerido(Integer id, String nivel) {
+        String sql = "UPDATE usuarios SET nivel=? WHERE id=?";
+        return jdbc.update(sql, nivel, id) > 0;
     }
 }

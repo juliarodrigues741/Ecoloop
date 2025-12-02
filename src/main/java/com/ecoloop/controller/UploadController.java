@@ -46,6 +46,7 @@ public class UploadController {
             @RequestParam("material") String tipoMaterial,
             @RequestParam(value = "descricao", required = false) String descricao,
             @RequestParam("usuarioId") Integer usuarioId,
+            @RequestParam("pesoKg") Double pesoKg, // <-- AQUI ESTAVA FALTANDO
             HttpSession session
     ) throws Exception {
 
@@ -55,13 +56,12 @@ public class UploadController {
             return "redirect:/login";
         }
 
-        System.out.println("Recebendo upload... usuarioId=" + usuarioId);
+        System.out.println("Recebendo upload... usuarioId=" + usuarioId + " | pesoKg=" + pesoKg);
 
         if (files == null || files.length == 0) {
             return "redirect:/enviar?erro=arquivo";
         }
 
-        // Caminho para /resources/static/uploads/
         String staticPath = System.getProperty("user.dir") +
                 "/src/main/resources/static/uploads/";
 
@@ -72,18 +72,13 @@ public class UploadController {
 
             if (file.isEmpty()) continue;
 
-            // cria nome único
             String nomeArquivo = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-
             Path caminho = Paths.get(staticPath + nomeArquivo);
 
-            // salva fisicamente
             Files.write(caminho, file.getBytes());
 
-            // caminho acessível via navegador
             String caminhoWeb = "/uploads/" + nomeArquivo;
 
-            // salva no banco
             MaterialEnviado m = new MaterialEnviado();
             m.setUsuarioId(usuarioId);
             m.setDescricao(descricao);
@@ -91,16 +86,20 @@ public class UploadController {
             m.setTipoMaterial(tipoMaterial);
             m.setTipoArquivo(file.getContentType().startsWith("video") ? "video" : "foto");
             m.setStatus("pendente");
-            m.setPesoKg(0.0);
+
+            m.setPesoKg(pesoKg);  // <-- AGORA SALVA O PESO CERTO
+
             m.setPontosGerados(0);
 
             materialDAO.create(m);
 
-            System.out.println("Arquivo salvo: " + caminhoWeb);
+            System.out.println("Arquivo salvo: " + caminhoWeb + " | PESO=" + pesoKg);
         }
 
         return "redirect:/dashboard";
     }
+
+
 
     // PÁGINA ADMIN
     @GetMapping("/uploads")

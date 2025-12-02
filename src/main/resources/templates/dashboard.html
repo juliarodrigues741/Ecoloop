@@ -1,194 +1,168 @@
 <!DOCTYPE html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8" />
-  <title>Dashboard - EcoLoop</title>
-  <link rel="stylesheet" href="dashboard.css" />
+    <meta charset="UTF-8" />
+    <title>Dashboard - EcoLoop</title>
+    <link rel="stylesheet" href="/dashboard.css" />
 </head>
-<body>
 
+<body>
 <div class="app">
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <div class="logo-row">
-      <div class="logo-circle"></div>
-      <span class="logo-text">EcoLoop</span>
-    </div>
-
-    <nav class="nav">
-      <button class="nav-item active">
-        <span><a href="/dashboard" class="menu-item">Home</a></span>
-      </button>
-      <button class="nav-item">
-        <span><a href="/enviar" class="menu-item">Enviar</a></span>
-      </button>
-      <button class="nav-item">
-        <span><a href="/beneficios" class="menu-item">Benefícios</a></span>
-      </button>
-      <button class="nav-item">
-        <span><a href="/conquistas" class="menu-item">Conquistas</a></span>
-      </button>
-      <button class="nav-item">
-        <span><a href="/perfil" class="menu-item">Perfil</a></span>
-      </button>
-      <button class="nav-item">
-        <span><a href="/configuracoes" class="menu-item">Configurações</a></span>
-      </button>
-      <button class="nav-item">
-        <span><a href="/uploads" class="menu-item">Uploads</a></span>
-      </button>
-    </nav>
-
-    <button class="nav-item">
-      <span><a href="/logout" class="menu-item">Sair</a></span>
-    </button>
-  </aside>
-
-  <!-- CONTEÚDO PRINCIPAL -->
-  <main class="main">
-
-    <!-- HEADER -->
-    <header class="page-header">
-      <h1>Dashboard</h1>
-      <p>
-        Bem-vindo de volta,
-        <span th:text="${usuario.email}">email</span>! 👋
-      </p>
-    </header>
-
-    <!-- LINHA DE CARDS RESUMO -->
-    <section class="summary-row">
-
-      <article class="summary-card">
-        <div>
-          <p class="summary-label">Pontos Totais</p>
-          <p class="summary-value" th:text="${usuario.pontos}">1250</p>
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="logo-row">
+            <div class="logo-circle"></div>
+            <span class="logo-text">EcoLoop</span>
         </div>
-        <div class="summary-icon circle"></div>
-      </article>
 
-      <article class="summary-card">
-        <div>
-          <p class="summary-label">Material Reciclado</p>
-          <p class="summary-value" th:text="${usuario.totalKg} + ' kg'">12.5 kg</p>
-        </div>
-        <div class="summary-icon leaf"></div>
-      </article>
+        <nav class="nav">
+            <a class="nav-item active" href="/dashboard">Home</a>
+            <a class="nav-item" href="/enviar">Enviar</a>
+            <a class="nav-item" href="/beneficios">Benefícios</a>
+            <a class="nav-item" href="/conquistas">Conquistas</a>
+            <a class="nav-item" href="/perfil">Perfil</a>
+            <a class="nav-item" href="/configuracoes">Configurações</a>
+            <a class="nav-item" href="/uploads">Uploads</a>
+            <a class="nav-item logout" href="/logout">Sair</a>
+        </nav>
+    </aside>
 
-      <article class="summary-card">
-        <div>
-          <p class="summary-label">Nível</p>
-          <p class="summary-value" th:text="${usuario.nivel}">5</p>
-        </div>
-        <div class="summary-icon up"></div>
-      </article>
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="main">
 
-      <article class="summary-card">
-        <div>
-          <p class="summary-label">Meta Mensal</p>
-          <p class="summary-value"
-             th:text="${usuario.metaMensalProgresso} + '%'">75%</p>
-        </div>
-        <div class="summary-icon target"></div>
-      </article>
+        <!-- HEADER -->
+        <header class="page-header">
+            <h1>Dashboard</h1>
+            <p>
+                Bem-vindo de volta,
+                <span th:text="${usuario.email}"></span>! 👋
+            </p>
+        </header>
 
-    </section>
+        <!-- CARDS SUPERIORES -->
+        <section class="summary-row">
 
-    <!-- GRID PRINCIPAL -->
-    <section class="content-grid">
+            <article class="summary-card">
+                <p class="summary-label">Pontos Totais</p>
+                <p class="summary-value" th:text="${usuario.pontos}">0</p>
+            </article>
 
-      <!-- COLUNA ESQUERDA -->
-      <div class="left-col">
+            <article class="summary-card">
+                <p class="summary-label">Nível</p>
+                <p class="summary-value" th:text="${usuario.nivel}">0</p>
+            </article>
 
-        <!-- DESAFIOS ATIVOS -->
-        <article class="card challenges-card">
-          <h2>Desafios Ativos</h2>
+        </section>
 
-          <div class="challenge" th:each="desafio : ${usuario.desafios}">
-            <div class="challenge-header">
-              <span th:text="${desafio.nome}">Recicle 5kg esta semana</span>
-              <span class="challenge-points" th:text="'+' + desafio.pontos + ' pts'">+100 pts</span>
+        <!-- GRID PRINCIPAL -->
+        <section class="content-grid">
+
+            <!-- ESQUERDA -->
+            <div class="left-col">
+
+                <!-- DESAFIOS ATIVOS -->
+                <article class="card challenges-card">
+                    <h2>Desafios Ativos</h2>
+
+                    <div class="challenge" th:each="ud : ${desafios}">
+
+                        <div class="challenge-header">
+                            <span th:text="${ud.desafio.titulo}">Título</span>
+							<span class="challenge-points"
+							      th:text="${ud.desafio != null ? ('+' + ud.desafio.pontosRecompensa + ' pts') : '+0 pts'}">
+							</span>
+                        </div>
+
+                        <div class="progress-bar">
+                            <div class="progress-fill"
+                                 th:style="'width:' + ud.progresso + '%'">
+                            </div>
+                        </div>
+
+                        <span class="progress-text"
+                              th:text="${ud.progresso} + '% completo'"></span>
+
+                    </div>
+                </article>
+
+                <!-- ATIVIDADES RECENTES -->
+                <article class="card activity-card">
+                    <h2>Atividades Recentes</h2>
+
+                    <div class="activity-item" th:each="a : ${notificacoes}">
+
+                        <div>
+                            <p class="activity-title" th:text="${a.tipo}">Tipo</p>
+                            <p class="activity-sub" th:text="${a.mensagem}">Mensagem</p>
+                        </div>
+
+                        <div class="activity-right">
+                            <span class="activity-points"
+                                  th:text="${a.pontos > 0 ? '+' + a.pontos : a.pontos}">
+                                0
+                            </span>
+
+                            <span class="activity-time"
+                                  th:text="${#temporals.format(a.dataEnvio, 'dd/MM/yyyy HH:mm')}">
+                                data
+                            </span>
+                        </div>
+
+                    </div>
+
+                </article>
+
             </div>
 
-            <div class="progress-bar">
-              <div class="progress-fill"
-                   th:style="'width:' + desafio.progresso + '%'"></div>
+            <!-- DIREITA -->
+            <div class="right-col">
+
+                <!-- AÇÕES RÁPIDAS -->
+                <article class="quick-actions">
+                    <h2>Ações Rápidas</h2>
+
+                    <button class="quick-btn primary"
+                            onclick="window.location='/enviar'">
+                        📸 Enviar Material
+                    </button>
+
+                    <button class="quick-btn"
+                            onclick="window.location='/beneficios'">
+                        🎁 Ver Recompensas
+                    </button>
+
+                    <button class="quick-btn"
+                            onclick="window.location='/conquistas'">
+                        🏅 Minhas Conquistas
+                    </button>
+                </article>
+
+                <!-- BENEFÍCIOS -->
+                <article class="card discounts-card">
+                    <h2>Descontos Disponíveis</h2>
+
+                    <div class="discount-item" th:each="b : ${beneficios}">
+                        <div>
+                            <p class="discount-name" th:text="${b.nome}">Benefício</p>
+                            <p class="discount-sub" th:text="${b.descricao}">Descrição</p>
+                        </div>
+
+                        <div class="discount-right">
+                            <span class="discount-points"
+                                  th:text="${b.pontosNecessarios}">
+                                0
+                            </span>
+                        </div>
+                    </div>
+
+                </article>
+
             </div>
 
-            <span class="progress-text"
-                  th:text="${desafio.progresso} + '% completo'">60% completo</span>
-          </div>
+        </section>
 
-        </article>
-
-        <!-- ATIVIDADES RECENTES -->
-        <article class="card activity-card">
-          <h2>Atividades Recentes</h2>
-
-          <div class="activity-item" th:each="a : ${notificacoes}">
-            <div>
-              <p class="activity-title" th:text="${a.titulo}">Upload aprovado</p>
-              <p class="activity-sub"   th:text="${a.descricao}">Garrafas PET</p>
-            </div>
-
-            <div class="activity-right">
-              <span class="activity-points"
-                    th:text="${a.pontos > 0 ? '+' + a.pontos : a.pontos}"
-                    th:classappend="${a.pontos < 0} ? ' negative' : ''">+50</span>
-
-              <span class="activity-time"
-                    th:text="${a.hora}">
-                14:32
-              </span>
-            </div>
-          </div>
-
-        </article>
-
-      </div>
-
-      <!-- COLUNA DIREITA -->
-      <div class="right-col">
-
-        <!-- AÇÕES RÁPIDAS -->
-        <article class="quick-actions">
-          <h2>Ações Rápidas</h2>
-
-          <button class="quick-btn primary" onclick="window.location='/enviar'">
-            <span>📸 Enviar Material</span>
-          </button>
-
-          <button class="quick-btn" onclick="window.location='/beneficios'">
-            <span>🎁 Ver Recompensas</span>
-          </button>
-
-          <button class="quick-btn" onclick="window.location='/conquistas'">
-            <span>🏅 Minhas Conquistas</span>
-          </button>
-        </article>
-
-        <!-- DESCONTOS DISPONÍVEIS -->
-        <article class="card discounts-card">
-          <h2>Descontos Disponíveis</h2>
-
-          <div class="discount-item" th:each="b : ${beneficios}">
-            <div>
-              <p class="discount-name" th:text="${b.nome}">Loja Verde</p>
-              <p class="discount-sub" th:text="${b.desconto + '% OFF'}">10% OFF</p>
-            </div>
-            <div class="discount-right">
-              <span class="discount-points" th:text="${b.custo + ' pts'}">100 pts</span>
-            </div>
-          </div>
-
-        </article>
-
-      </div>
-
-    </section>
-
-  </main>
+    </main>
 </div>
 
 </body>

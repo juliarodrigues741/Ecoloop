@@ -1,17 +1,7 @@
 package com.ecoloop.controller;
 
-import com.ecoloop.dao.BeneficioDAO;
-import com.ecoloop.dao.ConquistaDAO;
-import com.ecoloop.dao.MaterialEnviadoDAO;
-import com.ecoloop.dao.NotificacaoDAO;
-import com.ecoloop.dao.UsuarioDAO;
-import com.ecoloop.dao.UsuarioConquistaDAO;
-import com.ecoloop.dao.UsuarioDesafioDAO;
-import com.ecoloop.dao.DesafioDAO;
-import com.ecoloop.model.Conquista;
-import com.ecoloop.model.Desafio;
-import com.ecoloop.model.Usuario;
-import com.ecoloop.model.UsuarioDesafio;
+import com.ecoloop.dao.*;
+import com.ecoloop.model.*;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -19,7 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 public class DashboardController {
@@ -32,6 +21,7 @@ public class DashboardController {
     private final DesafioDAO desafioDAO;
     private final ConquistaDAO conquistaDAO;
     private final UsuarioConquistaDAO usuarioConquistaDAO;
+    private final RankingLocalDAO rankingLocalDAO;
 
     public DashboardController(UsuarioDAO usuarioDAO,
                                MaterialEnviadoDAO materialDAO,
@@ -40,7 +30,9 @@ public class DashboardController {
                                UsuarioDesafioDAO usuarioDesafioDAO,
                                DesafioDAO desafioDAO,
                                ConquistaDAO conquistaDAO,
-                               UsuarioConquistaDAO usuarioConquistaDAO) {
+                               UsuarioConquistaDAO usuarioConquistaDAO,
+                               RankingLocalDAO rankingLocalDAO) {
+
         this.usuarioDAO = usuarioDAO;
         this.materialDAO = materialDAO;
         this.notificacaoDAO = notificacaoDAO;
@@ -49,11 +41,13 @@ public class DashboardController {
         this.desafioDAO = desafioDAO;
         this.conquistaDAO = conquistaDAO;
         this.usuarioConquistaDAO = usuarioConquistaDAO;
+        this.rankingLocalDAO = rankingLocalDAO;
     }
 
     @GetMapping("/dashboard")
     public String dashboard(Model model, HttpSession session) {
 
+        // 🟢 1. Usuário logado
         Usuario u = (Usuario) session.getAttribute("usuario");
         if (u == null) {
             return "redirect:/login";
@@ -61,33 +55,73 @@ public class DashboardController {
 
         Usuario usuario = usuarioDAO.findByEmail(u.getEmail());
 
-        // Total kg reciclados
+        // 🟢 2. Total de kg reciclados
         Double totalKg = materialDAO.sumKgByUsuario(usuario.getId());
-        if (totalKg == null) totalKg = 0.0;
+        totalKg = (totalKg != null) ? totalKg : 0.0;
         usuario.setTotalKg(totalKg);
 
-        // Carregar desafios
-        List<UsuarioDesafio> usuarioDesafios = usuarioDesafioDAO.listarDesafiosPorUsuario(usuario.getId());
-        List<Desafio> desafios = usuarioDesafios.stream()
-                .map(ud -> desafioDAO.buscarPorId(ud.getDesafioId()))
-                .filter(d -> d != null)
-                .collect(Collectors.toList());
-        usuario.setDesafios(desafios);
+        // 🟢 3. Calcular nível do usuário
+        String nivelRequerido;
+        if (totalKg >= 50) {
+            nivelRequerido = "Ouro";
+        } else if (totalKg >= 20) {
+            nivelRequerido = "Prata";
+        } else {
+            nivelRequerido = "Bronze";
+        }
 
-        // Carregar conquistas
-        List<Integer> idsConquistas = usuarioConquistaDAO.listarIdsConquistasPorUsuario(usuario.getId());
-        List<Conquista> conquistas = conquistaDAO.findAllByIds(idsConquistas);
+        usuario.setNivel(nivelRequerido);
 
-        // Definir a conquista principal (ex: a que tem mais pontos)
+        // Atualiza no banco
+        usuarioDAO.atualizarNivel_requerido(usuario.getId(), nivelRequerido);
+
+        // 🟢 4. Carregar desafios + progresso
+        List<UsuarioDesafio> usuarioDesafios =
+                usuarioDesafioDAO.listarDesafiosPorUsuario(usuario.getId());
+
+        for (UsuarioDesafio ud : usuarioDesafios) {
+            Desafio d = desafioDAO.buscarPorId(ud.getDesafioId());
+            ud.setDesafio(d);
+
+            int progressoAtual = usuarioDesafioDAO.calcularProgressoPorDesafio(
+                    usuario.getId(),
+                    ud.getDesafioId()
+            );
+
+            ud.setProgresso(progressoAtual);
+        }
+
+        // 🟢 5. Carregar conquistas
+        List<Integer> idsConquistas =
+                usuarioConquistaDAO.listarIdsConquistasPorUsuario(usuario.getId());
+
+        List<Conquista> conquistas =
+                conquistaDAO.findAllByIds(idsConquistas);
+
         Conquista principal = conquistas.stream()
-                .max((c1, c2) -> Integer.compare(c1.getPontosRecompensa(), c2.getPontosRecompensa()))
+                .max((c1, c2) -> Integer.compare(
+                        c1.getPontosRecompensa(),
+                        c2.getPontosRecompensa()
+                ))
                 .orElse(null);
 
         usuario.setConquistaPrincipal(principal);
 
-        // Adicionar ao model
+        // 🟢 6. Notificações + pontos
+        List<Notificacao> notificacoes =
+                notificacaoDAO.findByUsuario(usuario.getId());
+
+        for (Notificacao n : notificacoes) {
+            RankingLocal rk = rankingLocalDAO.findByUsuarioId(n.getUsuarioId());
+            if (rk != null) {
+                n.setPontos(rk.getPontos());
+            }
+        }
+
+        // 🟢 7. Enviar dados para o HTML
         model.addAttribute("usuario", usuario);
-        model.addAttribute("notificacoes", notificacaoDAO.findByUsuario(usuario.getId()));
+        model.addAttribute("desafios", usuarioDesafios);
+        model.addAttribute("notificacoes", notificacoes);
         model.addAttribute("beneficios", beneficioDAO.findAll());
         model.addAttribute("uploads", materialDAO.findByUsuarioId(usuario.getId()));
 

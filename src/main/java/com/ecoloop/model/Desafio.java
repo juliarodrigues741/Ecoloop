@@ -1,14 +1,17 @@
 package com.ecoloop.model;
 
-public class Desafio{
+public class Desafio {
+
     private int id;
     private String titulo;
     private String descricao;
     private int pontosRecompensa;
-    private String nivelRequerido;
+    private String nivelRequerido; // Bronze, Prata, Ouro
     private String imagemUrl;
+    private double metaKg; // meta de kg a reciclar
+    private String tipoMaterial; // plástico, papel, vidro, geral...
 
-    // Getters e Setters
+    // GETTERS e SETTERS
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
@@ -26,5 +29,10 @@ public class Desafio{
 
     public String getImagemUrl() { return imagemUrl; }
     public void setImagemUrl(String imagemUrl) { this.imagemUrl = imagemUrl; }
-}
 
+    public double getMetaKg() { return metaKg; }
+    public void setMetaKg(double metaKg) { this.metaKg = metaKg; }
+
+    public String getTipoMaterial() { return tipoMaterial; }
+    public void setTipoMaterial(String tipoMaterial) { this.tipoMaterial = tipoMaterial; }
+}

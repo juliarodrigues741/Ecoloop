@@ -5,6 +5,24 @@
   box-sizing: border-box;  
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;  
 }
+/* garante que o botão ativo apareça destacado */
+.tab {
+  cursor: pointer;
+  user-select: none;
+}
+.tab.active {
+  /* se já tem estilo seu para .tab.active, apenas ajuste se quiser */
+  box-shadow: inset 0 0 0 2px rgba(0,0,0,0.03);
+  /* background/foreground já gerenciados pelo seu CSS - não sobrescrevo cores */
+}
+
+/* garantir layout consistente dos cards quando mostramos/ocultamos */
+.achievement-card {
+  display: flex; /* coerente com o script que define display:flex */
+  gap: 16px;
+  align-items: center;
+}
+
   
 body {  
   background: #9fd9a9;  

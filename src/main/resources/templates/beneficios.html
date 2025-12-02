@@ -10,36 +10,32 @@
 
 <div class="app">
 
-    <aside class="sidebar">  
-        <div class="logo-row">  
-            <div class="logo-circle"></div>  
-            <span class="logo-text">EcoLoop</span>  
+    <aside class="sidebar">
+        <div class="logo-row">
+            <div class="logo-circle"></div>
+            <span class="logo-text">EcoLoop</span>
         </div>
 
-        <nav class="nav">  
-            <button class="nav-item"><a href="/dashboard" class="menu-item">Home</a></button>  
-            <button class="nav-item"><a href="/enviar" class="menu-item">Enviar</a></button>  
+        <nav class="nav">
+            <button class="nav-item"><a href="/dashboard" class="menu-item">Home</a></button>
+            <button class="nav-item"><a href="/enviar" class="menu-item">Enviar</a></button>
             <button class="nav-item active"><a href="/beneficios" class="menu-item">Benefícios</a></button>
-            <button class="nav-item"><a href="/conquistas" class="menu-item">Conquistas</a></button>  
-            <button class="nav-item"><a href="/perfil" class="menu-item">Perfil</a></button>  
-            <button class="nav-item"><a href="/configuracoes" class="menu-item">Configurações</a></button>  
+            <button class="nav-item"><a href="/conquistas" class="menu-item">Conquistas</a></button>
+            <button class="nav-item"><a href="/perfil" class="menu-item">Perfil</a></button>
+            <button class="nav-item"><a href="/configuracoes" class="menu-item">Configurações</a></button>
             <button class="nav-item"><a href="/uploads" class="menu-item">Uploads</a></button>
         </nav>
 
         <button class="nav-item"><a href="/login" class="menu-item">Sair</a></button>
-
     </aside>
-
 
     <main class="content">
 
         <h1>Pontos e Recompensas</h1>
         <p class="subtitle">Resgate seus pontos por benefícios incríveis</p>
 
-
         <!-- BOX PRINCIPAL -->
         <section class="points-box">
-
             <div class="my-points">
                 <span class="label">Seus Pontos Disponíveis</span>
                 <h1 th:text="${usuario.pontos}">0</h1>
@@ -57,11 +53,9 @@
             </div>
 
             <div class="icon">✨</div>
-
         </section>
 
-
-        <!-- LOJAS / BENEFÍCIOS DISPONÍVEIS -->
+        <!-- BENEFÍCIOS DISPONÍVEIS -->
         <section class="grid">
 
             <th:block th:each="b : ${disponiveis}">
@@ -74,7 +68,7 @@
                     </div>
 
                     <div class="right">
-                        <h4 th:text="${b.valorExibicao}">Valor</h4>
+
                         <span th:text="${b.pontosNecessarios} + ' pts'"></span>
 
                         <a th:href="@{/beneficios/resgatar/{id}(id=${b.id})}">
@@ -82,32 +76,37 @@
                         </a>
 
                     </div>
+
                 </div>
             </th:block>
 
         </section>
-
 
         <!-- BENEFÍCIOS JÁ RESGATADOS -->
         <h2 style="margin-top:30px">Benefícios Resgatados</h2>
 
         <section class="grid">
 
-            <th:block th:each="r : ${resgatados}">
+            <th:block th:each="b : ${resgates}">
                 <div class="card" style="opacity:0.5">
 
                     <div>
-                        <h3 th:text="${r.nome}"></h3>
-                        <span class="tag" th:text="${r.categoria}"></span>
-                        <p th:text="${r.descricao}"></p>
+                        <h3 th:text="${b.nome}">Nome</h3>
+                        <span class="tag" th:text="${b.categoria}">Categoria</span>
+                        <p th:text="${b.descricao}">Descrição</p>
                     </div>
 
                     <div class="right">
                         <h4>Resgatado</h4>
+                        <span th:text="${#temporals.format(b.dataResgate, 'dd/MM/yyyy HH:mm')}"></span>
                     </div>
 
                 </div>
             </th:block>
+
+            <div th:if="${#lists.isEmpty(resgates)}">
+                <p style="opacity:0.7">Nenhum benefício resgatado ainda.</p>
+            </div>
 
         </section>
 
