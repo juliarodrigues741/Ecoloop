@@ -47,7 +47,7 @@ public class DashboardController {
     @GetMapping("/dashboard")
     public String dashboard(Model model, HttpSession session) {
 
-        // 🟢 1. Usuário logado
+        // 1. Usuário logado
         Usuario u = (Usuario) session.getAttribute("usuario");
         if (u == null) {
             return "redirect:/login";
@@ -55,12 +55,12 @@ public class DashboardController {
 
         Usuario usuario = usuarioDAO.findByEmail(u.getEmail());
 
-        // 🟢 2. Total de kg reciclados
+        //2. Total de kg reciclados
         Double totalKg = materialDAO.sumKgByUsuario(usuario.getId());
         totalKg = (totalKg != null) ? totalKg : 0.0;
         usuario.setTotalKg(totalKg);
 
-        // 🟢 3. Calcular nível do usuário
+        //3. Calcular nível do usuário
         String nivelRequerido;
         if (totalKg >= 50) {
             nivelRequerido = "Ouro";
@@ -75,7 +75,7 @@ public class DashboardController {
         // Atualiza no banco
         usuarioDAO.atualizarNivel_requerido(usuario.getId(), nivelRequerido);
 
-        // 🟢 4. Carregar desafios + progresso
+        //4. Carregar desafios + progresso
         List<UsuarioDesafio> usuarioDesafios =
                 usuarioDesafioDAO.listarDesafiosPorUsuario(usuario.getId());
 
@@ -91,7 +91,7 @@ public class DashboardController {
             ud.setProgresso(progressoAtual);
         }
 
-        // 🟢 5. Carregar conquistas
+        //5. Carregar conquistas
         List<Integer> idsConquistas =
                 usuarioConquistaDAO.listarIdsConquistasPorUsuario(usuario.getId());
 
@@ -107,7 +107,7 @@ public class DashboardController {
 
         usuario.setConquistaPrincipal(principal);
 
-        // 🟢 6. Notificações + pontos
+        //6. Notificações + pontos
         List<Notificacao> notificacoes =
                 notificacaoDAO.findByUsuario(usuario.getId());
 
@@ -118,7 +118,7 @@ public class DashboardController {
             }
         }
 
-        // 🟢 7. Enviar dados para o HTML
+        //7. Enviar dados para o HTML
         model.addAttribute("usuario", usuario);
         model.addAttribute("desafios", usuarioDesafios);
         model.addAttribute("notificacoes", notificacoes);

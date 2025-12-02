@@ -152,7 +152,27 @@ body {
   position: relative;  
 }
   
-/* ícone "usuário" simplificado */  
+/* ícone "usuário" simplificado */ 
+.alert {
+  padding: 12px 18px;
+  border-radius: 10px;
+  font-size: 14px;
+  margin-bottom: 15px;
+}
+
+.alert.success {
+  background: #d7ffdf;
+  color: #1e5a2b;
+  border: 1px solid #8ed9a3;
+}
+
+.alert.error {
+  background: #ffd7d7;
+  color: #7a1a1a;
+  border: 1px solid #e28a8a;
+}
+
+ 
 .settings-icon::before {  
   content: "";  
   position: absolute;  

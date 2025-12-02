@@ -31,9 +31,7 @@ public class DesafioDAO implements DesafioDAOInterface {
         return d;
     };
 
-    // ======================
     // CREATE
-    // ======================
     @Override
     public void adicionarDesafio(Desafio desafio) {
         final String sql = """
@@ -67,9 +65,7 @@ public class DesafioDAO implements DesafioDAOInterface {
         return list.isEmpty() ? null : list.get(0);
     }
 
-    // ======================
     // UPDATE
-    // ======================
     @Override
     public void atualizarDesafio(Desafio desafio) {
         final String sql = """
@@ -91,9 +87,7 @@ public class DesafioDAO implements DesafioDAOInterface {
         );
     }
 
-    // ======================
     // DELETE
-    // ======================
     @Override
     public void removerDesafio(int id) {
         jdbc.update("DELETE FROM desafios WHERE id = ?", id);

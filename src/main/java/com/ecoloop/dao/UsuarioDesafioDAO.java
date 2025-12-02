@@ -18,9 +18,7 @@ public class UsuarioDesafioDAO {
         this.jdbc = jdbc;
     }
 
-    // ------------------------------
     // ADICIONAR USUÁRIO AO DESAFIO
-    // ------------------------------
     public void adicionarUsuarioDesafio(int usuarioId, int desafioId, LocalDateTime dataConclusao) {
         String sql = """
             INSERT INTO usuario_desafios (usuario_id, desafio_id, data_conclusao, progresso)
@@ -33,9 +31,7 @@ public class UsuarioDesafioDAO {
         );
     }
 
-    // ------------------------------
     // LISTAR DESAFIOS DO USUÁRIO COM PROGRESSO REAL
-    // ------------------------------
     public List<UsuarioDesafio> listarDesafiosPorUsuario(int usuarioId) {
 
         String sql = """
@@ -80,9 +76,7 @@ public class UsuarioDesafioDAO {
         }, usuarioId);
     }
 
-    // ------------------------------
     // CALCULAR PROGRESSO BASEADO NO DESAFIO E NO PESO REAL DO USUÁRIO
-    // ------------------------------
     public int calcularProgressoPorDesafio(int usuarioId, int desafioId) {
 
         // 1 — pegar meta e tipo do desafio
@@ -95,7 +89,6 @@ public class UsuarioDesafioDAO {
         if (meta == null || meta == 0) return 0;
         if (tipo == null || tipo.isBlank()) return 0;
 
-        // 2 — total reciclado APENAS do tipo correto
         String sqlAtual = """
             SELECT IFNULL(SUM(peso_kg), 0)
             FROM materiais_enviados
@@ -107,15 +100,12 @@ public class UsuarioDesafioDAO {
         Double atual = jdbc.queryForObject(sqlAtual, Double.class, usuarioId, tipo);
         if (atual == null) atual = 0.0;
 
-        // 3 — porcentagem
         int progresso = (int) ((atual / meta) * 100);
         return Math.min(progresso, 100);
     }
 
 
-    // ------------------------------
     // REMOVER DESAFIO
-    // ------------------------------
     public void removerUsuarioDesafio(int usuarioId, int desafioId) {
         jdbc.update(
                 "DELETE FROM usuario_desafios WHERE usuario_id=? AND desafio_id=?",
@@ -123,9 +113,6 @@ public class UsuarioDesafioDAO {
         );
     }
 
-    // ------------------------------
-    // OPCIONAL: atualizar progresso manualmente
-    // ------------------------------
     public void atualizarProgresso(int usuarioId, int desafioId, int progresso) {
         jdbc.update(
                 "UPDATE usuario_desafios SET progresso=? WHERE usuario_id=? AND desafio_id=?",

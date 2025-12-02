@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EcoLoop - Enviar Material</title>
 
-    <!-- Corrigido para Thymeleaf -->
     <link rel="stylesheet" th:href="@{/enviar.css}">
 </head>
 <body>
@@ -13,10 +12,11 @@
 <div class="container">
 
     <aside class="sidebar">  
-      <div class="logo-row">  
-        <div class="logo-circle"></div>  
-        <span class="logo-text">EcoLoop</span>  
-      </div>
+		<div class="logo-row">  
+		    <img src="https://www.pngegg.com/pngimages/838/936/png-clipart-recycling-symbol-recycling-bin-waste-paper-waste-glass-recycle-angle-logo.png" 
+		         class="logo-circle">
+		    <span class="logo-text">EcoLoop</span>  
+		</div>
   
       <nav class="nav">  
         <button class="nav-item"><a href="/dashboard" class="menu-item">Home</a></button>
@@ -35,6 +35,17 @@
 
         <h1>Enviar Material</h1>
         <p class="subtitle">Envie fotos ou vídeos dos seus materiais recicláveis</p>
+
+        <!--ALERTAS DE ERRO E SUCESSO -->
+        <div th:if="${mensagemSucesso}" class="alert alert_success">
+            <p th:text="${mensagemSucesso}"></p>
+        </div>
+
+        <div th:if="${mensagemErro}" class="alert alert_error">
+            <p th:text="${mensagemErro}"></p>
+        </div>
+        <!--FIM DOS ALERTAS -->
+
 
         <!-- Form para envio -->
         <form action="/enviar" method="post" enctype="multipart/form-data">
@@ -63,33 +74,32 @@
                     </label>
                 </div>
 
-				<div class="material-box">
-				    <label>Tipo de Material</label>
-				    <select name="material" required>
-				        <option value="">Selecione o tipo</option>
-				        <option value="Plástico">Plástico</option>
-				        <option value="Papel">Papel</option>
-				        <option value="Vidro">Vidro</option>
-				        <option value="Metal">Metal</option>
-				        <option value="Eletrônicos">Eletrônicos</option>
-				    </select>
+                <div class="material-box">
+                    <label>Tipo de Material</label>
+                    <select name="material" required>
+                        <option value="">Selecione o tipo</option>
+                        <option value="Plástico">Plástico</option>
+                        <option value="Papel">Papel</option>
+                        <option value="Vidro">Vidro</option>
+                        <option value="Metal">Metal</option>
+                        <option value="Eletrônicos">Eletrônicos</option>
+                    </select>
 
-				    <!-- ➕ CAMPO DE PESO -->
-				    <label style="margin-top: 15px;">Peso (em Kg)</label>
-				    <input type="number" 
-				           name="pesoKg" 
-				           step="0.01" 
-				           min="0" 
-				           placeholder="Ex: 1.25" 
-				           required>
+                    <label style="margin-top: 15px;">Peso (em Kg)</label>
+                    <input type="number" 
+                           name="pesoKg" 
+                           step="0.01" 
+                           min="0" 
+                           placeholder="Ex: 1.25" 
+                           required>
 
-				    <ul class="tips">
-				        <li>Tire fotos claras dos materiais</li>
-				        <li>Separe por tipo de material</li>
-				        <li>Vídeos podem ganhar pontos extras</li>
-				        <li>Materiais limpos são melhor avaliados</li>
-				    </ul>
-				</div>
+                    <ul class="tips">
+                        <li>Tire fotos claras dos materiais</li>
+                        <li>Separe por tipo de material</li>
+                        <li>Vídeos podem ganhar pontos extras</li>
+                        <li>Materiais limpos são melhor avaliados</li>
+                    </ul>
+                </div>
             </section>
 
             <section class="descriptionBox">
@@ -98,7 +108,6 @@
                     placeholder="Ex: 5 garrafas PET, 3 latas de alumínio…"></textarea>
             </section>
 
-            <!-- Corrigido para Thymeleaf -->
             <input type="hidden" name="usuarioId" th:value="${usuario.id}">
 
             <button class="send-btn" type="submit">Enviar Material</button>

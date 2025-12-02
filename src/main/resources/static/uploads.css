@@ -1,4 +1,6 @@
-/* perfil-full.css */  
+/* ===========================
+   GERAL
+=========================== */
 * {  
   margin: 0;  
   padding: 0;  
@@ -106,125 +108,76 @@ body {
   grid-template-columns: 340px 1fr;  
   gap: 20px;  
 }
-  
-/* MAIN */  
-.main {  
-  padding: 22px 32px;  
-  color: #21432b;  
-  display: flex;  
-  flex-direction: column;  
-}
-  
-.main-header h1 {  
-  font-size: 26px;  
-  margin-bottom: 4px;  
-}
-  
-.main-header p {  
-  font-size: 14px;  
-  color: #4a7254;  
-  margin-bottom: 18px;  
+
+/* ===========================
+   CONTEÚDO
+=========================== */
+.content {
+    flex: 1;
+    padding: 40px 60px;
+    overflow-y: auto;
 }
 
-.subtitle{
-    margin-bottom:25px;
+h2 {
+    margin: 0;
+    font-size: 28px;
+    color: #123b2b;
 }
 
-
-/* POINTS BOX */
-
-.points-box{
-    background:#389959;
-    padding:25px;
-    border-radius:15px;
-    display:flex;
-    gap:20px;
-    align-items:flex-start;
-    color:white;
-    position:relative;
+.subtitle {
+    color: #4d6d5c;
+    margin-bottom: 25px;
 }
 
-.points-box .my-points h1{
-    font-size:55px;
+/* Card */
+.card {
+    background: white;
+    border-radius: 14px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
 }
 
-.points-box .unit{
-    font-size:18px;
+/* ===========================
+   LISTAGEM DE UPLOADS
+=========================== */
+.upload-item {
+    padding: 12px 0;
+    border-bottom: 1px solid #e0e0e0;
 }
 
-.points-box .small{
-    background:rgba(255,255,255,.1);
-    padding:15px;
-    border-radius:8px;
-    width:200px;
+.upload-title {
+    color: #0e4632;
+    font-size: 16px;
 }
 
-.points-box .icon{
-    position:absolute;
-    right:25px;
-    top:25px;
-    font-size:40px;
-    opacity:.8;
+.upload-link {
+    text-decoration: none;
+    color: #0e5a36 !important;
 }
 
-
-/* TABS */
-.tabs{
-    margin-top:25px;
-    margin-bottom:25px;
+.upload-link:hover {
+    text-decoration: underline;
 }
 
-.tabs button{
-    padding:8px 20px;
-    border-radius:25px;
-    border:1px solid #0b502d;
-    background:white;
-    cursor:pointer;
-    margin-right:8px;
+/* Status colorido */
+.upload-status {
+    padding: 6px 14px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: capitalize;
 }
 
-.tabs button.active{
-    background:#0b502d;
-    color:white;
+.status-green {
+    background-color: #d4f4dd;
+    color: #1b7a38;
 }
 
-
-/* GRID */
-.grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:20px;
+.status-red {
+    background-color: #f8d1d1;
+    color: #a32121;
 }
 
-
-/* CARD */
-.card{
-    background:white;
-    padding:20px;
-    border-radius:18px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-}
-
-.card .tag{
-    font-size:11px;
-    padding:3px 8px;
-    border-radius:10px;
-    background:#d0ead8;
-}
-
-.card .right{
-    text-align:right;
-}
-
-.card button{
-    width:150px;
-    padding:10px;
-    border-radius:8px;
-    border:none;
-    margin-top:8px;
-    background:#2c7e47;
-    color:white;
-    cursor:pointer;
+.status-yellow {
+    background-color: #fff2c2;
+    color: #a88214;
 }

@@ -1,3 +1,4 @@
+/* perfil-full.css */  
 * {  
   margin: 0;  
   padding: 0;  
@@ -6,17 +7,17 @@
 }
   
 body {  
-  background: #97d6aa;  
+  background: #9fd4a7;  
 }
-
-.container{
-    display: grid;  
+  
+/* SIDEBAR */  
+.app {  
+  display: grid;  
   grid-template-columns: 240px minmax(0, 1fr);  
-  min-height: 100vh;
+  min-height: 100vh;  
 }
-
-
-/* MENU LATERAL */
+  
+/* SIDEBAR */  
 .sidebar {  
   background: #1f5a34;  
   color: #ecfff1;  
@@ -105,11 +106,24 @@ body {
   grid-template-columns: 340px 1fr;  
   gap: 20px;  
 }
-
-/* CONTEÚDO PRINCIPAL */
-.content{
-    padding: 40px;
-    flex: 1;
+  
+/* MAIN */  
+.main {  
+  padding: 22px 32px;  
+  color: #21432b;  
+  display: flex;  
+  flex-direction: column;  
+}
+  
+.main-header h1 {  
+  font-size: 26px;  
+  margin-bottom: 4px;  
+}
+  
+.main-header p {  
+  font-size: 14px;  
+  color: #4a7254;  
+  margin-bottom: 18px;  
 }
 
 .subtitle{

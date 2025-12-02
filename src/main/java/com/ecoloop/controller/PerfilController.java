@@ -51,7 +51,7 @@ public class PerfilController {
             usuario.setFotoPerfil("/imagens/default-user.png");
         }
 
-        // 🔥 AQUI: soma total reciclado
+        //soma total reciclado
         Double totalKg = materialEnviadoDAO.sumKgByUsuario(usuario.getId());
 
      // --- reciclagens aprovadas ---
@@ -60,21 +60,21 @@ public class PerfilController {
                 .filter(m -> "aprovado".equalsIgnoreCase(m.getStatus()))
                 .toList();
 
-        // 🔥 total de uploads aprovados
+        //total de uploads aprovados
         int totalUploadsAprovados = reciclagens.size();
         model.addAttribute("totalUploadsAprovados", totalUploadsAprovados);
 
-        // 🔥 calcular CO2 baseado no peso total
+        //calcular CO2 baseado no peso total
         double co2Economizado = totalKg * 1.5; // ajuste o multiplicador se quiser
 
         int arvoresSalvas = (int) (totalKg / 20);
 
         List<BeneficioResgatado> resgates = beneficioResgatadoDAO.buscarResgatados(usuario.getId());
         
-     // --- definir pontos por nível ---
-        int nivelAtual = 5; // exemplo: usuário está no nível 5
-        int nivelAlvo = nivelAtual + 1; // próximo nível
-        int pontosParaProximoNivel = 600; // por exemplo, Nível 6 exige 600 pontos
+     // definir pontos por nível
+        int nivelAtual = 5; // 
+        int nivelAlvo = nivelAtual + 1; // 
+        int pontosParaProximoNivel = 600; // 
 
         int pontosAtuais = usuario.getPontos();
         int pontosFaltando = Math.max(pontosParaProximoNivel - pontosAtuais, 0);
@@ -87,7 +87,7 @@ public class PerfilController {
         model.addAttribute("arvoresSalvas", arvoresSalvas);
         model.addAttribute("co2Economizado", co2Economizado);
         model.addAttribute("usuario", usuario);
-        model.addAttribute("totalKg", totalKg); // 🔥 Enviado para a view
+        model.addAttribute("totalKg", totalKg); 
         model.addAttribute("reciclagens", reciclagens);
         model.addAttribute("resgates", resgates);
         model.addAttribute("aba", aba);

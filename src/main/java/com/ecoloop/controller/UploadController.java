@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -23,7 +24,6 @@ public class UploadController {
     @Autowired
     private MaterialEnviadoDAO materialDAO;
 
-    // Página de envio
     @GetMapping("/enviar")
     public String enviarPage(HttpSession session, Model model) {
 
@@ -38,7 +38,6 @@ public class UploadController {
         return "enviar";
     }
 
-    // RECEBE ARQUIVOS E SALVA NO /static/uploads
     @PostMapping("/enviar")
     public String enviarMaterial(
             @RequestParam("files") MultipartFile[] files,
@@ -46,19 +45,20 @@ public class UploadController {
             @RequestParam(value = "descricao", required = false) String descricao,
             @RequestParam("usuarioId") Integer usuarioId,
             @RequestParam("pesoKg") Double pesoKg,
-            HttpSession session
+            HttpSession session,
+            RedirectAttributes ra
     ) throws Exception {
 
         Usuario usuario = (Usuario) session.getAttribute("usuario");
 
         if (usuario == null) {
+            ra.addFlashAttribute("mensagemErro", "Você precisa estar logado.");
             return "redirect:/login";
         }
 
-        System.out.println("Recebendo upload... usuarioId=" + usuarioId + " | pesoKg=" + pesoKg);
-
         if (files == null || files.length == 0) {
-            return "redirect:/enviar?erro=arquivo";
+            ra.addFlashAttribute("mensagemErro", "Nenhum arquivo enviado.");
+            return "redirect:/enviar";
         }
 
         String staticPath = System.getProperty("user.dir") +
@@ -67,9 +67,13 @@ public class UploadController {
         File pasta = new File(staticPath);
         if (!pasta.exists()) pasta.mkdirs();
 
+        boolean peloMenosUm = false;
+
         for (MultipartFile file : files) {
 
             if (file.isEmpty()) continue;
+
+            peloMenosUm = true;
 
             String nomeArquivo = System.currentTimeMillis() + "_" + file.getOriginalFilename();
             Path caminho = Paths.get(staticPath + nomeArquivo);
@@ -89,14 +93,17 @@ public class UploadController {
             m.setPontosGerados(0);
 
             materialDAO.create(m);
-
-            System.out.println("Arquivo salvo: " + caminhoWeb + " | PESO=" + pesoKg);
         }
 
-        return "redirect:/dashboard";
+        if (!peloMenosUm) {
+            ra.addFlashAttribute("mensagemErro", "Nenhum arquivo válido foi enviado.");
+            return "redirect:/enviar";
+        }
+
+        ra.addFlashAttribute("mensagemSucesso", "Material enviado com sucesso! Aguarde a avaliação.");
+        return "redirect:/enviar";
     }
 
-    // PÁGINA DE LISTAGEM DE UPLOADS DO USUÁRIO
     @GetMapping("/uploads")
     public String uploadsPage(HttpSession session, Model model) {
 
@@ -106,7 +113,6 @@ public class UploadController {
             return "redirect:/login";
         }
 
-        // BUSCA TODOS OS ARQUIVOS DO USUÁRIO
         model.addAttribute("uploads", materialDAO.findAllByUsuario(usuario.getId()));
 
         return "uploads";

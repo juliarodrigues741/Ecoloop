@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8" />
   <title>Configurações - EcoLoop</title>
-  <link rel="stylesheet" href="configuracoes.css" />
+  <link rel="stylesheet" href="/configuracoes.css" />
 </head>
+
 <body>
   <div class="app">
 
@@ -16,35 +17,54 @@
       </div>
 
       <nav class="nav">
-        <button class="nav-item"><a href="/dashboard" class="menu-item">Home</a></button>
-        <button class="nav-item"><a href="/enviar" class="menu-item">Enviar</a></button>
-        <button class="nav-item"><a href="/beneficios" class="menu-item">Benefícios</a></button>
-        <button class="nav-item"><a href="/conquistas" class="menu-item">Conquistas</a></button>
-        <button class="nav-item"><a href="/perfil" class="menu-item">Perfil</a></button>
-        <button class="nav-item active"><a href="/configuracoes" class="menu-item">Configurações</a></button>
-        <button class="nav-item"><a href="/uploads" class="menu-item">Uploads</a></button>
+        <button class="nav-item"><a th:href="@{/dashboard}" class="menu-item">Home</a></button>
+        <button class="nav-item"><a th:href="@{/enviar}" class="menu-item">Enviar</a></button>
+        <button class="nav-item"><a th:href="@{/beneficios}" class="menu-item">Benefícios</a></button>
+        <button class="nav-item"><a th:href="@{/conquistas}" class="menu-item">Conquistas</a></button>
+        <button class="nav-item"><a th:href="@{/perfil}" class="menu-item">Perfil</a></button>
+        <button class="nav-item active"><a th:href="@{/configuracoes}" class="menu-item">Configurações</a></button>
+        <button class="nav-item"><a th:href="@{/uploads}" class="menu-item">Uploads</a></button>
       </nav>
 
       <button class="nav-item">
-        <a href="/login" class="menu-item">Sair</a>
+        <a th:href="@{/login}" class="menu-item">Sair</a>
       </button>
     </aside>
 
-    <!-- CONTEÚDO PRINCIPAL -->
+    <!-- MAIN CONTENT -->
     <main class="main">
+
       <header class="page-header">
         <h1>Configurações</h1>
         <p>Gerencie suas preferências e conta</p>
       </header>
+	  
+	  <!-- MENSAGENS DE RETORNO -->
+	  <div th:if="${param.sucesso}" class="alert success">
+	    Configurações alteradas com sucesso!
+	  </div>
+
+	  <div th:if="${param.emailAlterado}" class="alert success">
+	    Email alterado com sucesso!
+	  </div>
+
+	  <div th:if="${param.senhaAlterada}" class="alert success">
+	    Senha alterada com sucesso!
+	  </div>
+
+	  <div th:if="${param.erroSenha}" class="alert error">
+	    A senha atual está incorreta.
+	  </div>
 
       <section class="settings-card">
+
         <header class="settings-header">
           <div class="settings-icon"></div>
           <span class="settings-title">Perfil</span>
         </header>
 
-        <!-- FORM - ALTERAR EMAIL -->
-        <form class="settings-form" method="post" action="/configuracoes/alterar-email">
+        <!-- ALTERAR EMAIL -->
+        <form class="settings-form" th:action="@{/configuracoes/alterar-email}" method="post">
 
           <div class="form-group">
             <label for="username">Nome de usuário</label>
@@ -59,12 +79,13 @@
           <div class="form-footer">
             <button type="submit" class="btn-save">Alterar Email</button>
           </div>
+
         </form>
 
         <hr />
 
-        <!-- FORM - ALTERAR SENHA -->
-        <form class="settings-form" method="post" action="/configuracoes/alterar-senha">
+        <!-- ALTERAR SENHA -->
+        <form class="settings-form" th:action="@{/configuracoes/alterar-senha}" method="post">
 
           <div class="form-group">
             <label for="senhaAtual">Senha atual</label>
@@ -79,32 +100,33 @@
           <div class="form-footer">
             <button type="submit" class="btn-save">Alterar Senha</button>
           </div>
+
         </form>
 
         <hr />
 
-        <!-- FORM - CONFIGURAÇÕES DO SISTEMA -->
-        <form class="settings-form" method="post" action="/configuracoes">
+        <!-- PREFERÊNCIAS DO USUÁRIO -->
+        <form class="settings-form" th:action="@{/configuracoes}" method="post">
 
           <div class="form-group">
             <label for="idioma">Idioma</label>
             <select id="idioma" name="idioma">
-              <option value="pt" th:selected="${config != null and config.idioma == 'pt'}">Português</option>
-              <option value="en" th:selected="${config != null and config.idioma == 'en'}">Inglês</option>
-              <option value="es" th:selected="${config != null and config.idioma == 'es'}">Espanhol</option>
+              <option value="pt" th:selected="${config.idioma == 'pt'}">Português</option>
+              <option value="en" th:selected="${config.idioma == 'en'}">Inglês</option>
+              <option value="es" th:selected="${config.idioma == 'es'}">Espanhol</option>
             </select>
           </div>
 
           <div class="form-group">
             <label>
-              <input type="checkbox" name="temaEscuro" th:checked="${config != null and config.temaEscuro}" />
+              <input type="checkbox" name="temaEscuro" th:checked="${config.temaEscuro}" />
               Tema escuro
             </label>
           </div>
 
           <div class="form-group">
             <label>
-              <input type="checkbox" name="notificacaoEmail" th:checked="${config != null and config.notificacaoEmail}" />
+              <input type="checkbox" name="notificacaoEmail" th:checked="${config.notificacaoEmail}" />
               Receber notificações por email
             </label>
           </div>
@@ -116,7 +138,9 @@
         </form>
 
       </section>
+
     </main>
+
   </div>
 </body>
 </html>

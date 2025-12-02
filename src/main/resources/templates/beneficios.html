@@ -31,8 +31,17 @@
 
     <main class="content">
 
-        <h1>Pontos e Recompensas</h1>
-        <p class="subtitle">Resgate seus pontos por benefícios incríveis</p>
+		<h1>Pontos e Recompensas</h1>
+		<p class="subtitle">Resgate seus pontos por benefícios incríveis</p>
+
+		<div th:if="${mensagemSucesso}" class="alert success">
+		    <p th:text="${mensagemSucesso}"></p>
+		</div>
+
+		<div th:if="${mensagemErro}" class="alert error">
+		    <p th:text="${mensagemErro}"></p>
+		</div>
+		
 
         <!-- BOX PRINCIPAL -->
         <section class="points-box">
