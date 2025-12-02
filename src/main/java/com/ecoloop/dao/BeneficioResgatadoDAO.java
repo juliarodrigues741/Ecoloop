@@ -1,5 +1,6 @@
 package com.ecoloop.dao;
 
+import com.ecoloop.dao.interfaces.BeneficioResgatadoDAOInterface;
 import com.ecoloop.model.BeneficioResgatado;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -7,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class BeneficioResgatadoDAO {
+public class BeneficioResgatadoDAO implements BeneficioResgatadoDAOInterface {
 
     private final JdbcTemplate db;
 
@@ -15,11 +16,13 @@ public class BeneficioResgatadoDAO {
         this.db = db;
     }
 
+    @Override
     public List<Integer> buscarIdsResgatados(Integer usuarioId) {
         String sql = "SELECT beneficio_id FROM beneficios_resgatados WHERE usuario_id = ?";
         return db.query(sql, (rs, rowNum) -> rs.getInt("beneficio_id"), usuarioId);
     }
 
+    @Override
     public List<BeneficioResgatado> buscarResgatados(Integer usuarioId) {
 
         String sql = """
@@ -57,6 +60,7 @@ public class BeneficioResgatadoDAO {
         }, usuarioId);
     }
 
+    @Override
     public void salvarResgate(Integer usuarioId, Integer beneficioId) {
         String sql = "INSERT INTO beneficios_resgatados (usuario_id, beneficio_id, data_resgate) VALUES (?, ?, NOW())";
         db.update(sql, usuarioId, beneficioId);

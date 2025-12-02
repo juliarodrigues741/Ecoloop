@@ -1,5 +1,6 @@
 package com.ecoloop.dao;
 
+import com.ecoloop.dao.interfaces.RankingLocalDAOInterface;
 import com.ecoloop.model.RankingLocal;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -8,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class RankingLocalDAO {
+public class RankingLocalDAO implements RankingLocalDAOInterface {
 
     private final JdbcTemplate jdbc;
 
@@ -16,6 +17,18 @@ public class RankingLocalDAO {
         this.jdbc = jdbc;
     }
 
+    private final RowMapper<RankingLocal> mapper = (rs, n) -> {
+        RankingLocal r = new RankingLocal();
+        r.setId(rs.getInt("id"));
+        r.setUsuarioId(rs.getInt("usuario_id"));
+        r.setPontos(rs.getInt("pontos"));
+        r.setPosicao(null); // Não vem do banco
+
+        r.setNomeUsuario(rs.getString("nome_usuario"));
+        return r;
+    };
+
+    @Override
     public List<RankingLocal> getRankingLocal() {
 
         String sql = """
@@ -32,19 +45,7 @@ public class RankingLocalDAO {
         return jdbc.query(sql, mapper);
     }
 
-    private RowMapper<RankingLocal> mapper = (rs, n) -> {
-        RankingLocal r = new RankingLocal();
-        r.setId(rs.getInt("id"));
-        r.setUsuarioId(rs.getInt("usuario_id"));
-        r.setPontos(rs.getInt("pontos"));
-        r.setPosicao(null);
-
-        // ➕ nome do usuário vindo do JOIN
-        r.setNomeUsuario(rs.getString("nome_usuario"));
-
-        return r;
-    };
-
+    @Override
     public Integer create(RankingLocal r) {
         String sql = """
             INSERT INTO ranking_local (usuario_id, posicao, pontos)
@@ -60,6 +61,7 @@ public class RankingLocalDAO {
         return jdbc.queryForObject("SELECT LAST_INSERT_ID()", Integer.class);
     }
 
+    @Override
     public boolean update(RankingLocal r) {
         String sql = """
             UPDATE ranking_local SET usuario_id=?, posicao=?, pontos=? WHERE id=?
@@ -73,6 +75,7 @@ public class RankingLocalDAO {
         ) > 0;
     }
 
+    @Override
     public RankingLocal findByUsuarioId(int usuarioId) {
 
         String sql = """
@@ -90,6 +93,7 @@ public class RankingLocalDAO {
         return list.isEmpty() ? null : list.get(0);
     }
 
+    @Override
     public List<RankingLocal> topN(int n) {
 
         String sql = """
@@ -107,6 +111,7 @@ public class RankingLocalDAO {
         return jdbc.query(sql, mapper, n);
     }
 
+    @Override
     public boolean delete(int id) {
         return jdbc.update("DELETE FROM ranking_local WHERE id=?", id) > 0;
     }

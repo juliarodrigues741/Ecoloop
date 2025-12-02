@@ -1,5 +1,6 @@
 package com.ecoloop.dao;
 
+import com.ecoloop.dao.interfaces.UsuarioConquistaDAOInterface;
 import com.ecoloop.model.ConquistaDoUsuario;
 import com.ecoloop.model.UsuarioConquista;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class UsuarioConquistaDAO {
+public class UsuarioConquistaDAO implements UsuarioConquistaDAOInterface {
 
     private final JdbcTemplate jdbc;
 
@@ -25,13 +26,13 @@ public class UsuarioConquistaDAO {
         return uc;
     };
 
-    // Listar IDs de conquistas de um usuário
+    @Override
     public List<Integer> listarIdsConquistasPorUsuario(int usuarioId) {
         String sql = "SELECT conquista_id FROM usuarios_conquistas WHERE usuario_id=?";
         return jdbc.queryForList(sql, Integer.class, usuarioId);
     }
 
-    // Adicionar conquista a um usuário
+    @Override
     public boolean addConquista(int usuarioId, int conquistaId) {
         String sql = """
             INSERT INTO usuarios_conquistas (usuario_id, conquista_id)
@@ -40,7 +41,7 @@ public class UsuarioConquistaDAO {
         return jdbc.update(sql, usuarioId, conquistaId) > 0;
     }
 
-    // Remover conquista de um usuário
+    @Override
     public boolean removeConquista(int usuarioId, int conquistaId) {
         String sql = """
             DELETE FROM usuarios_conquistas 
@@ -49,7 +50,7 @@ public class UsuarioConquistaDAO {
         return jdbc.update(sql, usuarioId, conquistaId) > 0;
     }
 
-    // Buscar conquistas completas de um usuário
+    @Override
     public List<UsuarioConquista> findByUsuario(int usuarioId) {
         String sql = """
             SELECT *
@@ -60,7 +61,7 @@ public class UsuarioConquistaDAO {
         return jdbc.query(sql, mapper, usuarioId);
     }
 
-    // Listar IDs de conquistas de forma alternativa
+    @Override
     public List<Integer> findConquistaIdsByUsuario(int usuarioId) {
         String sql = """
             SELECT conquista_id
@@ -70,7 +71,7 @@ public class UsuarioConquistaDAO {
         return jdbc.query(sql, (rs, n) -> rs.getInt("conquista_id"), usuarioId);
     }
 
-    // Deletar todas conquistas de um usuário
+    @Override
     public void deleteAllByUsuario(int usuarioId) {
         String sql = """
             DELETE FROM usuarios_conquistas
@@ -79,7 +80,7 @@ public class UsuarioConquistaDAO {
         jdbc.update(sql, usuarioId);
     }
 
-    // Buscar conquistas completas com detalhes
+    @Override
     public List<ConquistaDoUsuario> findConquistasCompletasByUsuario(int usuarioId) {
         String sql = """
             SELECT c.id, c.titulo, c.descricao, c.imagem_url,

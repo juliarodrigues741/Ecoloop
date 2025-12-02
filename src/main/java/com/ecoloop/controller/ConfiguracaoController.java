@@ -1,7 +1,7 @@
 package com.ecoloop.controller;
 
-import com.ecoloop.dao.ConfiguracoesUsuarioDAO;
-import com.ecoloop.dao.UsuarioDAO;
+import com.ecoloop.dao.interfaces.ConfiguracoesUsuarioDAOInterface;
+import com.ecoloop.dao.interfaces.UsuarioDAOInterface;
 import com.ecoloop.model.ConfiguracoesUsuario;
 import com.ecoloop.model.Usuario;
 import jakarta.servlet.http.HttpSession;
@@ -12,10 +12,11 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class ConfiguracaoController {
 
-    private final ConfiguracoesUsuarioDAO configDAO;
-    private final UsuarioDAO usuarioDAO;
+    private final ConfiguracoesUsuarioDAOInterface configDAO;
+    private final UsuarioDAOInterface usuarioDAO;
 
-    public ConfiguracaoController(ConfiguracoesUsuarioDAO configDAO, UsuarioDAO usuarioDAO) {
+    public ConfiguracaoController(ConfiguracoesUsuarioDAOInterface configDAO, 
+    							  UsuarioDAOInterface usuarioDAO) {
         this.configDAO = configDAO;
         this.usuarioDAO = usuarioDAO;
     }

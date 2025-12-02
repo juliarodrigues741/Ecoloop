@@ -1,5 +1,6 @@
 package com.ecoloop.dao;
 
+import com.ecoloop.dao.interfaces.UsuarioDAOInterface;
 import com.ecoloop.model.Usuario;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -8,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class UsuarioDAO {
+public class UsuarioDAO implements UsuarioDAOInterface {
 
     private final JdbcTemplate jdbc;
 
@@ -37,6 +38,7 @@ public class UsuarioDAO {
     // LOGIN / BUSCAS
     // =====================
 
+    @Override
     public Usuario findByEmail(String email) {
         List<Usuario> list = jdbc.query(
                 "SELECT * FROM usuarios WHERE email=?",
@@ -46,6 +48,7 @@ public class UsuarioDAO {
         return list.isEmpty() ? null : list.get(0);
     }
 
+    @Override
     public Usuario findById(Integer id) {
         List<Usuario> list = jdbc.query(
                 "SELECT * FROM usuarios WHERE id=?",
@@ -55,10 +58,12 @@ public class UsuarioDAO {
         return list.isEmpty() ? null : list.get(0);
     }
 
+    @Override
     public List<Usuario> findAll() {
         return jdbc.query("SELECT * FROM usuarios ORDER BY id DESC", mapper);
     }
 
+    @Override
     public int countAll() {
         return jdbc.queryForObject("SELECT COUNT(*) FROM usuarios", Integer.class);
     }
@@ -67,6 +72,7 @@ public class UsuarioDAO {
     // CREATE / UPDATE / DELETE
     // =====================
 
+    @Override
     public boolean create(Usuario u) {
 
         if (u.getNivel() == null || u.getNivel().isBlank()) u.setNivel("Bronze");
@@ -89,6 +95,7 @@ public class UsuarioDAO {
         ) > 0;
     }
 
+    @Override
     public boolean update(Usuario u) {
         String sql = """
             UPDATE usuarios 
@@ -108,10 +115,12 @@ public class UsuarioDAO {
         ) > 0;
     }
 
+    @Override
     public boolean delete(Integer id) {
         return jdbc.update("DELETE FROM usuarios WHERE id=?", id) > 0;
     }
 
+    @Override
     public boolean addPoints(int userId, int pontos) {
         return jdbc.update(
                 "UPDATE usuarios SET pontos = pontos + ? WHERE id=?",
@@ -119,10 +128,7 @@ public class UsuarioDAO {
         ) > 0;
     }
 
-    // =====================
-    // ATUALIZAR NÍVEL — MÉTODO QUE FALTAVA
-    // =====================
-
+    @Override
     public boolean atualizarNivel_requerido(Integer id, String nivel) {
         String sql = "UPDATE usuarios SET nivel=? WHERE id=?";
         return jdbc.update(sql, nivel, id) > 0;

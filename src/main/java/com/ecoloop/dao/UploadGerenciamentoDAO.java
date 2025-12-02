@@ -1,5 +1,7 @@
 package com.ecoloop.dao;
 
+import com.ecoloop.dao.interfaces.MaterialEnviadoDAOInterface;
+import com.ecoloop.dao.interfaces.UploadGerenciamentoDAOInterface;
 import com.ecoloop.model.MaterialEnviado;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -8,16 +10,17 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-public class UploadGerenciamentoDAO {
+public class UploadGerenciamentoDAO implements UploadGerenciamentoDAOInterface {
 
     private final JdbcTemplate jdbc;
-    private final MaterialEnviadoDAO materialDAO;
+    private final MaterialEnviadoDAOInterface materialDAO;
 
-    public UploadGerenciamentoDAO(JdbcTemplate jdbc, MaterialEnviadoDAO materialDAO) {
+    public UploadGerenciamentoDAO(JdbcTemplate jdbc, MaterialEnviadoDAOInterface materialDAO) {
         this.jdbc = jdbc;
         this.materialDAO = materialDAO;
     }
 
+    @Override
     public List<MaterialEnviado> listarPorStatus(String status) {
         return jdbc.query(
             "SELECT id FROM materiais_enviados WHERE status=? ORDER BY data_envio DESC",
@@ -26,6 +29,7 @@ public class UploadGerenciamentoDAO {
         );
     }
 
+    @Override
     public boolean aprovar(int id, int pontos, String comentario) {
         String sql = """
             UPDATE materiais_enviados SET
@@ -44,6 +48,7 @@ public class UploadGerenciamentoDAO {
         ) > 0;
     }
 
+    @Override
     public boolean recusar(int id, String comentario) {
         String sql = """
             UPDATE materiais_enviados SET

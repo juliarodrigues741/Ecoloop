@@ -1,5 +1,6 @@
 package com.ecoloop.dao;
 
+import com.ecoloop.dao.interfaces.BeneficioDAOInterface;
 import com.ecoloop.model.Beneficio;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -8,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class BeneficioDAO {
+public class BeneficioDAO implements BeneficioDAOInterface {
 
     private final JdbcTemplate jdbc;
 
@@ -16,7 +17,7 @@ public class BeneficioDAO {
         this.jdbc = jdbc;
     }
 
-    private RowMapper<Beneficio> mapper = (rs, rowNum) -> {
+    private final RowMapper<Beneficio> mapper = (rs, rowNum) -> {
         Beneficio b = new Beneficio();
         b.setId(rs.getInt("id"));
         b.setNome(rs.getString("nome"));
@@ -27,6 +28,7 @@ public class BeneficioDAO {
         return b;
     };
 
+    @Override
     public Integer create(Beneficio b) {
         String sql = """
             INSERT INTO beneficios (nome, descricao, categoria, pontos_necessarios, imagem_url)
@@ -44,6 +46,7 @@ public class BeneficioDAO {
         return jdbc.queryForObject("SELECT LAST_INSERT_ID()", Integer.class);
     }
 
+    @Override
     public boolean update(Beneficio b) {
         String sql = """
             UPDATE beneficios
@@ -61,18 +64,22 @@ public class BeneficioDAO {
         ) > 0;
     }
 
+    @Override
     public boolean delete(int id) {
         return jdbc.update("DELETE FROM beneficios WHERE id=?", id) > 0;
     }
 
+    @Override
     public Beneficio findById(int id) {
         List<Beneficio> list = jdbc.query(
                 "SELECT * FROM beneficios WHERE id=?",
-                mapper, id
+                mapper,
+                id
         );
         return list.isEmpty() ? null : list.get(0);
     }
 
+    @Override
     public List<Beneficio> findAll() {
         return jdbc.query("SELECT * FROM beneficios ORDER BY pontos_necessarios ASC", mapper);
     }

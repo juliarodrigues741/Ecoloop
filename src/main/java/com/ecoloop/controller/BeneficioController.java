@@ -1,10 +1,10 @@
 package com.ecoloop.controller;
 
 import com.ecoloop.model.Usuario;
-import com.ecoloop.dao.UsuarioDAO;
+import com.ecoloop.dao.interfaces.BeneficioDAOInterface;
+import com.ecoloop.dao.interfaces.BeneficioResgatadoDAOInterface;
+import com.ecoloop.dao.interfaces.UsuarioDAOInterface;
 import com.ecoloop.model.Beneficio;
-import com.ecoloop.dao.BeneficioDAO;
-import com.ecoloop.dao.BeneficioResgatadoDAO;
 import com.ecoloop.model.BeneficioResgatado;
 
 import org.springframework.stereotype.Controller;
@@ -20,13 +20,13 @@ import java.util.List;
 @Controller
 public class BeneficioController {
 
-    private final BeneficioDAO beneficioDAO;
-    private final UsuarioDAO usuarioDAO;
-    private final BeneficioResgatadoDAO beneficioResgatadoDAO;
+    private final BeneficioDAOInterface beneficioDAO;
+    private final UsuarioDAOInterface usuarioDAO;
+    private final BeneficioResgatadoDAOInterface beneficioResgatadoDAO;
 
-    public BeneficioController(BeneficioDAO beneficioDAO,
-                               UsuarioDAO usuarioDAO,
-                               BeneficioResgatadoDAO beneficioResgatadoDAO) {
+    public BeneficioController(BeneficioDAOInterface beneficioDAO,
+    						   UsuarioDAOInterface usuarioDAO,
+    						   BeneficioResgatadoDAOInterface beneficioResgatadoDAO) {
         this.beneficioDAO = beneficioDAO;
         this.usuarioDAO = usuarioDAO;
         this.beneficioResgatadoDAO = beneficioResgatadoDAO;
