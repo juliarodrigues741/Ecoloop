@@ -33,7 +33,6 @@ public class UploadController {
             return "redirect:/login";
         }
 
-        // manda para o HTML
         model.addAttribute("usuario", usuario);
 
         return "enviar";
@@ -46,7 +45,7 @@ public class UploadController {
             @RequestParam("material") String tipoMaterial,
             @RequestParam(value = "descricao", required = false) String descricao,
             @RequestParam("usuarioId") Integer usuarioId,
-            @RequestParam("pesoKg") Double pesoKg, // <-- AQUI ESTAVA FALTANDO
+            @RequestParam("pesoKg") Double pesoKg,
             HttpSession session
     ) throws Exception {
 
@@ -86,9 +85,7 @@ public class UploadController {
             m.setTipoMaterial(tipoMaterial);
             m.setTipoArquivo(file.getContentType().startsWith("video") ? "video" : "foto");
             m.setStatus("pendente");
-
-            m.setPesoKg(pesoKg);  // <-- AGORA SALVA O PESO CERTO
-
+            m.setPesoKg(pesoKg);
             m.setPontosGerados(0);
 
             materialDAO.create(m);
@@ -99,17 +96,19 @@ public class UploadController {
         return "redirect:/dashboard";
     }
 
-
-
-    // PÁGINA ADMIN
+    // PÁGINA DE LISTAGEM DE UPLOADS DO USUÁRIO
     @GetMapping("/uploads")
     public String uploadsPage(HttpSession session, Model model) {
 
-        if (session.getAttribute("usuario") == null) {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+
+        if (usuario == null) {
             return "redirect:/login";
         }
 
-        model.addAttribute("uploads", materialDAO.findAllPendentes());
+        // BUSCA TODOS OS ARQUIVOS DO USUÁRIO
+        model.addAttribute("uploads", materialDAO.findAllByUsuario(usuario.getId()));
+
         return "uploads";
     }
 }

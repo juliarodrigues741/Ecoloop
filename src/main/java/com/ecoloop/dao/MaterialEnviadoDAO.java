@@ -110,4 +110,16 @@ public class MaterialEnviadoDAO implements MaterialEnviadoDAOInterface {
     public boolean delete(int id) {
         return jdbc.update("DELETE FROM materiais_enviados WHERE id=?", id) > 0;
     }
+    
+    public List<MaterialEnviado> findAllByUsuario(Integer usuarioId) {
+        String sql = """
+            SELECT *
+            FROM materiais_enviados
+            WHERE usuario_id=?
+            ORDER BY data_envio DESC
+        """;
+
+        return jdbc.query(sql, mapper, usuarioId);
+    }
+
 }

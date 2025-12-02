@@ -133,4 +133,10 @@ public class UsuarioDAO implements UsuarioDAOInterface {
         String sql = "UPDATE usuarios SET nivel=? WHERE id=?";
         return jdbc.update(sql, nivel, id) > 0;
     }
+    
+    public boolean updateSenha(int id, String novaSenha) {
+        String sql = "UPDATE usuarios SET senha_hash = ? WHERE id = ?";
+        return jdbc.update(sql, novaSenha, id) > 0;
+    }
+
 }

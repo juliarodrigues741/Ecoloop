@@ -1,68 +1,77 @@
 <!doctype html>
-<html lang="pt-BR">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Uploads - Ecoloop</title>
-<link rel="stylesheet" href="/styles.css"></head>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Uploads - Ecoloop</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+
 <body>
-  
-  <div class="app">
-  
-  <aside class="sidebar">  
-      <div class="logo-row">  
-        <div class="logo-circle"></div>  
-        <span class="logo-text">EcoLoop</span>  
-      </div>
-  
-      <nav class="nav">  
-        <button class="nav-item">  
-          <span ><a href="/dashboard" class="menu-item">Home</a></span> 
-        </button>  
-        <button class="nav-item">  
-          <span ><a href="/enviar" class="menu-item">Enviar</a></span> 
-        </button>  
-        <button class="nav-item">  
-          <span ><a href="/beneficios" class="menu-item">Benefícios</a></span>   
-        </button>  
-        <button class="nav-item">  
-          <span ><a href="/conquistas" class="menu-item">Conquistas</a></span>  
-        </button>  
-        <button class="nav-item">  
-          <span ><a href="/perfil" class="menu-item">Perfil</a></span>   
-        </button>  
-        <button class="nav-item">  
-          <span ><a href="/configuracoes" class="menu-item">Configurações</a></span>   
-        </button>  
-        <button class="nav-item active">  
-          <span ><a href="/uploads" class="menu-item">Uploads</a></span>   
-        </button>  
-      </nav>
-  
-      <button class="nav-item">
-        <span ><a href="/login" class="menu-item">Sair</a></span> 
-      </button>  
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="logo-row">
+            <div class="logo-circle"></div>
+            <span class="logo-text">EcoLoop</span>
+        </div>
+
+        <nav class="nav">
+            <button class="nav-item"><a href="/dashboard" class="menu-item">Home</a></button>
+            <button class="nav-item"><a href="/enviar" class="menu-item">Enviar</a></button>
+            <button class="nav-item"><a href="/beneficios" class="menu-item">Benefícios</a></button>
+            <button class="nav-item"><a href="/conquistas" class="menu-item">Conquistas</a></button>
+            <button class="nav-item"><a href="/perfil" class="menu-item">Perfil</a></button>
+            <button class="nav-item"><a href="/configuracoes" class="menu-item">Configurações</a></button>
+            <button class="nav-item active"><a href="/uploads" class="menu-item">Uploads</a></button>
+        </nav>
+
+        <button class="nav-item"><a href="/login" class="menu-item">Sair</a></button>
     </aside>
 
+    <!-- CONTEÚDO -->
     <main class="content">
-      <h2>Gerenciamento de uploads</h2>
-	  <div class="card">
-	      <div style="display:flex;flex-direction:column;gap:10px">
 
-	          <th:block th:each="uploads : ${uploads}">
-	              <div style="display:flex;justify-content:space-between;align-items:center">
-	                  <div>
-	                      <span th:text="${uploads.descricao}"></span> -
-	                      <a th:href="${uploads.caminhoArquivo}" target="_blank">Abrir</a>
-	                  </div>
+        <h2>Histórico de Envio de Materiais</h2>
+        <p class="subtitle">Veja tudo que você enviou e o status de aprovação</p>
 
-	                  <div>
-	                      <span th:text="${uploads.status}"></span>
-	                  </div>
-	              </div>
-	          </th:block>
+        <div class="card" style="padding: 25px; display:flex; flex-direction:column; gap:20px;">
 
-	      </div>
-	  </div>
+            <!-- LISTA DE TODOS OS UPLOADS -->
+            <div th:each="up : ${uploads}" class="upload-item"
+                 style="display:flex; justify-content:space-between; align-items:center; padding:10px; border-bottom:1px solid #dcdcdc;">
+
+                <div class="upload-info" style="display:flex; flex-direction:column;">
+                    <span class="upload-title" th:text="${up.descricao}" style="font-weight:600;"></span>
+
+                    <span style="font-size:13px; color:#2b6b56;">
+                        <b>Material:</b> <span th:text="${up.tipoMaterial}"></span> —
+                        <b>Peso:</b> <span th:text="${up.pesoKg}"></span> kg
+                    </span>
+
+                    <a class="upload-link"
+                       th:href="${up.caminhoArquivo}"
+                       target="_blank"
+                       style="font-size:14px; color:#0e5a36; margin-top:5px;">
+                        Abrir arquivo
+                    </a>
+                </div>
+
+                <!-- STATUS COM CORES -->
+                <div class="upload-status"
+                     th:text="${up.status}"
+                     th:classappend="
+                        ${up.status} == 'aprovado' ? ' status-green' :
+                        (${up.status} == 'reprovado' ? ' status-red' : ' status-yellow')
+                     ">
+                </div>
+
+            </div>
+        </div>
 
     </main>
-  </div>
+
+</div>
 </body>
 </html>
