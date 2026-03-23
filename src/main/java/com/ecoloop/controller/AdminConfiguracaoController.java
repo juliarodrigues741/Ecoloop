@@ -8,14 +8,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/admin/configuracoes")
+@RequestMapping("/admin/config")
 public class AdminConfiguracaoController {
 
     @GetMapping
-    public String configuracoes(HttpSession session, Model model) {
+    public String config(HttpSession session, Model model) {
         Usuario usuario = (Usuario) session.getAttribute("usuario");
         if (usuario == null) return "redirect:/login";
+        if (usuario.getEmail() == null || !usuario.getEmail().contains("@adm")) {
+            return "redirect:/configuracoes";
+        }
         model.addAttribute("usuario", usuario);
-        return "admin/configuracoes";
+        return "admin/config";
     }
 }
