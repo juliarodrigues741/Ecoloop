@@ -1,0 +1,212 @@
+<!DOCTYPE html>  
+<html lang="pt-BR">  
+<head>  
+  <meta charset="UTF-8" />  
+  <title>Dashboard - EcoLoop</title>  
+  <link rel="stylesheet" href="dashboard.css" />  
+</head>  
+<body>  
+  <div class="app">  
+    <aside class="sidebar">  
+      <div class="logo-row">  
+        <div class="logo-circle"></div>  
+        <span class="logo-text">EcoLoop</span>  
+      </div>
+  
+      <nav class="nav">  
+        <button class="nav-item active">  
+          <span ><a href="/dashboard" class="menu-item">Home</a></span> 
+        </button>  
+        <button class="nav-item">  
+          <span ><a href="/enviar" class="menu-item">Enviar</a></span> 
+        </button>  
+        <button class="nav-item">  
+          <span ><a href="/beneficios" class="menu-item">Benefícios</a></span>   
+        </button>  
+        <button class="nav-item">  
+          <span ><a href="/conquistas" class="menu-item">Conquistas</a></span>  
+        </button>  
+        <button class="nav-item">  
+          <span ><a href="/perfil" class="menu-item">Perfil</a></span>   
+        </button>  
+        <button class="nav-item">  
+          <span ><a href="/configuracoes" class="menu-item">Configurações</a></span>   
+        </button>  
+        <button class="nav-item">  
+          <span ><a href="/uploads" class="menu-item">Uploads</a></span>   
+        </button>  
+      </nav>
+  
+      <button class="nav-item">
+        <span ><a href="/login" class="menu-item">Sair</a></span> 
+      </button>  
+    </aside>
+    <!-- CONTEÚDO PRINCIPAL -->  
+    <main class="main">  
+      <header class="page-header">  
+        <h1>Dashboard</h1>  
+        <p>Bem-vindo de volta, delucaerick@gmail.com! 👋</p>  
+      </header>
+  
+      <!-- LINHA DE CARDS RESUMO -->  
+      <section class="summary-row">  
+        <article class="summary-card">  
+          <div>  
+            <p class="summary-label">Pontos Totais</p>  
+            <p class="summary-value">1250</p>  
+          </div>  
+          <div class="summary-icon circle"></div>  
+        </article>
+  
+        <article class="summary-card">  
+          <div>  
+            <p class="summary-label">Material Reciclado</p>  
+            <p class="summary-value">12.5 kg</p>  
+          </div>  
+          <div class="summary-icon leaf"></div>  
+        </article>
+  
+        <article class="summary-card">  
+          <div>  
+            <p class="summary-label">Nível</p>  
+            <p class="summary-value">5</p>  
+          </div>  
+          <div class="summary-icon up"></div>  
+        </article>
+  
+        <article class="summary-card">  
+          <div>  
+            <p class="summary-label">Meta Mensal</p>  
+            <p class="summary-value">75%</p>  
+          </div>  
+          <div class="summary-icon target"></div>  
+        </article>  
+      </section>
+  
+      <!-- GRID PRINCIPAL -->  
+      <section class="content-grid">  
+        <!-- COLUNA ESQUERDA -->  
+        <div class="left-col">  
+          <!-- DESAFIOS ATIVOS -->  
+          <article class="card challenges-card">  
+            <h2>Desafios Ativos</h2>
+  
+            <div class="challenge">  
+              <div class="challenge-header">  
+                <span>Recicle 5kg esta semana</span>  
+                <span class="challenge-points">+100 pts</span>  
+              </div>  
+              <div class="progress-bar">  
+                <div class="progress-fill" style="width: 60%"></div>  
+              </div>  
+              <span class="progress-text">60% completo</span>  
+            </div>
+  
+            <div class="challenge">  
+              <div class="challenge-header">  
+                <span>Faça 10 uploads este mês</span>  
+                <span class="challenge-points">+200 pts</span>  
+              </div>  
+              <div class="progress-bar">  
+                <div class="progress-fill" style="width: 40%"></div>  
+              </div>  
+              <span class="progress-text">40% completo</span>  
+            </div>  
+          </article>
+  
+          <!-- ATIVIDADES RECENTES -->  
+          <article class="card activity-card">  
+            <h2>Atividades Recentes</h2>
+  
+            <div class="activity-item">  
+              <div>  
+                <p class="activity-title">Upload aprovado</p>  
+                <p class="activity-sub">Garrafas PET</p>  
+              </div>  
+              <div class="activity-right">  
+                <span class="activity-points">+50</span>  
+                <span class="activity-time">14:32</span>  
+              </div>  
+            </div>
+  
+            <div class="activity-item">  
+              <div>  
+                <p class="activity-title">Resgate realizado</p>  
+                <p class="activity-sub">Desconto EcoShop</p>  
+              </div>  
+              <div class="activity-right">  
+                <span class="activity-points negative">-150</span>  
+                <span class="activity-time">10:15</span>  
+              </div>  
+            </div>
+  
+            <div class="activity-item">  
+              <div>  
+                <p class="activity-title">Upload aprovado</p>  
+                <p class="activity-sub">Papelão</p>  
+              </div>  
+              <div class="activity-right">  
+                <span class="activity-points">+30</span>  
+                <span class="activity-time">16:45</span>  
+              </div>  
+            </div>  
+          </article>  
+        </div>
+  
+        <!-- COLUNA DIREITA -->  
+        <div class="right-col">  
+          <!-- AÇÕES RÁPIDAS -->  
+          <article class="quick-actions">  
+            <h2>Ações Rápidas</h2>
+  
+            <button class="quick-btn primary">  
+              <span><a href="/enviar" class="quick-btn primary">📸 Enviar Material</a></span>  
+            </button>  
+            <button class="quick-btn">  
+              <span><a href="/beneficios" class="quick-btn">🎁 Ver Recompensas</a></span>  
+            </button>  
+            <button class="quick-btn">  
+              <span><a href ="/conquistas" class="quick-btn">🏅 Minhas Conquistas</a></span>  
+            </button>  
+          </article>
+  
+          <!-- DESCONTOS DISPONÍVEIS -->  
+          <article class="card discounts-card">  
+            <h2>Descontos Disponíveis</h2>
+  
+            <div class="discount-item">  
+              <div>  
+                <p class="discount-name">Loja Verde</p>  
+                <p class="discount-sub">10% OFF</p>  
+              </div>  
+              <div class="discount-right">  
+                <span class="discount-points">100 pts</span>  
+              </div>  
+            </div>
+  
+            <div class="discount-item">  
+              <div>  
+                <p class="discount-name">EcoShop</p>  
+                <p class="discount-sub">15% OFF</p>  
+              </div>  
+              <div class="discount-right">  
+                <span class="discount-points">150 pts</span>  
+              </div>  
+            </div>
+  
+            <div class="discount-item">  
+              <div>  
+                <p class="discount-name">BioStore</p>  
+                <p class="discount-sub">20% OFF</p>  
+              </div>  
+              <div class="discount-right">  
+                <span class="discount-points">200 pts</span>  
+              </div>  
+            </div>  
+          </article>  
+        </div>  
+      </section>  
+    </main>  
+  </div>  
+</body>  
+</html>
