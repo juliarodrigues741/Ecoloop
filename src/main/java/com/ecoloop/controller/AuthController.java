@@ -34,19 +34,21 @@ public class AuthController {
     public String login(
             @RequestParam String username,
             @RequestParam String password,
-
             HttpSession session
-            
     ) {
+        Usuario u = usuarioDAO.findByEmail(username);
 
-        // Usuario u = usuarioDAO.findByEmail(username);
+        if (u != null && u.getSenhaHash().equals(password)) {
+            session.setAttribute("usuario", u);
 
-        // if (u != null && u.getSenhaHash().equals(password)) {
-        //     session.setAttribute("usuario", u);
-            return "redirect:/dashboard";
-    //     }
+            if (username.contains("@adm")) {
+                return "redirect:/admin/dashboard";
+            } else {
+                return "redirect:/dashboard";
+            }
+        }
 
-    //     return "redirect:/login?erro=true";
+        return "redirect:/login?erro=true";
     }
 
     @GetMapping("/logout")

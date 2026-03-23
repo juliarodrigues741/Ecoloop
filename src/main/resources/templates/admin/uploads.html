@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title>Gerenciamento de Uploads - EcoLoop</title>
+  <link rel="stylesheet" href="/admin-dashboard.css" />
+  <link rel="stylesheet" href="/admin-uploads.css" />
+</head>
+<body>
+  <script>if (localStorage.getItem('tema') === 'escuro') document.body.classList.add('dark');</script>
+  <div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="logo-row">
+        <div class="logo-circle">
+          <span style="font-size:22px">🌍</span>
+        </div>
+        <span class="logo-text">EcoLoop</span>
+      </div>
+
+      <p class="sidebar-section">MENU</p>
+
+      <nav class="nav">
+        <a href="/admin/dashboard" class="nav-item">
+          <span class="nav-icon">🏠</span> Home
+        </a>
+        <a href="/admin/uploads" class="nav-item active">
+          <span class="nav-icon">📤</span> Upload Usuário
+        </a>
+        <a href="/admin/configuracoes" class="nav-item">
+          <span class="nav-icon">⚙️</span> Configurações
+        </a>
+      </nav>
+
+      <a href="/logout" class="nav-item sair-btn">
+        <span class="nav-icon">🚪</span> Sair
+      </a>
+    </aside>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="main">
+      <div class="top-bar">
+        <div>
+          <h1 class="page-title">Gerenciamento de uploads</h1>
+          <p class="page-sub">Aprove ou recuse os materiais enviados pelos usuários</p>
+        </div>
+        <div class="admin-badge">
+          <div class="admin-avatar">A</div>
+          <span th:text="${usuario != null ? usuario.nome : 'Admin'}">Admin</span>
+        </div>
+      </div>
+
+      <!-- FILTROS -->
+      <div class="filtros">
+        <a th:href="@{/admin/uploads(filtro='pendente')}"
+           th:classappend="${filtro == 'pendente'} ? ' ativo' : ''"
+           class="filtro-btn">Pendente</a>
+        <a th:href="@{/admin/uploads(filtro='aprovado')}"
+           th:classappend="${filtro == 'aprovado'} ? ' ativo' : ''"
+           class="filtro-btn">Aprovado</a>
+        <a th:href="@{/admin/uploads(filtro='recusado')}"
+           th:classappend="${filtro == 'recusado'} ? ' ativo' : ''"
+           class="filtro-btn">Recusado</a>
+      </div>
+
+      <!-- LISTA DE UPLOADS -->
+      <div class="uploads-lista">
+
+        <div th:if="${materiais.isEmpty()}" class="vazio">
+          Nenhum envio com status "<span th:text="${filtro}"></span>".
+        </div>
+
+        <div th:each="m : ${materiais}" class="upload-card">
+          <div class="upload-info">
+            <div class="upload-icone" th:text="${m.tipoArquivo == 'video'} ? '🎥' : '📷'">📷</div>
+            <div>
+              <p class="upload-descricao" th:text="${m.descricao}">Descrição</p>
+              <p class="upload-meta">
+                Usuário ID: <span th:text="${m.usuarioId}">0</span> &nbsp;|&nbsp;
+                <span th:text="${m.tipoArquivo}">foto</span> &nbsp;|&nbsp;
+                <span th:text="${m.dataEnvio != null ? #temporals.format(m.dataEnvio, 'dd/MM/yyyy HH:mm') : '-'}">--</span>
+              </p>
+            </div>
+          </div>
+
+          <div class="upload-acoes" th:if="${filtro == 'pendente'}">
+            <form th:action="@{/admin/uploads/{id}/aprovar(id=${m.id})}" method="post">
+              <input type="hidden" name="filtro" th:value="${filtro}" />
+              <button type="submit" class="btn-aprovar">Aprovado</button>
+            </form>
+            <form th:action="@{/admin/uploads/{id}/recusar(id=${m.id})}" method="post">
+              <input type="hidden" name="filtro" th:value="${filtro}" />
+              <button type="submit" class="btn-recusar">Recusado</button>
+            </form>
+          </div>
+
+          <div class="upload-status" th:if="${filtro != 'pendente'}">
+            <span th:classappend="${m.status == 'aprovado'} ? ' tag-aprovado' : ' tag-recusado'"
+                  class="status-tag"
+                  th:text="${m.status}">status</span>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+  </div>
+</body>
+</html>

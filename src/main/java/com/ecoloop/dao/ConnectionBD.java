@@ -9,7 +9,7 @@ public class ConnectionBD {
     // Ajuste URL/USER/PASSWORD conforme seu ambiente
     private static final String URL = "jdbc:mysql://localhost:3306/ecopontos?zeroDateTimeBehavior=CONVERT_TO_NULL";
     private static final String USER = "root";
-    private static final String PASSWORD = "310706";
+    private static final String PASSWORD = "370607";
 
     static {
         try {

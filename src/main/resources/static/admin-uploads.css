@@ -1,0 +1,150 @@
+/* FILTROS */
+.filtros {
+  display: flex;
+  gap: 10px;
+}
+
+.filtro-btn {
+  padding: 8px 22px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  background: #fff;
+  color: #3d5c44;
+  border: 1px solid #c8e0cc;
+  transition: all 0.15s;
+}
+
+.filtro-btn:hover {
+  background: #eaf6ed;
+}
+
+.filtro-btn.ativo {
+  background: #2f8f3c;
+  color: #fff;
+  border-color: #2f8f3c;
+}
+
+/* LISTA */
+.uploads-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.vazio {
+  background: #fff;
+  border-radius: 14px;
+  padding: 32px;
+  text-align: center;
+  color: #8fa893;
+  font-size: 14px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+/* CARD */
+.upload-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 18px 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.07);
+  gap: 16px;
+}
+
+.upload-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+}
+
+.upload-icone {
+  font-size: 28px;
+  background: #eaf6ed;
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.upload-descricao {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a3c28;
+  margin-bottom: 4px;
+}
+
+.upload-meta {
+  font-size: 12px;
+  color: #7a9480;
+}
+
+/* AÇÕES */
+.upload-acoes {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.btn-aprovar,
+.btn-recusar {
+  padding: 8px 18px;
+  border: none;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.btn-aprovar {
+  background: #2f8f3c;
+  color: #fff;
+}
+
+.btn-aprovar:hover { opacity: 0.85; }
+
+.btn-recusar {
+  background: #e05555;
+  color: #fff;
+}
+
+.btn-recusar:hover { opacity: 0.85; }
+
+/* STATUS TAG */
+.upload-status {
+  flex-shrink: 0;
+}
+
+.status-tag {
+  padding: 6px 16px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.tag-aprovado {
+  background: #d4f0db;
+  color: #1a5c2a;
+}
+
+.tag-recusado {
+  background: #fde0e0;
+  color: #8b1a1a;
+}
+/* ===== DARK MODE ===== */
+body.dark .upload-card { background: #1c2d22; box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
+body.dark .upload-descricao { color: #c8e6cc; }
+body.dark .upload-meta { color: #5a8060; }
+body.dark .upload-icone { background: #163f25; }
+body.dark .vazio { background: #1c2d22; color: #5a8060; }
+body.dark .filtro-btn { background: #1c2d22; color: #a0c8a8; border-color: #2a3d2f; }
+body.dark .filtro-btn:hover { background: #213028; }

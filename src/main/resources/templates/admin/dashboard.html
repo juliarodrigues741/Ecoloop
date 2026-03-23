@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dashboard Admin - EcoLoop</title>
+  <link rel="stylesheet" href="/admin-dashboard.css" />
+</head>
+<body>
+  <script>if (localStorage.getItem('tema') === 'escuro') document.body.classList.add('dark');</script>
+  <div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="logo-row">
+        <div class="logo-circle">
+          <span style="font-size:22px">🌍</span>
+        </div>
+        <span class="logo-text">EcoLoop</span>
+      </div>
+
+      <p class="sidebar-section">MENU</p>
+
+      <nav class="nav">
+        <a href="/admin/dashboard" class="nav-item active">
+          <span class="nav-icon">🏠</span> Home
+        </a>
+        <a href="/admin/uploads" class="nav-item">
+          <span class="nav-icon">📤</span> Upload Usuário
+        </a>
+        <a href="/admin/configuracoes" class="nav-item">
+          <span class="nav-icon">⚙️</span> Configurações
+        </a>
+      </nav>
+
+      <a href="/logout" class="nav-item sair-btn">
+        <span class="nav-icon">🚪</span> Sair
+      </a>
+    </aside>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="main">
+
+      <div class="top-bar">
+        <div>
+          <h1 class="page-title">Dashboard</h1>
+          <p class="page-sub">Painel administrativo EcoLoop</p>
+        </div>
+        <div class="admin-badge">
+          <div class="admin-avatar">A</div>
+          <span th:text="${usuario != null ? usuario.nome : 'Admin'}">Admin</span>
+        </div>
+      </div>
+
+      <!-- CARDS DE RESUMO -->
+      <section class="cards-row">
+        <article class="stat-card green">
+          <div class="stat-icon">👥</div>
+          <div>
+            <p class="stat-label">Total de Usuários</p>
+            <p class="stat-value" th:text="${totalUsuarios}">0</p>
+          </div>
+        </article>
+        <article class="stat-card pink">
+          <div class="stat-icon">📦</div>
+          <div>
+            <p class="stat-label">Coletas Agendadas</p>
+            <p class="stat-value" th:text="${coletasPendentes}">0</p>
+          </div>
+        </article>
+        <article class="stat-card blue">
+          <div class="stat-icon">⭐</div>
+          <div>
+            <p class="stat-label">Total de Pontos</p>
+            <p class="stat-value" th:text="${totalPontos}">0</p>
+          </div>
+        </article>
+        <article class="stat-card orange">
+          <div class="stat-icon">🏆</div>
+          <div>
+            <p class="stat-label">No Ranking</p>
+            <p class="stat-value" th:text="${ranking.size()}">0</p>
+          </div>
+        </article>
+      </section>
+
+      <div class="content-grid">
+
+        <!-- COLUNA CENTRAL -->
+        <div class="center-col">
+
+          <!-- Coletas Agendadas barra -->
+          <article class="info-card">
+            <div class="info-card-header">
+              <h3>Coletas Agendadas</h3>
+              <span class="badge-count" th:text="${coletasPendentes}">0</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill pink-fill" style="width: 65%"></div>
+            </div>
+            <p class="progress-hint">materiais aguardando aprovação</p>
+          </article>
+
+          <!-- Total usuários barra -->
+          <article class="info-card">
+            <div class="info-card-header">
+              <h3>Total de Usuários Cadastrados</h3>
+              <span class="badge-count" th:text="${totalUsuarios}">0</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill pink-fill" style="width: 80%"></div>
+            </div>
+            <p class="progress-hint">usuários registrados na plataforma</p>
+          </article>
+
+          <!-- Pontos de coleta -->
+          <article class="info-card">
+            <h3 style="margin-bottom:14px">Pontos de Coleta Disponíveis</h3>
+            <div class="pontos-list">
+              <div th:each="u : ${ranking}" class="ponto-item">
+                <span class="ponto-nome" th:text="${u.nome}">Nome</span>
+                <div class="ponto-bar-wrap">
+                  <div class="ponto-bar pink-fill"></div>
+                </div>
+                <span class="ponto-pts" th:text="${u.pontos}">0</span>
+              </div>
+            </div>
+          </article>
+
+        </div>
+
+        <!-- COLUNA DIREITA: RANKING -->
+        <aside class="ranking-col">
+          <h2 class="ranking-title">🏆 Ranking Local</h2>
+          <div class="ranking-list">
+            <div th:each="u, stat : ${ranking}" class="ranking-item">
+              <div class="ranking-pos" th:text="${stat.index + 1}">1</div>
+              <div class="ranking-avatar" th:text="${u.nome.substring(0,1).toUpperCase()}">A</div>
+              <div class="ranking-info">
+                <span class="ranking-nome" th:text="${u.nome}">Nome</span>
+                <span class="ranking-pontos" th:text="${u.pontos} + ' pontos'">0 pontos</span>
+              </div>
+            </div>
+            <div th:if="${ranking.isEmpty()}" class="ranking-empty">
+              Nenhum usuário no ranking ainda.
+            </div>
+          </div>
+        </aside>
+
+      </div>
+    </main>
+
+  </div>
+</body>
+</html>

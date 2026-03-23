@@ -2,17 +2,17 @@
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8" />
-  <title>Configurações - EcoLoop</title>
+  <title>Configurações - EcoLoop Admin</title>
   <link rel="stylesheet" href="/configuracoes.css" />
 </head>
 <body>
   <div class="app">
 
-    <!-- SIDEBAR -->
+    <!-- SIDEBAR ADMIN -->
     <aside class="sidebar">
       <div class="logo-row">
         <div class="logo-circle">
-          <svg viewBox="0 0 24 24" fill="white" width="18" height="18"><path d="M17 8C8 10 5.9 16.17 3.82 19.82C6.55 21.25 10.44 20.5 12 17C14 13 21 12 21 7C21 4.5 18.5 2 16 2C14 2 12.5 3.5 12.5 5.5C12.5 7 13.5 8 15 8C15.83 8 16.5 7.5 17 8Z"/></svg>
+          <span style="font-size:22px">🌍</span>
         </div>
         <span class="logo-text">EcoLoop</span>
       </div>
@@ -20,12 +20,9 @@
       <p class="sidebar-section">MENU</p>
 
       <nav class="nav">
-        <a href="/dashboard" class="nav-item"><span class="nav-icon">🏠</span> Home</a>
-        <a href="/enviar" class="nav-item"><span class="nav-icon">📤</span> Enviar</a>
-        <a href="/beneficios" class="nav-item"><span class="nav-icon">🎁</span> Benefícios</a>
-        <a href="/conquistas" class="nav-item"><span class="nav-icon">🏅</span> Conquistas</a>
-        <a href="/uploads" class="nav-item"><span class="nav-icon">👥</span> Upload Usuários</a>
-        <a href="/configuracoes" class="nav-item active"><span class="nav-icon">⚙️</span> Configurações</a>
+        <a href="/admin/dashboard" class="nav-item"><span class="nav-icon">🏠</span> Home</a>
+        <a href="/admin/uploads" class="nav-item"><span class="nav-icon">📤</span> Upload Usuário</a>
+        <a href="/admin/configuracoes" class="nav-item active"><span class="nav-icon">⚙️</span> Configurações</a>
       </nav>
 
       <a href="/logout" class="nav-item sair-btn"><span class="nav-icon">🚪</span> Sair</a>
@@ -138,13 +135,10 @@
   <script>
     const toggle = document.getElementById('darkToggle');
     const body = document.body;
-
-    // Carregar preferência salva
     if (localStorage.getItem('tema') === 'escuro') {
       body.classList.add('dark');
       toggle.checked = true;
     }
-
     toggle.addEventListener('change', () => {
       if (toggle.checked) {
         body.classList.add('dark');
