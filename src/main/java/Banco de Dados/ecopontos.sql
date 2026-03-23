@@ -98,3 +98,11 @@ CREATE TABLE logs_acoes (
   data_acao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE SET NULL
 );
+
+INSERT INTO usuarios (nome, email, senha_hash, role, nivel, pontos) 
+VALUES ('Admin', 'admin@adm.com', '123456', 'ADMIN', 'Bronze', 0);
+
+insert into usuarios (nome, email, senha_hash, role, nivel, pontos)
+values ('usuario', 'usuario@gmail.com', '123456', 'usuario', 'Bronze', 0);
+
+SELECT id, nome, email, senha_hash FROM usuarios;
