@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EcoLoop - Esqueceu a Senha</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    :root {
+      --green-dark: #165c33;
+      --green-main: #2f9e44;
+      --green-soft: #dff3e3;
+      --bg-main: #eef8f0;
+      --white: #ffffff;
+      --pink-soft: #f6d6dc;
+      --blue-soft: #dce4fa;
+      --beige-soft: #f8e7c8;
+      --text-dark: #0f3d2b;
+      --text-soft: #6b8576;
+      --border-soft: #e3efe6;
+      --shadow: 0 10px 25px rgba(22, 92, 51, 0.08);
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --radius-sm: 12px;
+    }
+
+    body {
+      background: var(--bg-main);
+      color: var(--text-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 900px;
+      width: 100%;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--green-dark);
+      margin-bottom: 16px;
+    }
+
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #64d47c, #2f9e44);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .header h1 {
+      font-size: 36px;
+      color: var(--green-dark);
+      margin-bottom: 8px;
+    }
+
+    .header p {
+      font-size: 16px;
+      color: var(--text-soft);
+    }
+
+    /* Info cards */
+    .info-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .info-card {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .info-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .green-card .info-icon { background: #d8f1dd; }
+    .pink-card .info-icon { background: var(--pink-soft); }
+    .blue-card .info-icon { background: var(--blue-soft); }
+
+    .info-content h3 {
+      font-size: 13px;
+      color: #4e695b;
+      margin-bottom: 4px;
+      font-weight: 500;
+    }
+
+    .info-content p {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--green-dark);
+    }
+
+    /* Content grid */
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 20px;
+    }
+
+    .form-card,
+    .side-card {
+      background: var(--white);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      padding: 28px;
+    }
+
+    .form-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .form-card-header h2 {
+      font-size: 28px;
+      color: var(--green-dark);
+    }
+
+    .pill {
+      background: var(--green-soft);
+      color: var(--green-dark);
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .description-box {
+      background: #f7fbf8;
+      border: 1px solid var(--border-soft);
+      border-radius: 16px;
+      padding: 16px;
+      color: var(--text-soft);
+      line-height: 1.6;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+
+    /* Mensagens */
+    .alert {
+      padding: 14px 16px;
+      border-radius: 14px;
+      margin-bottom: 18px;
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .alert-success {
+      background: #d8f1dd;
+      color: var(--green-dark);
+      border: 1px solid var(--green-main);
+    }
+
+    .alert-error {
+      background: #ffe0e0;
+      color: #c41e3a;
+      border: 1px solid #ff6b6b;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: #456757;
+      margin-bottom: 8px;
+    }
+
+    input {
+      width: 100%;
+      border: 1px solid var(--border-soft);
+      background: #f8fcf8;
+      border-radius: 14px;
+      padding: 14px 16px;
+      font-size: 15px;
+      color: var(--text-dark);
+      outline: none;
+      transition: 0.2s ease;
+    }
+
+    input:focus {
+      border-color: var(--green-main);
+      box-shadow: 0 0 0 4px rgba(47, 158, 68, 0.12);
+    }
+
+    .form-note {
+      font-size: 13px;
+      color: var(--text-soft);
+      margin-top: -6px;
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 14px;
+      padding: 13px 20px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.25s ease;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-primary {
+      background: var(--green-main);
+      color: white;
+      box-shadow: 0 8px 20px rgba(47, 158, 68, 0.22);
+    }
+
+    .btn-primary:hover {
+      background: #27873a;
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: #edf6ef;
+      color: var(--green-dark);
+    }
+
+    .btn-secondary:hover {
+      background: #e2efe5;
+    }
+
+    .side-card h3 {
+      font-size: 24px;
+      color: var(--green-dark);
+      margin-bottom: 16px;
+    }
+
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .step {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      background: #f8fbf8;
+      border-radius: 16px;
+      padding: 14px;
+    }
+
+    .step-number {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--green-main);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      flex-shrink: 0;
+      font-size: 14px;
+    }
+
+    .step-text strong {
+      display: block;
+      color: var(--green-dark);
+      margin-bottom: 4px;
+      font-size: 14px;
+    }
+
+    .step-text span {
+      font-size: 13px;
+      color: var(--text-soft);
+      line-height: 1.5;
+    }
+
+    .security-box {
+      background: var(--beige-soft);
+      border-radius: 18px;
+      padding: 16px;
+      margin-top: 8px;
+    }
+
+    .security-box strong {
+      display: block;
+      color: var(--green-dark);
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+
+    .security-box p {
+      font-size: 13px;
+      color: #597464;
+      line-height: 1.6;
+    }
+
+    /* Responsivo */
+    @media (max-width: 1100px) {
+      .info-cards,
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .header h1 {
+        font-size: 28px;
+      }
+
+      .form-card,
+      .side-card {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo">
+        <div class="logo-icon">🌎</div>
+        <span>EcoLoop</span>
+      </div>
+      <h1>Esqueceu a Senha</h1>
+      <p>Recupere o acesso à sua conta de forma rápida e segura</p>
+    </div>
+
+    <section class="info-cards">
+      <div class="info-card green-card">
+        <div class="info-icon">📧</div>
+        <div class="info-content">
+          <h3>Recuperação por e-mail</h3>
+          <p>Disponível</p>
+        </div>
+      </div>
+
+      <div class="info-card pink-card">
+        <div class="info-icon">🔒</div>
+        <div class="info-content">
+          <h3>Segurança</h3>
+          <p>Protegida</p>
+        </div>
+      </div>
+
+      <div class="info-card blue-card">
+        <div class="info-icon">⚡</div>
+        <div class="info-content">
+          <h3>Tempo médio</h3>
+          <p>2 minutos</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-grid">
+      <div class="form-card">
+        <div class="form-card-header">
+          <h2>Recuperar Senha</h2>
+          <div class="pill">Envio de link seguro</div>
+        </div>
+
+        <div class="description-box">
+          Informe o e-mail cadastrado na plataforma EcoLoop. Mostraremos sua senha atual para que você possa acessar o sistema.
+        </div>
+
+        <!-- Mensagens -->
+        <div th:if="${erro}" class="alert alert-error">
+          <span>⚠️</span>
+          <span th:text="${erro}"></span>
+        </div>
+
+        <div th:if="${senhaEncontrada}" class="alert alert-success">
+          <span>✓</span>
+          <span>Sua senha é: <strong th:text="${senhaEncontrada}"></strong></span>
+        </div>
+
+        <form method="post" action="/esqueceu-senha">
+          <div class="form-group">
+            <label for="email">E-mail cadastrado</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="Digite seu e-mail"
+              required
+            />
+          </div>
+
+          <p class="form-note">
+            Verifique se o endereço digitado está correto. Buscaremos sua senha no sistema.
+          </p>
+
+          <div class="actions">
+            <a href="/login" class="btn btn-secondary">Voltar ao Login</a>
+            <button type="submit" class="btn btn-primary">Recuperar Senha</button>
+          </div>
+        </form>
+      </div>
+
+      <aside class="side-card">
+        <h3>Como funciona</h3>
+
+        <div class="steps">
+          <div class="step">
+            <div class="step-number">1</div>
+            <div class="step-text">
+              <strong>Digite seu e-mail</strong>
+              <span>Informe o endereço de e-mail que está cadastrado no sistema.</span>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-number">2</div>
+            <div class="step-text">
+              <strong>Recupere sua senha</strong>
+              <span>O sistema mostrará sua senha atual na tela.</span>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-number">3</div>
+            <div class="step-text">
+              <strong>Faça login</strong>
+              <span>Use a senha recuperada para entrar no sistema.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="security-box">
+          <strong>Dica de segurança</strong>
+          <p>
+            Após recuperar sua senha, considere alterá-la nas configurações da sua conta para manter sua segurança.
+          </p>
+        </div>
+      </aside>
+    </section>
+  </div>
+</body>
+</html>

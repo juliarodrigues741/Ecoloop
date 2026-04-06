@@ -10,40 +10,82 @@ import java.util.List;
 public class UsuarioDAO {
 
     public Integer create(Usuario u) {
-        String sql = "INSERT INTO usuarios (nome, email, senha_hash, foto_perfil, nivel, pontos) VALUES (?, ?, ?, ?, ?, ?)";
-        try (Connection conn = ConnectionBD.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        // Tenta primeiro com os novos campos (cpf e telefone)
+        String sqlNew = "INSERT INTO usuarios (nome, email, senha_hash, cpf, telefone, foto_perfil, nivel, pontos) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sqlOld = "INSERT INTO usuarios (nome, email, senha_hash, foto_perfil, nivel, pontos) VALUES (?, ?, ?, ?, ?, ?)";
 
-            ps.setString(1, u.getNome());
-            ps.setString(2, u.getEmail());
-            ps.setString(3, u.getSenhaHash());
-            ps.setString(4, u.getFotoPerfil());
-            ps.setString(5, u.getNivel());
-            ps.setInt(6, u.getPontos() == null ? 0 : u.getPontos());
+        try (Connection conn = ConnectionBD.getConnection()) {
+            // Tenta primeiro com as novas colunas
+            try (PreparedStatement ps = conn.prepareStatement(sqlNew, Statement.RETURN_GENERATED_KEYS)) {
+                ps.setString(1, u.getNome());
+                ps.setString(2, u.getEmail());
+                ps.setString(3, u.getSenhaHash());
+                ps.setString(4, u.getCpf());
+                ps.setString(5, u.getTelefone());
+                ps.setString(6, u.getFotoPerfil());
+                ps.setString(7, u.getNivel());
+                ps.setInt(8, u.getPontos() == null ? 0 : u.getPontos());
 
-            int affected = ps.executeUpdate();
-            if (affected == 0) return null;
-            try (ResultSet rs = ps.getGeneratedKeys()) {
-                if (rs.next()) return rs.getInt(1);
+                int affected = ps.executeUpdate();
+                if (affected == 0) return null;
+                try (ResultSet rs = ps.getGeneratedKeys()) {
+                    if (rs.next()) return rs.getInt(1);
+                }
+                return null;
+            } catch (SQLException e) {
+                // Se falhou, tenta com o SQL antigo (sem cpf e telefone)
+                try (PreparedStatement ps = conn.prepareStatement(sqlOld, Statement.RETURN_GENERATED_KEYS)) {
+                    ps.setString(1, u.getNome());
+                    ps.setString(2, u.getEmail());
+                    ps.setString(3, u.getSenhaHash());
+                    ps.setString(4, u.getFotoPerfil());
+                    ps.setString(5, u.getNivel());
+                    ps.setInt(6, u.getPontos() == null ? 0 : u.getPontos());
+
+                    int affected = ps.executeUpdate();
+                    if (affected == 0) return null;
+                    try (ResultSet rs = ps.getGeneratedKeys()) {
+                        if (rs.next()) return rs.getInt(1);
+                    }
+                    return null;
+                }
             }
-            return null;
         } catch (SQLException e) {
             throw new RuntimeException("Erro ao criar usuário", e);
         }
     }
 
     public boolean update(Usuario u) {
-        String sql = "UPDATE usuarios SET nome=?, email=?, senha_hash=?, foto_perfil=?, nivel=?, pontos=? WHERE id=?";
-        try (Connection conn = ConnectionBD.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, u.getNome());
-            ps.setString(2, u.getEmail());
-            ps.setString(3, u.getSenhaHash());
-            ps.setString(4, u.getFotoPerfil());
-            ps.setString(5, u.getNivel());
-            ps.setInt(6, u.getPontos() == null ? 0 : u.getPontos());
-            ps.setInt(7, u.getId());
-            return ps.executeUpdate() > 0;
+        // Tenta primeiro com os novos campos (cpf e telefone)
+        String sqlNew = "UPDATE usuarios SET nome=?, email=?, senha_hash=?, cpf=?, telefone=?, foto_perfil=?, nivel=?, pontos=? WHERE id=?";
+        String sqlOld = "UPDATE usuarios SET nome=?, email=?, senha_hash=?, foto_perfil=?, nivel=?, pontos=? WHERE id=?";
+
+        try (Connection conn = ConnectionBD.getConnection()) {
+            // Tenta primeiro com as novas colunas
+            try (PreparedStatement ps = conn.prepareStatement(sqlNew)) {
+                ps.setString(1, u.getNome());
+                ps.setString(2, u.getEmail());
+                ps.setString(3, u.getSenhaHash());
+                ps.setString(4, u.getCpf());
+                ps.setString(5, u.getTelefone());
+                ps.setString(6, u.getFotoPerfil());
+                ps.setString(7, u.getNivel());
+                ps.setInt(8, u.getPontos() == null ? 0 : u.getPontos());
+                ps.setInt(9, u.getId());
+                return ps.executeUpdate() > 0;
+            } catch (SQLException e) {
+                // Se falhou, tenta com o SQL antigo (sem cpf e telefone)
+                try (PreparedStatement ps = conn.prepareStatement(sqlOld)) {
+                    ps.setString(1, u.getNome());
+                    ps.setString(2, u.getEmail());
+                    ps.setString(3, u.getSenhaHash());
+                    ps.setString(4, u.getFotoPerfil());
+                    ps.setString(5, u.getNivel());
+                    ps.setInt(6, u.getPontos() == null ? 0 : u.getPontos());
+                    ps.setInt(7, u.getId());
+                    return ps.executeUpdate() > 0;
+                }
+            }
         } catch (SQLException e) {
             throw new RuntimeException("Erro ao atualizar usuário", e);
         }
@@ -107,6 +149,20 @@ public class UsuarioDAO {
         u.setNome(rs.getString("nome"));
         u.setEmail(rs.getString("email"));
         u.setSenhaHash(rs.getString("senha_hash"));
+
+        // Campos opcionais - tentam ler, mas não falham se não existirem
+        try {
+            u.setCpf(rs.getString("cpf"));
+        } catch (SQLException e) {
+            u.setCpf(null);
+        }
+
+        try {
+            u.setTelefone(rs.getString("telefone"));
+        } catch (SQLException e) {
+            u.setTelefone(null);
+        }
+
         u.setFotoPerfil(rs.getString("foto_perfil"));
         u.setNivel(rs.getString("nivel"));
         u.setPontos(rs.getInt("pontos"));

@@ -1,61 +1,501 @@
-<!doctype html>
-<html lang="pt-BR">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Uploads - Ecoloop</title>
-<link rel="stylesheet" href="/styles.css"></head>
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title>Meus Uploads - EcoLoop</title>
+  <link rel="stylesheet" href="/admin-dashboard.css" />
+  <style>
+    .filter-bar {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+      margin-bottom: 24px;
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex: 1;
+      min-width: 180px;
+    }
+
+    .filter-group label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #456757;
+    }
+
+    .filter-group select {
+      border: 1px solid #e4efe7;
+      background: #f8fcf8;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 14px;
+      color: #0f3d2b;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .filter-group select:focus {
+      border-color: #2f9e44;
+    }
+
+    .uploads-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .upload-card {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+      display: grid;
+      grid-template-columns: 80px 1fr auto;
+      gap: 20px;
+      align-items: center;
+      transition: 0.2s ease;
+    }
+
+    .upload-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .upload-thumbnail {
+      width: 80px;
+      height: 80px;
+      border-radius: 12px;
+      background: #f8fcf8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      overflow: hidden;
+    }
+
+    .upload-thumbnail img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .upload-info {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .upload-info h3 {
+      font-size: 18px;
+      color: #165c33;
+      margin: 0;
+    }
+
+    .upload-meta {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .upload-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      color: #6b8576;
+    }
+
+    .upload-meta-item .icon {
+      font-size: 16px;
+    }
+
+    .upload-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: flex-end;
+    }
+
+    .status-badge {
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .status-badge.aprovado {
+      background: #dff3e3;
+      color: #2f9e44;
+    }
+
+    .status-badge.pendente {
+      background: #fff8e1;
+      color: #f59e0b;
+    }
+
+    .status-badge.rejeitado {
+      background: #fee2e2;
+      color: #dc2626;
+    }
+
+    .upload-points {
+      font-size: 18px;
+      font-weight: 700;
+      color: #2f9e44;
+    }
+
+    .btn-details {
+      background: #edf6ef;
+      color: #165c33;
+      border: none;
+      border-radius: 10px;
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .btn-details:hover {
+      background: #dff3e3;
+    }
+
+    .empty-state {
+      background: white;
+      border-radius: 20px;
+      padding: 60px 30px;
+      text-align: center;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    }
+
+    .empty-state .icon {
+      font-size: 64px;
+      margin-bottom: 16px;
+    }
+
+    .empty-state h3 {
+      font-size: 22px;
+      color: #165c33;
+      margin: 0 0 12px 0;
+    }
+
+    .empty-state p {
+      font-size: 15px;
+      color: #6b8576;
+      margin: 0 0 24px 0;
+    }
+
+    .btn-upload {
+      background: #2f9e44;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 28px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(47, 158, 68, 0.2);
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-upload:hover {
+      background: #27873a;
+    }
+
+    @media (max-width: 768px) {
+      .upload-card {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      .upload-actions {
+        align-items: flex-start;
+        flex-direction: row;
+        justify-content: space-between;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
 <body>
-  
+  <script>if (localStorage.getItem('tema') === 'escuro') document.body.classList.add('dark');</script>
   <div class="app">
-  
-  <aside class="sidebar">  
-      <div class="logo-row">  
-        <div class="logo-circle"></div>  
-        <span class="logo-text">EcoLoop</span>  
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="logo-row">
+        <div class="logo-circle">
+          <span style="font-size:22px">🌍</span>
+        </div>
+        <span class="logo-text">EcoLoop</span>
       </div>
-  
-      <nav class="nav">  
-        <button class="nav-item">  
-          <span ><a href="/dashboard" class="menu-item">Home</a></span> 
-        </button>  
-        <button class="nav-item">  
-          <span ><a href="/enviar" class="menu-item">Enviar</a></span> 
-        </button>  
-        <button class="nav-item">  
-          <span ><a href="/beneficios" class="menu-item">Benefícios</a></span>   
-        </button>  
-        <button class="nav-item">  
-          <span ><a href="/conquistas" class="menu-item">Conquistas</a></span>  
-        </button>  
-        <button class="nav-item">  
-          <span ><a href="/perfil" class="menu-item">Perfil</a></span>   
-        </button>  
-        <button class="nav-item">  
-          <span ><a href="/configuracoes" class="menu-item">Configurações</a></span>   
-        </button>  
-        <button class="nav-item active">  
-          <span ><a href="/uploads" class="menu-item">Uploads</a></span>   
-        </button>  
+
+      <p class="sidebar-section">MENU</p>
+
+      <nav class="nav">
+        <a href="/dashboard" class="nav-item">
+          <span class="nav-icon">🏠</span> Home
+        </a>
+        <a href="/enviar" class="nav-item">
+          <span class="nav-icon">📸</span> Enviar
+        </a>
+        <a href="/beneficios" class="nav-item">
+          <span class="nav-icon">🎁</span> Benefícios
+        </a>
+        <a href="/conquistas" class="nav-item">
+          <span class="nav-icon">🏆</span> Conquistas
+        </a>
+        <a href="/perfil" class="nav-item">
+          <span class="nav-icon">👤</span> Perfil
+        </a>
+        <a href="/configuracoes" class="nav-item">
+          <span class="nav-icon">⚙️</span> Configurações
+        </a>
       </nav>
-  
-      <button class="nav-item">
-        <span ><a href="/login" class="menu-item">Sair</a></span> 
-      </button>  
+
+      <a href="/logout" class="nav-item sair-btn">
+        <span class="nav-icon">🚪</span> Sair
+      </a>
     </aside>
 
-    <main class="content">
-      <h2>Gerenciamento de uploads</h2>
-      <div class="card">
-        <div style="display:flex;flex-direction:column;gap:10px">
-          <div style="display:flex;justify-content:space-between;align-items:center">
-            <div>Envio_001.jpg</div><div><button class="btn-outline">Aprovar</button></div>
-          </div>
-          <div style="display:flex;justify-content:space-between;align-items:center">
-            <div>Envio_002.mp4</div><div><button class="btn-outline">Rejeitar</button></div>
-          </div>
-          <div style="display:flex;justify-content:space-between;align-items:center">
-            <div>Envio_003.jpg</div><div><button class="btn-outline">Aprovar</button></div>
-          </div>
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="main">
+
+      <div class="top-bar">
+        <div>
+          <h1 class="page-title">Meus Uploads</h1>
+          <p class="page-sub">Acompanhe o histórico dos seus envios</p>
+        </div>
+        <div class="admin-badge">
+          <div class="admin-avatar">U</div>
+          <span>Usuário</span>
         </div>
       </div>
+
+      <!-- CARDS DE RESUMO -->
+      <section class="cards-row">
+        <article class="stat-card green">
+          <div class="stat-icon">📤</div>
+          <div>
+            <p class="stat-label">Total de Uploads</p>
+            <p class="stat-value">24</p>
+          </div>
+        </article>
+        <article class="stat-card pink">
+          <div class="stat-icon">✅</div>
+          <div>
+            <p class="stat-label">Aprovados</p>
+            <p class="stat-value">21</p>
+          </div>
+        </article>
+        <article class="stat-card blue">
+          <div class="stat-icon">⏳</div>
+          <div>
+            <p class="stat-label">Pendentes</p>
+            <p class="stat-value">2</p>
+          </div>
+        </article>
+        <article class="stat-card orange">
+          <div class="stat-icon">❌</div>
+          <div>
+            <p class="stat-label">Rejeitados</p>
+            <p class="stat-value">1</p>
+          </div>
+        </article>
+      </section>
+
+      <!-- FILTROS -->
+      <div class="filter-bar">
+        <div class="filter-group">
+          <label>Status</label>
+          <select>
+            <option value="">Todos</option>
+            <option value="aprovado">Aprovados</option>
+            <option value="pendente">Pendentes</option>
+            <option value="rejeitado">Rejeitados</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label>Tipo de Material</label>
+          <select>
+            <option value="">Todos</option>
+            <option value="plastico">Plástico</option>
+            <option value="papel">Papel/Papelão</option>
+            <option value="vidro">Vidro</option>
+            <option value="metal">Metal</option>
+            <option value="eletronico">Eletrônico</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label>Período</label>
+          <select>
+            <option value="todos">Todos</option>
+            <option value="semana">Última Semana</option>
+            <option value="mes">Último Mês</option>
+            <option value="ano">Último Ano</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- LISTA DE UPLOADS -->
+      <div class="uploads-list">
+
+        <div class="upload-card">
+          <div class="upload-thumbnail">
+            📦
+          </div>
+          <div class="upload-info">
+            <h3>Garrafas PET</h3>
+            <div class="upload-meta">
+              <span class="upload-meta-item">
+                <span class="icon">🏷️</span> Plástico
+              </span>
+              <span class="upload-meta-item">
+                <span class="icon">⚖️</span> 2.5 kg
+              </span>
+              <span class="upload-meta-item">
+                <span class="icon">📅</span> 15/03/2026
+              </span>
+              <span class="upload-meta-item">
+                <span class="icon">📍</span> São Paulo, SP
+              </span>
+            </div>
+          </div>
+          <div class="upload-actions">
+            <span class="status-badge aprovado">✓ Aprovado</span>
+            <span class="upload-points">+50 pts</span>
+            <button class="btn-details">Ver Detalhes</button>
+          </div>
+        </div>
+
+        <div class="upload-card">
+          <div class="upload-thumbnail">
+            📄
+          </div>
+          <div class="upload-info">
+            <h3>Papelão</h3>
+            <div class="upload-meta">
+              <span class="upload-meta-item">
+                <span class="icon">🏷️</span> Papel
+              </span>
+              <span class="upload-meta-item">
+                <span class="icon">⚖️</span> 1.0 kg
+              </span>
+              <span class="upload-meta-item">
+                <span class="icon">📅</span> 20/03/2026
+              </span>
+              <span class="upload-meta-item">
+                <span class="icon">📍</span> São Paulo, SP
+              </span>
+            </div>
+          </div>
+          <div class="upload-actions">
+            <span class="status-badge pendente">⏳ Pendente</span>
+            <span class="upload-points" style="color:#6b8576">-</span>
+            <button class="btn-details">Ver Detalhes</button>
+          </div>
+        </div>
+
+        <div class="upload-card">
+          <div class="upload-thumbnail">
+            🥫
+          </div>
+          <div class="upload-info">
+            <h3>Latas de Alumínio</h3>
+            <div class="upload-meta">
+              <span class="upload-meta-item">
+                <span class="icon">🏷️</span> Metal
+              </span>
+              <span class="upload-meta-item">
+                <span class="icon">⚖️</span> 0.5 kg
+              </span>
+              <span class="upload-meta-item">
+                <span class="icon">📅</span> 25/03/2026
+              </span>
+              <span class="upload-meta-item">
+                <span class="icon">📍</span> São Paulo, SP
+              </span>
+            </div>
+          </div>
+          <div class="upload-actions">
+            <span class="status-badge aprovado">✓ Aprovado</span>
+            <span class="upload-points">+30 pts</span>
+            <button class="btn-details">Ver Detalhes</button>
+          </div>
+        </div>
+
+        <div class="upload-card">
+          <div class="upload-thumbnail">
+            🍾
+          </div>
+          <div class="upload-info">
+            <h3>Garrafas de Vidro</h3>
+            <div class="upload-meta">
+              <span class="upload-meta-item">
+                <span class="icon">🏷️</span> Vidro
+              </span>
+              <span class="upload-meta-item">
+                <span class="icon">⚖️</span> 1.5 kg
+              </span>
+              <span class="upload-meta-item">
+                <span class="icon">📅</span> 28/03/2026
+              </span>
+              <span class="upload-meta-item">
+                <span class="icon">📍</span> São Paulo, SP
+              </span>
+            </div>
+          </div>
+          <div class="upload-actions">
+            <span class="status-badge aprovado">✓ Aprovado</span>
+            <span class="upload-points">+40 pts</span>
+            <button class="btn-details">Ver Detalhes</button>
+          </div>
+        </div>
+
+        <div class="upload-card">
+          <div class="upload-thumbnail">
+            🍃
+          </div>
+          <div class="upload-info">
+            <h3>Resíduos Orgânicos</h3>
+            <div class="upload-meta">
+              <span class="upload-meta-item">
+                <span class="icon">🏷️</span> Orgânico
+              </span>
+              <span class="upload-meta-item">
+                <span class="icon">⚖️</span> 0.8 kg
+              </span>
+              <span class="upload-meta-item">
+                <span class="icon">📅</span> 30/03/2026
+              </span>
+              <span class="upload-meta-item">
+                <span class="icon">📍</span> São Paulo, SP
+              </span>
+            </div>
+          </div>
+          <div class="upload-actions">
+            <span class="status-badge rejeitado">✗ Rejeitado</span>
+            <span class="upload-points" style="color:#dc2626">0 pts</span>
+            <button class="btn-details">Ver Detalhes</button>
+          </div>
+        </div>
+
+      </div>
+
     </main>
   </div>
 </body>

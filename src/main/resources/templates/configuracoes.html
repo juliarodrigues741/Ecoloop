@@ -1,99 +1,382 @@
-<!DOCTYPE html>  
-<html lang="pt-BR">  
-<head>  
-  <meta charset="UTF-8" />  
-  <title>Configurações - EcoLoop</title>  
-  <link rel="stylesheet" href="configuracoes.css" />  
-</head>  
-<body>  
-  <div class="app">  
-    <!-- SIDEBAR -->  
-    <!-- SIDEBAR -->  
-    <aside class="sidebar">  
-      <div class="logo-row">  
-        <div class="logo-circle"></div>  
-        <span class="logo-text">EcoLoop</span>  
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title>Configurações - EcoLoop</title>
+  <link rel="stylesheet" href="/admin-dashboard.css" />
+  <style>
+    .settings-wrapper {
+      max-width: 720px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .settings-card {
+      background: white;
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    }
+
+    .settings-card h2 {
+      font-size: 20px;
+      color: #165c33;
+      margin: 0 0 24px 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .setting-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 0;
+      border-bottom: 1px solid #e4efe7;
+    }
+
+    .setting-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .setting-item:first-child {
+      padding-top: 0;
+    }
+
+    .setting-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .setting-label {
+      font-size: 15px;
+      font-weight: 600;
+      color: #165c33;
+      margin: 0;
+    }
+
+    .setting-value {
+      font-size: 14px;
+      color: #6b8576;
+      margin: 0;
+    }
+
+    .setting-desc {
+      font-size: 13px;
+      color: #9ab1a1;
+      margin: 0;
+      line-height: 1.4;
+    }
+
+    .btn-edit {
+      background: #edf6ef;
+      color: #2f9e44;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .btn-edit:hover {
+      background: #dff3e3;
+      transform: translateY(-1px);
+    }
+
+    .toggle {
+      position: relative;
+      display: inline-block;
+      width: 52px;
+      height: 28px;
+      flex-shrink: 0;
+    }
+
+    .toggle input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      inset: 0;
+      background: #d4e4d8;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .slider::before {
+      content: "";
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      left: 3px;
+      top: 3px;
+      background: white;
+      border-radius: 50%;
+      transition: 0.3s;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    }
+
+    .toggle input:checked + .slider {
+      background: #2f9e44;
+    }
+
+    .toggle input:checked + .slider::before {
+      transform: translateX(24px);
+    }
+
+    .settings-card.danger {
+      border: 2px solid #fee2e2;
+      background: #fef9f9;
+    }
+
+    .settings-card.danger h2 {
+      color: #dc2626;
+    }
+
+    .btn-danger {
+      background: #fee2e2;
+      color: #dc2626;
+      border: 2px solid #fecaca;
+      border-radius: 10px;
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .btn-danger:hover {
+      background: #fecaca;
+      border-color: #dc2626;
+      transform: translateY(-1px);
+    }
+
+    @media (max-width: 768px) {
+      .setting-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      .btn-edit,
+      .btn-danger,
+      .toggle {
+        align-self: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <script>if (localStorage.getItem('tema') === 'escuro') document.body.classList.add('dark');</script>
+  <div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="logo-row">
+        <div class="logo-circle">
+          <span style="font-size:22px">🌍</span>
+        </div>
+        <span class="logo-text">EcoLoop</span>
       </div>
-  
-      <nav class="nav">  
-        <button class="nav-item">  
-          <span ><a href="/dashboard" class="menu-item">Home</a></span> 
-        </button>  
-        <button class="nav-item">  
-          <span ><a href="/enviar" class="menu-item">Enviar</a></span> 
-        </button>  
-        <button class="nav-item">  
-          <span ><a href="/beneficios" class="menu-item">Benefícios</a></span>   
-        </button>  
-        <button class="nav-item">  
-          <span ><a href="/conquistas" class="menu-item">Conquistas</a></span>  
-        </button>  
-        <button class="nav-item">  
-          <span ><a href="/perfil" class="menu-item">Perfil</a></span>   
-        </button>  
-        <button class="nav-item active">  
-          <span ><a href="/configuracoes" class="menu-item">Configurações</a></span>   
-        </button>  
-        <button class="nav-item">  
-          <span ><a href="/uploads" class="menu-item">Uploads</a></span>   
-        </button>  
+
+      <p class="sidebar-section">MENU</p>
+
+      <nav class="nav">
+        <a href="/dashboard" class="nav-item">
+          <span class="nav-icon">🏠</span> Home
+        </a>
+        <a href="/enviar" class="nav-item">
+          <span class="nav-icon">📸</span> Enviar
+        </a>
+        <a href="/beneficios" class="nav-item">
+          <span class="nav-icon">🎁</span> Benefícios
+        </a>
+        <a href="/conquistas" class="nav-item">
+          <span class="nav-icon">🏆</span> Conquistas
+        </a>
+        <a href="/perfil" class="nav-item">
+          <span class="nav-icon">👤</span> Perfil
+        </a>
+        <a href="/configuracoes" class="nav-item active">
+          <span class="nav-icon">⚙️</span> Configurações
+        </a>
       </nav>
-  
-      <button class="nav-item">
-        <span ><a href="/login" class="menu-item">Sair</a></span> 
-      </button>  
+
+      <a href="/logout" class="nav-item sair-btn">
+        <span class="nav-icon">🚪</span> Sair
+      </a>
     </aside>
-  
-    <!-- CONTEÚDO PRINCIPAL -->  
-    <main class="main">  
-      <header class="page-header">  
-        <h1>Configurações</h1>  
-        <p>Gerencie suas preferências e conta</p>  
-      </header>
-  
-      <!-- CARD GRANDE DE PERFIL -->  
-      <section class="settings-card">  
-        <header class="settings-header">  
-          <div class="settings-icon"></div>  
-          <span class="settings-title">Perfil</span>  
-        </header>
-  
-        <form class="settings-form">  
-          <div class="form-group">  
-            <label for="username">Nome de usuário</label>  
-            <input  
-              id="username"  
-              type="text"  
-              value="anna beatriz Martins"  
-            />  
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="main">
+
+      <div class="top-bar">
+        <div>
+          <h1 class="page-title">Configurações</h1>
+          <p class="page-sub">Gerencie suas preferências e conta</p>
+        </div>
+        <div class="admin-badge">
+          <div class="admin-avatar">U</div>
+          <span>Usuário</span>
+        </div>
+      </div>
+
+      <div class="settings-wrapper">
+
+        <!-- CARD CONTA -->
+        <div class="settings-card">
+          <h2>👤 Conta</h2>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <p class="setting-label">E-mail</p>
+              <p class="setting-value">usuario@exemplo.com</p>
+            </div>
+            <button class="btn-edit">Alterar</button>
           </div>
-  
-          <div class="form-group">  
-            <label for="email">Email</label>  
-            <input  
-              id="email"  
-              type="email"  
-              value="anna beatriz Martins@email.com"  
-            />  
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <p class="setting-label">Senha</p>
+              <p class="setting-value">••••••••</p>
+            </div>
+            <button class="btn-edit">Alterar</button>
           </div>
-  
-          <div class="form-group">  
-            <label for="password">Alterar senha</label>  
-            <input  
-              id="password"  
-              type="password"  
-              placeholder="Nova senha"  
-            />  
+        </div>
+
+        <!-- CARD NOTIFICAÇÕES -->
+        <div class="settings-card">
+          <h2>🔔 Notificações</h2>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <p class="setting-label">Notificações por E-mail</p>
+              <p class="setting-desc">Receba atualizações sobre seus uploads</p>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" checked>
+              <span class="slider"></span>
+            </label>
           </div>
-  
-          <div class="form-footer">  
-            <button type="submit" class="btn-save">  
-              Salvar alterações  
-            </button>  
-          </div>  
-        </form>  
-      </section>  
-    </main>  
-  </div>  
-</body>  
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <p class="setting-label">Notificações de Desafios</p>
+              <p class="setting-desc">Alertas sobre novos desafios e conquistas</p>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <p class="setting-label">Notificações Push</p>
+              <p class="setting-desc">Receba notificações no navegador</p>
+            </div>
+            <label class="toggle">
+              <input type="checkbox">
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- CARD PRIVACIDADE -->
+        <div class="settings-card">
+          <h2>🔒 Privacidade</h2>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <p class="setting-label">Perfil Público</p>
+              <p class="setting-desc">Permitir que outros vejam seu perfil</p>
+            </div>
+            <label class="toggle">
+              <input type="checkbox">
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <p class="setting-label">Mostrar no Ranking</p>
+              <p class="setting-desc">Aparecer no ranking público</p>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <p class="setting-label">Compartilhar Estatísticas</p>
+              <p class="setting-desc">Permitir que seus dados ajudem a melhorar o app</p>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- CARD TEMA -->
+        <div class="settings-card">
+          <h2>🎨 Aparência</h2>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <p class="setting-label">Tema Escuro</p>
+              <p class="setting-desc">Ativar modo escuro para economia de bateria</p>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="tema-toggle">
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- CARD ZONA DE PERIGO -->
+        <div class="settings-card danger">
+          <h2>⚠️ Zona de Perigo</h2>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <p class="setting-label">Excluir Conta</p>
+              <p class="setting-desc">Apagar permanentemente sua conta e todos os dados</p>
+            </div>
+            <button class="btn-danger">Excluir Conta</button>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script>
+    document.getElementById('tema-toggle')?.addEventListener('change', function(e) {
+      if (e.target.checked) {
+        document.body.classList.add('dark');
+        localStorage.setItem('tema', 'escuro');
+      } else {
+        document.body.classList.remove('dark');
+        localStorage.removeItem('tema');
+      }
+    });
+
+    if (localStorage.getItem('tema') === 'escuro') {
+      document.body.classList.add('dark');
+      document.getElementById('tema-toggle').checked = true;
+    }
+  </script>
+</body>
 </html>

@@ -7,6 +7,8 @@ public class Usuario {
     private String nome;
     private String email;
     private String senhaHash;
+    private String cpf;
+    private String telefone;
     private String fotoPerfil;
     private String nivel;
     private Integer pontos;
@@ -21,6 +23,10 @@ public class Usuario {
     public void setEmail(String email) { this.email = email; }
     public String getSenhaHash() { return senhaHash; }
     public void setSenhaHash(String senhaHash) { this.senhaHash = senhaHash; }
+    public String getCpf() { return cpf; }
+    public void setCpf(String cpf) { this.cpf = cpf; }
+    public String getTelefone() { return telefone; }
+    public void setTelefone(String telefone) { this.telefone = telefone; }
     public String getFotoPerfil() { return fotoPerfil; }
     public void setFotoPerfil(String fotoPerfil) { this.fotoPerfil = fotoPerfil; }
     public String getNivel() { return nivel; }

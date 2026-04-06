@@ -1,121 +1,377 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EcoLoop - Enviar Material</title>
-    <link rel="stylesheet" href="enviar.css">
-    
+  <meta charset="UTF-8" />
+  <title>Enviar Material - EcoLoop</title>
+  <link rel="stylesheet" href="/admin-dashboard.css" />
+  <style>
+    .upload-section {
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+      margin-bottom: 20px;
+    }
+
+    .upload-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .upload-header h2 {
+      font-size: 28px;
+      color: #165c33;
+    }
+
+    .badge-pill {
+      background: #dff3e3;
+      color: #165c33;
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .upload-area {
+      border: 2px dashed #2f9e44;
+      border-radius: 16px;
+      padding: 40px 20px;
+      text-align: center;
+      background: #f8fcf8;
+      cursor: pointer;
+      transition: 0.2s ease;
+      margin-bottom: 24px;
+    }
+
+    .upload-area:hover {
+      background: #edf6ef;
+      border-color: #27873a;
+    }
+
+    .upload-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+
+    .upload-area h3 {
+      color: #165c33;
+      margin-bottom: 8px;
+      font-size: 18px;
+    }
+
+    .upload-area p {
+      color: #6b8576;
+      font-size: 14px;
+    }
+
+    .file-input {
+      display: none;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    .form-group label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #456757;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      border: 1px solid #e4efe7;
+      background: #f8fcf8;
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 15px;
+      color: #0f3d2b;
+      outline: none;
+      transition: 0.2s ease;
+      font-family: inherit;
+    }
+
+    .form-group textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: #2f9e44;
+      box-shadow: 0 0 0 3px rgba(47, 158, 68, 0.1);
+    }
+
+    .btn-submit {
+      background: #2f9e44;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 28px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(47, 158, 68, 0.2);
+      width: 100%;
+    }
+
+    .btn-submit:hover {
+      background: #27873a;
+      transform: translateY(-1px);
+    }
+
+    .info-box {
+      background: #fff8e1;
+      border-left: 4px solid #ffc107;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+
+    .info-box strong {
+      display: block;
+      color: #165c33;
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+
+    .info-box p {
+      color: #597464;
+      font-size: 14px;
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    .preview-image {
+      max-width: 200px;
+      max-height: 200px;
+      border-radius: 12px;
+      margin-top: 12px;
+      border: 2px solid #e4efe7;
+    }
+
+    @media (max-width: 768px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 <body>
+  <script>if (localStorage.getItem('tema') === 'escuro') document.body.classList.add('dark');</script>
+  <div class="app">
 
-<div class="container">
-
-    <aside class="sidebar">  
-      <div class="logo-row">  
-        <div class="logo-circle"></div>  
-        <span class="logo-text">EcoLoop</span>  
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="logo-row">
+        <div class="logo-circle">
+          <span style="font-size:22px">🌍</span>
+        </div>
+        <span class="logo-text">EcoLoop</span>
       </div>
-  
-      <nav class="nav">  
-        <button class="nav-item">  
-          <span ><a href="/dashboard" class="menu-item">Home</a></span> 
-        </button>  
-        <button class="nav-item active">  
-          <span ><a href="/enviar" class="menu-item">Enviar</a></span> 
-        </button>  
-        <button class="nav-item">  
-          <span ><a href="/beneficios" class="menu-item">Benefícios</a></span>   
-        </button>  
-        <button class="nav-item">  
-          <span ><a href="/conquistas" class="menu-item">Conquistas</a></span>  
-        </button>  
-        <button class="nav-item">  
-          <span ><a href="/perfil" class="menu-item">Perfil</a></span>   
-        </button>  
-        <button class="nav-item">  
-          <span ><a href="/configuracoes" class="menu-item">Configurações</a></span>   
-        </button>  
-        <button class="nav-item">  
-          <span ><a href="/uploads" class="menu-item">Uploads</a></span>   
-        </button>  
+
+      <p class="sidebar-section">MENU</p>
+
+      <nav class="nav">
+        <a href="/dashboard" class="nav-item">
+          <span class="nav-icon">🏠</span> Home
+        </a>
+        <a href="/enviar" class="nav-item active">
+          <span class="nav-icon">📸</span> Enviar
+        </a>
+        <a href="/beneficios" class="nav-item">
+          <span class="nav-icon">🎁</span> Benefícios
+        </a>
+        <a href="/conquistas" class="nav-item">
+          <span class="nav-icon">🏆</span> Conquistas
+        </a>
+        <a href="/perfil" class="nav-item">
+          <span class="nav-icon">👤</span> Perfil
+        </a>
+        <a href="/configuracoes" class="nav-item">
+          <span class="nav-icon">⚙️</span> Configurações
+        </a>
       </nav>
-  
-      <button class="nav-item">
-        <span ><a href="/login" class="menu-item">Sair</a></span> 
-      </button>  
+
+      <a href="/logout" class="nav-item sair-btn">
+        <span class="nav-icon">🚪</span> Sair
+      </a>
     </aside>
 
-    <main class="content">
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="main">
 
-        <h1>Enviar Material</h1>
-        <p class="subtitle">Envie fotos ou vídeos dos seus materiais recicláveis</p>
+      <div class="top-bar">
+        <div>
+          <h1 class="page-title">Enviar Material</h1>
+          <p class="page-sub">Envie fotos dos seus materiais recicláveis e ganhe pontos</p>
+        </div>
+        <div class="admin-badge">
+          <div class="admin-avatar">U</div>
+          <span>Usuário</span>
+        </div>
+      </div>
 
+      <!-- CARDS DE RESUMO -->
+      <section class="cards-row">
+        <article class="stat-card green">
+          <div class="stat-icon">⭐</div>
+          <div>
+            <p class="stat-label">Pontos por Upload</p>
+            <p class="stat-value">+50</p>
+          </div>
+        </article>
+        <article class="stat-card pink">
+          <div class="stat-card pink">
+          <div class="stat-icon">📤</div>
+          <div>
+            <p class="stat-label">Enviados Hoje</p>
+            <p class="stat-value">3</p>
+          </div>
+        </article>
+        <article class="stat-card blue">
+          <div class="stat-icon">✅</div>
+          <div>
+            <p class="stat-label">Taxa de Aprovação</p>
+            <p class="stat-value">95%</p>
+          </div>
+        </article>
+      </section>
 
-        <form action="/uploads" method="post" enctype="multipart/form-data">
+      <!-- FORMULÁRIO DE ENVIO -->
+      <div class="upload-section">
+        <div class="upload-header">
+          <h2>📸 Novo Envio</h2>
+          <div class="badge-pill">Preencha os dados</div>
+        </div>
 
-            <section class="uploadBox">
+        <div class="info-box">
+          <strong>💡 Dica</strong>
+          <p>Tire fotos claras dos materiais recicláveis. Quanto melhor a qualidade, mais rápida será a aprovação!</p>
+        </div>
 
-                <div class="upload-area">
+        <form>
+          <!-- Área de Upload -->
+          <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+            <div class="upload-icon">📸</div>
+            <h3>Clique para selecionar uma foto</h3>
+            <p>Ou arraste e solte aqui (JPG, PNG - Máx. 5MB)</p>
+            <input type="file" id="fileInput" class="file-input" accept="image/*" onchange="previewImage(event)">
+            <img id="preview" class="preview-image" style="display:none">
+          </div>
 
-                    <div class="upload-icon">⬆</div>
-                    <span>Arraste suas fotos ou vídeos aqui</span>
+          <!-- Campos do Formulário -->
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="tipo">Tipo de Material</label>
+              <select id="tipo" required>
+                <option value="">Selecione o tipo</option>
+                <option value="plastico">Plástico</option>
+                <option value="papel">Papel/Papelão</option>
+                <option value="vidro">Vidro</option>
+                <option value="metal">Metal</option>
+                <option value="eletronico">Eletrônico</option>
+                <option value="organico">Orgânico</option>
+              </select>
+            </div>
 
-                    <div class="upload-buttons">
-                        <label class="camera-btn">
-                            Tirar Foto
-                            <input type="file" accept="image/*" capture="camera" name="files">
-                        </label>
+            <div class="form-group">
+              <label for="quantidade">Quantidade (kg)</label>
+              <input type="number" id="quantidade" placeholder="Ex: 2.5" step="0.1" min="0" required>
+            </div>
 
-                        <label class="camera-btn">
-                            Gravar Vídeo
-                            <input type="file" accept="video/*" capture="camcorder" name="files">
-                        </label>
-                    </div>
+            <div class="form-group full">
+              <label for="descricao">Descrição (opcional)</label>
+              <textarea id="descricao" placeholder="Descreva o material enviado..."></textarea>
+            </div>
 
-                    <label class="fileInput">
-                        <input type="file" multiple name="files">
-                        Escolher Arquivos
-                    </label>
-                </div>
+            <div class="form-group">
+              <label for="localizacao">Localização</label>
+              <input type="text" id="localizacao" placeholder="Ex: São Paulo, SP">
+            </div>
 
+            <div class="form-group">
+              <label for="data">Data da Coleta</label>
+              <input type="date" id="data" required>
+            </div>
+          </div>
 
-                <div class="material-box">
-
-                    <label>Tipo de Material</label>
-                    <select name="material">
-                        <option>Selecione o tipo</option>
-                        <option>Plástico</option>
-                        <option>Papel</option>
-                        <option>Vidro</option>
-                        <option>Metal</option>
-                        <option>Eletrônicos</option>
-                    </select>
-
-                    <ul class="tips">
-                        <li>Tire fotos claras dos materiais</li>
-                        <li>Separe por tipo de material</li>
-                        <li>Vídeos podem ganhar pontos extras</li>
-                        <li>Materiais limpos são melhor avaliados</li>
-                    </ul>
-
-                </div>
-            </section>
-
-
-            <section class="descriptionBox">
-                <label>Descrição (Opcional)</label>
-                <textarea name="descricao"
-                    placeholder="Ex: 5 garrafas PET, 3 latas de alumínio…"></textarea>
-            </section>
-
-            <button class = "send-btn" type="submit"><a href="/uploads" class="link"> Enviar Material</a></button>
-
+          <button type="submit" class="btn-submit">
+            📤 Enviar Material
+          </button>
         </form>
+      </div>
+
+      <!-- Histórico Recente -->
+      <div class="upload-section">
+        <h2 style="margin-bottom:16px;color:#165c33">📋 Últimos Envios</h2>
+        <div class="pontos-list">
+          <div class="ponto-item">
+            <div>
+              <span class="ponto-nome">Garrafas PET</span>
+              <br><small style="color:#6b8576">2.5 kg - Aprovado</small>
+            </div>
+            <span class="ponto-pts" style="color:#2f9e44">+50 pts</span>
+          </div>
+
+          <div class="ponto-item">
+            <div>
+              <span class="ponto-nome">Papelão</span>
+              <br><small style="color:#6b8576">1.0 kg - Pendente</small>
+            </div>
+            <span class="ponto-pts" style="color:#ffc107">⏳</span>
+          </div>
+
+          <div class="ponto-item">
+            <div>
+              <span class="ponto-nome">Latas de Alumínio</span>
+              <br><small style="color:#6b8576">0.5 kg - Aprovado</small>
+            </div>
+            <span class="ponto-pts" style="color:#2f9e44">+30 pts</span>
+          </div>
+        </div>
+      </div>
 
     </main>
+  </div>
 
-</div>
+  <script>
+    function previewImage(event) {
+      const preview = document.getElementById('preview');
+      const file = event.target.files[0];
 
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          preview.src = e.target.result;
+          preview.style.display = 'block';
+        }
+        reader.readAsDataURL(file);
+      }
+    }
+
+    // Definir data de hoje como padrão
+    document.getElementById('data').valueAsDate = new Date();
+  </script>
 </body>
 </html>

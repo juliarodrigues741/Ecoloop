@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title>Adicionar Usuário - EcoLoop</title>
+  <link rel="stylesheet" href="/admin-dashboard.css" />
+  <style>
+    /* Estilos específicos para o formulário */
+    .form-section {
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    }
+
+    .form-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .form-header h2 {
+      font-size: 28px;
+      color: #165c33;
+    }
+
+    .badge-pill {
+      background: #dff3e3;
+      color: #165c33;
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    .form-group label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #456757;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      border: 1px solid #e4efe7;
+      background: #f8fcf8;
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 15px;
+      color: #0f3d2b;
+      outline: none;
+      transition: 0.2s ease;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: #2f9e44;
+      box-shadow: 0 0 0 3px rgba(47, 158, 68, 0.1);
+    }
+
+    .section-title {
+      font-size: 20px;
+      color: #165c33;
+      margin: 24px 0 16px;
+      font-weight: 600;
+    }
+
+    .form-divider {
+      height: 1px;
+      background: #e4efe7;
+      margin: 24px 0;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+      margin-top: 24px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 12px;
+      padding: 12px 20px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .btn-secondary {
+      background: #edf6ef;
+      color: #165c33;
+    }
+
+    .btn-secondary:hover {
+      background: #e2efe5;
+    }
+
+    .btn-primary {
+      background: #2f9e44;
+      color: white;
+      box-shadow: 0 4px 12px rgba(47, 158, 68, 0.2);
+    }
+
+    .btn-primary:hover {
+      background: #27873a;
+      transform: translateY(-1px);
+    }
+
+    .alert {
+      padding: 14px 18px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .alert-success {
+      background: #d8f1dd;
+      color: #165c33;
+      border: 1px solid #2f9e44;
+    }
+
+    .alert-error {
+      background: #ffe0e0;
+      color: #c41e3a;
+      border: 1px solid #ff6b6b;
+    }
+
+    @media (max-width: 768px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <script>if (localStorage.getItem('tema') === 'escuro') document.body.classList.add('dark');</script>
+  <div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="logo-row">
+        <div class="logo-circle">
+          <span style="font-size:22px">🌍</span>
+        </div>
+        <span class="logo-text">EcoLoop</span>
+      </div>
+
+      <p class="sidebar-section">MENU</p>
+
+      <nav class="nav">
+        <a href="/admin/dashboard" class="nav-item">
+          <span class="nav-icon">🏠</span> Home
+        </a>
+        <a href="/admin/adicionar-usuario" class="nav-item active">
+          <span class="nav-icon">👤</span> Adicionar Usuário
+        </a>
+        <a href="/admin/adicionar-recompensa" class="nav-item">
+          <span class="nav-icon">🎁</span> Adicionar Recompensa
+        </a>
+        <a href="/admin/uploads" class="nav-item">
+          <span class="nav-icon">📤</span> Upload Usuário
+        </a>
+        <a href="/admin/config" class="nav-item">
+          <span class="nav-icon">⚙️</span> Configurações
+        </a>
+      </nav>
+
+      <a href="/logout" class="nav-item sair-btn">
+        <span class="nav-icon">🚪</span> Sair
+      </a>
+    </aside>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="main">
+
+      <div class="top-bar">
+        <div>
+          <h1 class="page-title">Adicionar Usuário</h1>
+          <p class="page-sub">Cadastre um novo usuário na plataforma EcoLoop</p>
+        </div>
+        <div class="admin-badge">
+          <div class="admin-avatar" th:text="${usuario != null ? usuario.nome.substring(0,1).toUpperCase() : 'A'}">A</div>
+          <span th:text="${usuario != null ? usuario.nome.split(' ')[0] : 'Admin'}">Admin</span>
+        </div>
+      </div>
+
+      <!-- Mensagens de erro e sucesso -->
+      <div th:if="${erro}" class="alert alert-error">
+        <span>⚠️</span>
+        <span th:text="${erro}"></span>
+      </div>
+
+      <div th:if="${sucesso}" class="alert alert-success">
+        <span>✓</span>
+        <span th:text="${sucesso}"></span>
+      </div>
+
+      <!-- FORMULÁRIO -->
+      <section class="form-section">
+        <div class="form-header">
+          <h2>Formulário de Cadastro</h2>
+          <div class="badge-pill">Preencha os dados abaixo</div>
+        </div>
+
+        <form method="post" action="/admin/adicionar-usuario">
+          <h3 class="section-title">Dados Pessoais</h3>
+
+          <div class="form-grid">
+            <div class="form-group full">
+              <label for="nome">Nome completo</label>
+              <input type="text" id="nome" name="nome" placeholder="Digite o nome completo" required />
+            </div>
+
+            <div class="form-group">
+              <label for="email">E-mail</label>
+              <input type="email" id="email" name="email" placeholder="Digite o e-mail" required />
+            </div>
+
+            <div class="form-group">
+              <label for="telefone">Telefone</label>
+              <input type="text" id="telefone" name="telefone" placeholder="(00) 00000-0000" />
+            </div>
+
+            <div class="form-group">
+              <label for="cpf">CPF</label>
+              <input type="text" id="cpf" name="cpf" placeholder="000.000.000-00" />
+            </div>
+
+            <div class="form-group">
+              <label for="cargo">Tipo de usuário</label>
+              <select id="cargo" name="cargo" required>
+                <option value="">Selecione o tipo</option>
+                <option value="Administrador">Administrador</option>
+                <option value="Usuário">Usuário</option>
+                <option value="Moderador">Moderador</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-divider"></div>
+
+          <h3 class="section-title">Dados de Acesso</h3>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="senha">Senha</label>
+              <input type="password" id="senha" name="senha" placeholder="Digite a senha" required minlength="6" />
+            </div>
+
+            <div class="form-group">
+              <label for="confirmarSenha">Confirmar senha</label>
+              <input type="password" id="confirmarSenha" name="confirmarSenha" placeholder="Repita a senha" required minlength="6" />
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary" onclick="window.location.href='/admin/dashboard'">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Salvar Usuário</button>
+          </div>
+        </form>
+      </section>
+
+    </main>
+  </div>
+</body>
+</html>

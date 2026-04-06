@@ -1,212 +1,205 @@
-<!DOCTYPE html>  
-<html lang="pt-BR">  
-<head>  
-  <meta charset="UTF-8" />  
-  <title>Dashboard - EcoLoop</title>  
-  <link rel="stylesheet" href="dashboard.css" />  
-</head>  
-<body>  
-  <div class="app">  
-    <aside class="sidebar">  
-      <div class="logo-row">  
-        <div class="logo-circle"></div>  
-        <span class="logo-text">EcoLoop</span>  
-      </div>
-  
-      <nav class="nav">  
-        <button class="nav-item active">  
-          <span ><a href="/dashboard" class="menu-item">Home</a></span> 
-        </button>  
-        <button class="nav-item">  
-          <span ><a href="/enviar" class="menu-item">Enviar</a></span> 
-        </button>  
-        <button class="nav-item">  
-          <span ><a href="/beneficios" class="menu-item">Benefícios</a></span>   
-        </button>  
-        <button class="nav-item">  
-          <span ><a href="/conquistas" class="menu-item">Conquistas</a></span>  
-        </button>  
-        <button class="nav-item">  
-          <span ><a href="/perfil" class="menu-item">Perfil</a></span>   
-        </button>  
-        <button class="nav-item">  
-          <span ><a href="/configuracoes" class="menu-item">Configurações</a></span>   
-        </button>  
-        <button class="nav-item">  
-          <span ><a href="/uploads" class="menu-item">Uploads</a></span>   
-        </button>  
-      </nav>
-  
-      <button class="nav-item">
-        <span ><a href="/login" class="menu-item">Sair</a></span> 
-      </button>  
-    </aside>
-    <!-- CONTEÚDO PRINCIPAL -->  
-    <main class="main">  
-      <header class="page-header">  
-        <h1>Dashboard</h1>  
-        <p>Bem-vindo de volta, delucaerick@gmail.com! 👋</p>  
-      </header>
-  
-      <!-- LINHA DE CARDS RESUMO -->  
-      <section class="summary-row">  
-        <article class="summary-card">  
-          <div>  
-            <p class="summary-label">Pontos Totais</p>  
-            <p class="summary-value">1250</p>  
-          </div>  
-          <div class="summary-icon circle"></div>  
-        </article>
-  
-        <article class="summary-card">  
-          <div>  
-            <p class="summary-label">Material Reciclado</p>  
-            <p class="summary-value">12.5 kg</p>  
-          </div>  
-          <div class="summary-icon leaf"></div>  
-        </article>
-  
-        <article class="summary-card">  
-          <div>  
-            <p class="summary-label">Nível</p>  
-            <p class="summary-value">5</p>  
-          </div>  
-          <div class="summary-icon up"></div>  
-        </article>
-  
-        <article class="summary-card">  
-          <div>  
-            <p class="summary-label">Meta Mensal</p>  
-            <p class="summary-value">75%</p>  
-          </div>  
-          <div class="summary-icon target"></div>  
-        </article>  
-      </section>
-  
-      <!-- GRID PRINCIPAL -->  
-      <section class="content-grid">  
-        <!-- COLUNA ESQUERDA -->  
-        <div class="left-col">  
-          <!-- DESAFIOS ATIVOS -->  
-          <article class="card challenges-card">  
-            <h2>Desafios Ativos</h2>
-  
-            <div class="challenge">  
-              <div class="challenge-header">  
-                <span>Recicle 5kg esta semana</span>  
-                <span class="challenge-points">+100 pts</span>  
-              </div>  
-              <div class="progress-bar">  
-                <div class="progress-fill" style="width: 60%"></div>  
-              </div>  
-              <span class="progress-text">60% completo</span>  
-            </div>
-  
-            <div class="challenge">  
-              <div class="challenge-header">  
-                <span>Faça 10 uploads este mês</span>  
-                <span class="challenge-points">+200 pts</span>  
-              </div>  
-              <div class="progress-bar">  
-                <div class="progress-fill" style="width: 40%"></div>  
-              </div>  
-              <span class="progress-text">40% completo</span>  
-            </div>  
-          </article>
-  
-          <!-- ATIVIDADES RECENTES -->  
-          <article class="card activity-card">  
-            <h2>Atividades Recentes</h2>
-  
-            <div class="activity-item">  
-              <div>  
-                <p class="activity-title">Upload aprovado</p>  
-                <p class="activity-sub">Garrafas PET</p>  
-              </div>  
-              <div class="activity-right">  
-                <span class="activity-points">+50</span>  
-                <span class="activity-time">14:32</span>  
-              </div>  
-            </div>
-  
-            <div class="activity-item">  
-              <div>  
-                <p class="activity-title">Resgate realizado</p>  
-                <p class="activity-sub">Desconto EcoShop</p>  
-              </div>  
-              <div class="activity-right">  
-                <span class="activity-points negative">-150</span>  
-                <span class="activity-time">10:15</span>  
-              </div>  
-            </div>
-  
-            <div class="activity-item">  
-              <div>  
-                <p class="activity-title">Upload aprovado</p>  
-                <p class="activity-sub">Papelão</p>  
-              </div>  
-              <div class="activity-right">  
-                <span class="activity-points">+30</span>  
-                <span class="activity-time">16:45</span>  
-              </div>  
-            </div>  
-          </article>  
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dashboard - EcoLoop</title>
+  <link rel="stylesheet" href="/admin-dashboard.css" />
+</head>
+<body>
+  <script>if (localStorage.getItem('tema') === 'escuro') document.body.classList.add('dark');</script>
+  <div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="logo-row">
+        <div class="logo-circle">
+          <span style="font-size:22px">🌍</span>
         </div>
-  
-        <!-- COLUNA DIREITA -->  
-        <div class="right-col">  
-          <!-- AÇÕES RÁPIDAS -->  
-          <article class="quick-actions">  
-            <h2>Ações Rápidas</h2>
-  
-            <button class="quick-btn primary">  
-              <span><a href="/enviar" class="quick-btn primary">📸 Enviar Material</a></span>  
-            </button>  
-            <button class="quick-btn">  
-              <span><a href="/beneficios" class="quick-btn">🎁 Ver Recompensas</a></span>  
-            </button>  
-            <button class="quick-btn">  
-              <span><a href ="/conquistas" class="quick-btn">🏅 Minhas Conquistas</a></span>  
-            </button>  
+        <span class="logo-text">EcoLoop</span>
+      </div>
+
+      <p class="sidebar-section">MENU</p>
+
+      <nav class="nav">
+        <a href="/dashboard" class="nav-item active">
+          <span class="nav-icon">🏠</span> Home
+        </a>
+        <a href="/enviar" class="nav-item">
+          <span class="nav-icon">📸</span> Enviar
+        </a>
+        <a href="/beneficios" class="nav-item">
+          <span class="nav-icon">🎁</span> Benefícios
+        </a>
+        <a href="/conquistas" class="nav-item">
+          <span class="nav-icon">🏆</span> Conquistas
+        </a>
+        <a href="/perfil" class="nav-item">
+          <span class="nav-icon">👤</span> Perfil
+        </a>
+        <a href="/configuracoes" class="nav-item">
+          <span class="nav-icon">⚙️</span> Configurações
+        </a>
+      </nav>
+
+      <a href="/logout" class="nav-item sair-btn">
+        <span class="nav-icon">🚪</span> Sair
+      </a>
+    </aside>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="main">
+
+      <div class="top-bar">
+        <div>
+          <h1 class="page-title">Dashboard</h1>
+          <p class="page-sub">Bem-vindo de volta! 👋</p>
+        </div>
+        <div class="admin-badge">
+          <div class="admin-avatar">U</div>
+          <span>Usuário</span>
+        </div>
+      </div>
+
+      <!-- CARDS DE RESUMO -->
+      <section class="cards-row">
+        <article class="stat-card green">
+          <div class="stat-icon">⭐</div>
+          <div>
+            <p class="stat-label">Pontos Totais</p>
+            <p class="stat-value">1250</p>
+          </div>
+        </article>
+        <article class="stat-card pink">
+          <div class="stat-icon">♻️</div>
+          <div>
+            <p class="stat-label">Material Reciclado</p>
+            <p class="stat-value">12.5 kg</p>
+          </div>
+        </article>
+        <article class="stat-card blue">
+          <div class="stat-icon">📊</div>
+          <div>
+            <p class="stat-label">Nível</p>
+            <p class="stat-value">5</p>
+          </div>
+        </article>
+        <article class="stat-card orange">
+          <div class="stat-icon">🎯</div>
+          <div>
+            <p class="stat-label">Meta Mensal</p>
+            <p class="stat-value">75%</p>
+          </div>
+        </article>
+      </section>
+
+      <div class="content-grid">
+
+        <!-- COLUNA CENTRAL -->
+        <div class="center-col">
+
+          <!-- Desafios Ativos -->
+          <article class="info-card">
+            <div class="info-card-header">
+              <h3>🎯 Desafios Ativos</h3>
+              <span class="badge-count">2</span>
+            </div>
+
+            <div class="pontos-list">
+              <div class="ponto-item">
+                <span class="ponto-nome">Recicle 5kg esta semana</span>
+                <div class="ponto-bar-wrap">
+                  <div class="ponto-bar pink-fill" style="width: 60%"></div>
+                </div>
+                <span class="ponto-pts">+100 pts</span>
+              </div>
+
+              <div class="ponto-item">
+                <span class="ponto-nome">Faça 10 uploads este mês</span>
+                <div class="ponto-bar-wrap">
+                  <div class="ponto-bar pink-fill" style="width: 40%"></div>
+                </div>
+                <span class="ponto-pts">+200 pts</span>
+              </div>
+            </div>
           </article>
-  
-          <!-- DESCONTOS DISPONÍVEIS -->  
-          <article class="card discounts-card">  
-            <h2>Descontos Disponíveis</h2>
-  
-            <div class="discount-item">  
-              <div>  
-                <p class="discount-name">Loja Verde</p>  
-                <p class="discount-sub">10% OFF</p>  
-              </div>  
-              <div class="discount-right">  
-                <span class="discount-points">100 pts</span>  
-              </div>  
+
+          <!-- Atividades Recentes -->
+          <article class="info-card">
+            <h3 style="margin-bottom:14px">📋 Atividades Recentes</h3>
+            <div class="pontos-list">
+              <div class="ponto-item">
+                <div>
+                  <span class="ponto-nome">Upload aprovado</span>
+                  <br><small style="color:#6b8576">Garrafas PET - 14:32</small>
+                </div>
+                <span class="ponto-pts" style="color:#2f9e44">+50</span>
+              </div>
+
+              <div class="ponto-item">
+                <div>
+                  <span class="ponto-nome">Resgate realizado</span>
+                  <br><small style="color:#6b8576">Desconto EcoShop - 10:15</small>
+                </div>
+                <span class="ponto-pts" style="color:#c41e3a">-150</span>
+              </div>
+
+              <div class="ponto-item">
+                <div>
+                  <span class="ponto-nome">Upload aprovado</span>
+                  <br><small style="color:#6b8576">Papelão - 16:45</small>
+                </div>
+                <span class="ponto-pts" style="color:#2f9e44">+30</span>
+              </div>
             </div>
-  
-            <div class="discount-item">  
-              <div>  
-                <p class="discount-name">EcoShop</p>  
-                <p class="discount-sub">15% OFF</p>  
-              </div>  
-              <div class="discount-right">  
-                <span class="discount-points">150 pts</span>  
-              </div>  
+          </article>
+
+        </div>
+
+        <!-- COLUNA DIREITA -->
+        <aside class="ranking-col">
+          <h2 class="ranking-title">⚡ Ações Rápidas</h2>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <a href="/enviar" style="background:#2f9e44;color:white;padding:14px;border-radius:12px;text-align:center;text-decoration:none;font-weight:600;box-shadow:0 4px 12px rgba(47,158,68,0.2)">
+              📸 Enviar Material
+            </a>
+            <a href="/beneficios" style="background:#edf6ef;color:#165c33;padding:14px;border-radius:12px;text-align:center;text-decoration:none;font-weight:600">
+              🎁 Ver Recompensas
+            </a>
+            <a href="/conquistas" style="background:#edf6ef;color:#165c33;padding:14px;border-radius:12px;text-align:center;text-decoration:none;font-weight:600">
+              🏅 Minhas Conquistas
+            </a>
+          </div>
+
+          <h2 class="ranking-title" style="margin-top:24px">🎁 Descontos Disponíveis</h2>
+          <div class="ranking-list">
+            <div class="ranking-item">
+              <div class="ranking-avatar">🏪</div>
+              <div class="ranking-info">
+                <span class="ranking-nome">Loja Verde</span>
+                <span class="ranking-pontos">10% OFF - 100 pts</span>
+              </div>
             </div>
-  
-            <div class="discount-item">  
-              <div>  
-                <p class="discount-name">BioStore</p>  
-                <p class="discount-sub">20% OFF</p>  
-              </div>  
-              <div class="discount-right">  
-                <span class="discount-points">200 pts</span>  
-              </div>  
-            </div>  
-          </article>  
-        </div>  
-      </section>  
-    </main>  
-  </div>  
-</body>  
+
+            <div class="ranking-item">
+              <div class="ranking-avatar">🛒</div>
+              <div class="ranking-info">
+                <span class="ranking-nome">EcoShop</span>
+                <span class="ranking-pontos">15% OFF - 150 pts</span>
+              </div>
+            </div>
+
+            <div class="ranking-item">
+              <div class="ranking-avatar">🌱</div>
+              <div class="ranking-info">
+                <span class="ranking-nome">BioStore</span>
+                <span class="ranking-pontos">20% OFF - 200 pts</span>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+      </div>
+    </main>
+  </div>
+</body>
 </html>

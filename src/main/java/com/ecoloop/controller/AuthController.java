@@ -41,7 +41,8 @@ public class AuthController {
         if (u != null && u.getSenhaHash().equals(password)) {
             session.setAttribute("usuario", u);
 
-            if (username.contains("@adm")) {
+            // Verifica se o email termina com @adm.com para redirecionar para área admin
+            if (username.toLowerCase().endsWith("@adm.com")) {
                 return "redirect:/admin/dashboard";
             } else {
                 return "redirect:/dashboard";

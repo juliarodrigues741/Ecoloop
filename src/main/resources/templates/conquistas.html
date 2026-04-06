@@ -1,255 +1,561 @@
-<!DOCTYPE html>  
-<html lang="pt-BR">  
-<head>  
-  <meta charset="UTF-8" />  
-  <title>Conquistas - EcoLoop</title>  
-  <link rel="stylesheet" href="conquistas.css" />  
-</head>  
-<body>  
-  <div class="app">  
-    <!-- SIDEBAR -->  
-    <aside class="sidebar">  
-      <div class="logo-row">  
-        <div class="logo-circle"></div>  
-        <span class="logo-text">EcoLoop</span>  
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title>Conquistas - EcoLoop</title>
+  <link rel="stylesheet" href="/admin-dashboard.css" />
+  <style>
+    .content-grid-achievements {
+      display: grid;
+      grid-template-columns: 1fr 350px;
+      gap: 24px;
+    }
+
+    .achievements-section {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .tabs-bar {
+      display: flex;
+      gap: 12px;
+      background: white;
+      border-radius: 16px;
+      padding: 8px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    }
+
+    .tab-button {
+      flex: 1;
+      background: transparent;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 20px;
+      font-size: 15px;
+      font-weight: 600;
+      color: #6b8576;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .tab-button:hover {
+      background: #f8fcf8;
+      color: #2f9e44;
+    }
+
+    .tab-button.active {
+      background: #2f9e44;
+      color: white;
+      box-shadow: 0 2px 8px rgba(47, 158, 68, 0.2);
+    }
+
+    .achievements-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .achievement-card {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: 0.2s ease;
+    }
+
+    .achievement-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .achievement-card.locked {
+      opacity: 0.6;
+      background: #f8fcf8;
+    }
+
+    .ach-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #2f9e44, #165c33);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      flex-shrink: 0;
+    }
+
+    .achievement-card.locked .ach-icon {
+      background: #d4e4d8;
+    }
+
+    .ach-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .ach-content h3 {
+      font-size: 18px;
+      color: #165c33;
+      margin: 0;
+    }
+
+    .ach-content p {
+      font-size: 14px;
+      color: #6b8576;
+      margin: 0;
+    }
+
+    .ach-points {
+      background: #dff3e3;
+      color: #165c33;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      align-self: flex-start;
+      margin-top: 6px;
+    }
+
+    .achievement-card.locked .ach-points {
+      background: #e4efe7;
+      color: #6b8576;
+    }
+
+    .ach-date {
+      font-size: 13px;
+      color: #9ab1a1;
+      font-weight: 600;
+    }
+
+    .ranking-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .ranking-card {
+      background: white;
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    }
+
+    .ranking-card h2 {
+      font-size: 20px;
+      color: #165c33;
+      margin: 0 0 20px 0;
+    }
+
+    .ranking-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .ranking-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px;
+      background: #f8fcf8;
+      border-radius: 12px;
+      transition: 0.2s ease;
+    }
+
+    .ranking-item:hover {
+      background: #edf6ef;
+    }
+
+    .ranking-item.me {
+      background: linear-gradient(135deg, #dff3e3, #c9ebd1);
+      border: 2px solid #2f9e44;
+    }
+
+    .ranking-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+    }
+
+    .rank-position {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: #2f9e44;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .ranking-item.gold .rank-position {
+      background: linear-gradient(135deg, #ffd700, #ffed4e);
+      color: #000;
+    }
+
+    .ranking-item.silver .rank-position {
+      background: linear-gradient(135deg, #c0c0c0, #e8e8e8);
+      color: #000;
+    }
+
+    .ranking-item.bronze .rank-position {
+      background: linear-gradient(135deg, #cd7f32, #e8a87c);
+      color: #000;
+    }
+
+    .rank-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #2f9e44, #165c33);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .rank-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    .rank-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #165c33;
+      margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .rank-level {
+      font-size: 12px;
+      color: #6b8576;
+      margin: 0;
+    }
+
+    .rank-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 2px;
+    }
+
+    .rank-points {
+      font-size: 18px;
+      font-weight: 700;
+      color: #2f9e44;
+    }
+
+    .rank-pts-label {
+      font-size: 11px;
+      color: #6b8576;
+      font-weight: 600;
+    }
+
+    @media (max-width: 968px) {
+      .content-grid-achievements {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <script>if (localStorage.getItem('tema') === 'escuro') document.body.classList.add('dark');</script>
+  <div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="logo-row">
+        <div class="logo-circle">
+          <span style="font-size:22px">🌍</span>
+        </div>
+        <span class="logo-text">EcoLoop</span>
       </div>
-  
-      <nav class="nav">  
-        <button class="nav-item">  
-          <span ><a href="/dashboard" class="menu-item">Home</a></span> 
-        </button>  
-        <button class="nav-item">  
-          <span ><a href="/enviar" class="menu-item">Enviar</a></span> 
-        </button>  
-        <button class="nav-item">  
-          <span ><a href="/beneficios" class="menu-item">Benefícios</a></span>   
-        </button>  
-        <button class="nav-item active">  
-          <span ><a href="/conquistas" class="menu-item">Conquistas</a></span>  
-        </button>  
-        <button class="nav-item">  
-          <span ><a href="/perfil" class="menu-item">Perfil</a></span>   
-        </button>  
-        <button class="nav-item">  
-          <span ><a href="/configuracoes" class="menu-item">Configurações</a></span>   
-        </button>  
-        <button class="nav-item">  
-          <span ><a href="/uploads" class="menu-item">Uploads</a></span>   
-        </button>  
+
+      <p class="sidebar-section">MENU</p>
+
+      <nav class="nav">
+        <a href="/dashboard" class="nav-item">
+          <span class="nav-icon">🏠</span> Home
+        </a>
+        <a href="/enviar" class="nav-item">
+          <span class="nav-icon">📸</span> Enviar
+        </a>
+        <a href="/beneficios" class="nav-item">
+          <span class="nav-icon">🎁</span> Benefícios
+        </a>
+        <a href="/conquistas" class="nav-item active">
+          <span class="nav-icon">🏆</span> Conquistas
+        </a>
+        <a href="/perfil" class="nav-item">
+          <span class="nav-icon">👤</span> Perfil
+        </a>
+        <a href="/configuracoes" class="nav-item">
+          <span class="nav-icon">⚙️</span> Configurações
+        </a>
       </nav>
-  
-      <button class="nav-item">
-        <span ><a href="/login" class="menu-item">Sair</a></span> 
-      </button>  
+
+      <a href="/logout" class="nav-item sair-btn">
+        <span class="nav-icon">🚪</span> Sair
+      </a>
     </aside>
-  
-    <!-- CONTEÚDO PRINCIPAL -->  
-    <main class="main">  
-      <header class="page-header">  
-        <h1>Conquistas</h1>  
-        <p>Acompanhe suas conquistas e posição no ranking</p>  
-      </header>
-  
-      <!-- LINHA DOS 3 CARDS RESUMO -->  
-      <section class="summary-row">  
-        <div class="summary-card">  
-          <div>  
-            <p class="summary-label">Conquistas</p>  
-            <p class="summary-value">4/8</p>  
-          </div>  
-          <div class="summary-icon trophy"></div>  
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="main">
+
+      <div class="top-bar">
+        <div>
+          <h1 class="page-title">Conquistas</h1>
+          <p class="page-sub">Acompanhe suas conquistas e posição no ranking</p>
         </div>
-  
-        <div class="summary-card">  
-          <div>  
-            <p class="summary-label">Posição no Ranking</p>  
-            <p class="summary-value">#4</p>  
-          </div>  
-          <div class="summary-icon trend"></div>  
+        <div class="admin-badge">
+          <div class="admin-avatar">U</div>
+          <span>Usuário</span>
         </div>
-  
-        <div class="summary-card">  
-          <div>  
-            <p class="summary-label">Total de Jogadores</p>  
-            <p class="summary-value">147</p>  
-          </div>  
-          <div class="summary-icon users"></div>  
-        </div>  
-      </section>
-  
-      <!-- ÁREA CENTRAL: CONQUISTAS + RANKING -->  
-      <section class="content-row">  
-        <!-- CONQUISTAS -->  
-        <div class="achievements-area">  
-          <!-- "ABAS" -->  
-          <div class="tabs-bar">  
-            <button class="tab active">Desbloqueadas (4)</button>  
-            <button class="tab">Bloqueadas (4)</button>  
+      </div>
+
+      <!-- CARDS DE RESUMO -->
+      <section class="cards-row">
+        <article class="stat-card green">
+          <div class="stat-icon">🏆</div>
+          <div>
+            <p class="stat-label">Conquistas</p>
+            <p class="stat-value">4/8</p>
           </div>
-  
-          <!-- GRID DE CARDS -->  
-          <div class="achievements-grid">  
-            <!-- Card 1 -->  
-            <article class="achievement-card">  
-              <div class="ach-icon plant"></div>  
-              <div class="ach-middle">  
-                <h3>Primeiro Passo</h3>  
-                <p>Faça seu primeiro upload</p>  
-                <span class="points-pill">+50 pts</span>  
-              </div>  
-              <span class="ach-date">2025-10-15</span>  
+        </article>
+        <article class="stat-card pink">
+          <div class="stat-icon">📊</div>
+          <div>
+            <p class="stat-label">Posição no Ranking</p>
+            <p class="stat-value">#4</p>
+          </div>
+        </article>
+        <article class="stat-card blue">
+          <div class="stat-icon">👥</div>
+          <div>
+            <p class="stat-label">Total de Jogadores</p>
+            <p class="stat-value">147</p>
+          </div>
+        </article>
+      </section>
+
+      <!-- GRID COM CONQUISTAS E RANKING -->
+      <div class="content-grid-achievements">
+
+        <!-- ÁREA DE CONQUISTAS -->
+        <div class="achievements-section">
+
+          <!-- TABS -->
+          <div class="tabs-bar">
+            <button class="tab-button active">Desbloqueadas (4)</button>
+            <button class="tab-button">Bloqueadas (4)</button>
+          </div>
+
+          <!-- GRID DE CONQUISTAS -->
+          <div class="achievements-grid">
+
+            <article class="achievement-card">
+              <div class="ach-icon">🌱</div>
+              <div class="ach-content">
+                <h3>Primeiro Passo</h3>
+                <p>Faça seu primeiro upload</p>
+                <span class="ach-points">+50 pts</span>
+              </div>
+              <span class="ach-date">15/10/2025</span>
             </article>
-  
-            <!-- Card 2 -->  
-            <article class="achievement-card">  
-              <div class="ach-icon sword"></div>  
-              <div class="ach-middle">  
-                <h3>Eco Guerreiro</h3>  
-                <p>Complete 10 uploads</p>  
-                <span class="points-pill">+100 pts</span>  
-              </div>  
-              <span class="ach-date">2025-10-20</span>  
+
+            <article class="achievement-card">
+              <div class="ach-icon">⚔️</div>
+              <div class="ach-content">
+                <h3>Eco Guerreiro</h3>
+                <p>Complete 10 uploads</p>
+                <span class="ach-points">+100 pts</span>
+              </div>
+              <span class="ach-date">20/10/2025</span>
             </article>
-  
-            <!-- Card 3 -->  
-            <article class="achievement-card">  
-              <div class="ach-icon shield"></div>  
-              <div class="ach-middle">  
-                <h3>Protetor Ambiental</h3>  
-                <p>Recicle 5kg de materiais</p>  
-                <span class="points-pill">+150 pts</span>  
-              </div>  
-              <span class="ach-date">2025-10-25</span>  
+
+            <article class="achievement-card">
+              <div class="ach-icon">🛡️</div>
+              <div class="ach-content">
+                <h3>Protetor Ambiental</h3>
+                <p>Recicle 5kg de materiais</p>
+                <span class="ach-points">+150 pts</span>
+              </div>
+              <span class="ach-date">25/10/2025</span>
             </article>
-  
-            <!-- Card 4 -->  
-            <article class="achievement-card">  
-              <div class="ach-icon recycle"></div>  
-              <div class="ach-middle">  
-                <h3>Reciclador Dedicado</h3>  
-                <p>Use o app por 7 dias seguidos</p>  
-                <span class="points-pill">+200 pts</span>  
-              </div>  
-              <span class="ach-date">2025-10-27</span>  
-            </article>  
-          </div>  
+
+            <article class="achievement-card">
+              <div class="ach-icon">♻️</div>
+              <div class="ach-content">
+                <h3>Reciclador Dedicado</h3>
+                <p>Use o app por 7 dias seguidos</p>
+                <span class="ach-points">+200 pts</span>
+              </div>
+              <span class="ach-date">27/10/2025</span>
+            </article>
+
+            <article class="achievement-card locked">
+              <div class="ach-icon">🔒</div>
+              <div class="ach-content">
+                <h3>Mestre Verde</h3>
+                <p>Complete 50 uploads</p>
+                <span class="ach-points">+500 pts</span>
+              </div>
+              <span class="ach-date">Bloqueada</span>
+            </article>
+
+            <article class="achievement-card locked">
+              <div class="ach-icon">🔒</div>
+              <div class="ach-content">
+                <h3>Campeão Sustentável</h3>
+                <p>Recicle 25kg de materiais</p>
+                <span class="ach-points">+750 pts</span>
+              </div>
+              <span class="ach-date">Bloqueada</span>
+            </article>
+
+          </div>
+
         </div>
-  
-        <!-- RANKING LOCAL -->  
-        <aside class="ranking-area">  
-          <div class="ranking-card">  
-            <h2>Ranking Local</h2>
-  
-            <div class="ranking-list">  
-              <div class="ranking-item">  
-                <div class="rk-left">  
-                  <span class="rk-pos">1°</span>  
-                  <div class="rk-avatar medal gold"></div>  
-                  <div>  
-                    <p class="rk-name">Maria Silva</p>  
-                    <p class="rk-level">Nível 15</p>  
-                  </div>  
-                </div>  
-                <div class="rk-right">  
-                  <span class="rk-points">2450</span>  
-                  <span class="rk-pts-label">pts</span>  
-                </div>  
+
+        <!-- SIDEBAR DE RANKING -->
+        <aside class="ranking-sidebar">
+
+          <div class="ranking-card">
+            <h2>🏅 Ranking Local</h2>
+
+            <div class="ranking-list">
+
+              <div class="ranking-item gold">
+                <div class="ranking-left">
+                  <div class="rank-position">1</div>
+                  <div class="rank-avatar">M</div>
+                  <div class="rank-info">
+                    <p class="rank-name">Maria Silva</p>
+                    <p class="rank-level">Nível 15</p>
+                  </div>
+                </div>
+                <div class="rank-right">
+                  <span class="rank-points">2450</span>
+                  <span class="rank-pts-label">pts</span>
+                </div>
               </div>
-  
-              <div class="ranking-item">  
-                <div class="rk-left">  
-                  <span class="rk-pos">2°</span>  
-                  <div class="rk-avatar medal silver"></div>  
-                  <div>  
-                    <p class="rk-name">João Santos</p>  
-                    <p class="rk-level">Nível 13</p>  
-                  </div>  
-                </div>  
-                <div class="rk-right">  
-                  <span class="rk-points">2100</span>  
-                  <span class="rk-pts-label">pts</span>  
-                </div>  
+
+              <div class="ranking-item silver">
+                <div class="ranking-left">
+                  <div class="rank-position">2</div>
+                  <div class="rank-avatar">J</div>
+                  <div class="rank-info">
+                    <p class="rank-name">João Santos</p>
+                    <p class="rank-level">Nível 13</p>
+                  </div>
+                </div>
+                <div class="rank-right">
+                  <span class="rank-points">2100</span>
+                  <span class="rank-pts-label">pts</span>
+                </div>
               </div>
-  
-              <div class="ranking-item">  
-                <div class="rk-left">  
-                  <span class="rk-pos">3°</span>  
-                  <div class="rk-avatar medal bronze"></div>  
-                  <div>  
-                    <p class="rk-name">Ana Costa</p>  
-                    <p class="rk-level">Nível 12</p>  
-                  </div>  
-                </div>  
-                <div class="rk-right">  
-                  <span class="rk-points">1890</span>  
-                  <span class="rk-pts-label">pts</span>  
-                </div>  
+
+              <div class="ranking-item bronze">
+                <div class="ranking-left">
+                  <div class="rank-position">3</div>
+                  <div class="rank-avatar">A</div>
+                  <div class="rank-info">
+                    <p class="rank-name">Ana Costa</p>
+                    <p class="rank-level">Nível 12</p>
+                  </div>
+                </div>
+                <div class="rank-right">
+                  <span class="rank-points">1890</span>
+                  <span class="rank-pts-label">pts</span>
+                </div>
               </div>
-  
-              <div class="ranking-item me">  
-                <div class="rk-left">  
-                  <span class="rk-pos">4°</span>  
-                  <div class="rk-avatar"></div>  
-                  <div>  
-                    <p class="rk-name">delucaerick@gmail.com</p>  
-                    <p class="rk-level">Nível 5</p>  
-                  </div>  
-                </div>  
-                <div class="rk-right">  
-                  <span class="rk-points">1250</span>  
-                  <span class="rk-pts-label">pts</span>  
-                </div>  
+
+              <div class="ranking-item me">
+                <div class="ranking-left">
+                  <div class="rank-position">4</div>
+                  <div class="rank-avatar">U</div>
+                  <div class="rank-info">
+                    <p class="rank-name">Você</p>
+                    <p class="rank-level">Nível 5</p>
+                  </div>
+                </div>
+                <div class="rank-right">
+                  <span class="rank-points">1250</span>
+                  <span class="rank-pts-label">pts</span>
+                </div>
               </div>
-  
-              <div class="ranking-item">  
-                <div class="rk-left">  
-                  <span class="rk-pos">5°</span>  
-                  <div class="rk-avatar"></div>  
-                  <div>  
-                    <p class="rk-name">Pedro Lima</p>  
-                    <p class="rk-level">Nível 8</p>  
-                  </div>  
-                </div>  
-                <div class="rk-right">  
-                  <span class="rk-points">980</span>  
-                  <span class="rk-pts-label">pts</span>  
-                </div>  
+
+              <div class="ranking-item">
+                <div class="ranking-left">
+                  <div class="rank-position">5</div>
+                  <div class="rank-avatar">P</div>
+                  <div class="rank-info">
+                    <p class="rank-name">Pedro Lima</p>
+                    <p class="rank-level">Nível 8</p>
+                  </div>
+                </div>
+                <div class="rank-right">
+                  <span class="rank-points">980</span>
+                  <span class="rank-pts-label">pts</span>
+                </div>
               </div>
-  
-              <div class="ranking-item">  
-                <div class="rk-left">  
-                  <span class="rk-pos">6°</span>  
-                  <div class="rk-avatar"></div>  
-                  <div>  
-                    <p class="rk-name">Carla Dias</p>  
-                    <p class="rk-level">Nível 7</p>  
-                  </div>  
-                </div>  
-                <div class="rk-right">  
-                  <span class="rk-points">850</span>  
-                  <span class="rk-pts-label">pts</span>  
-                </div>  
+
+              <div class="ranking-item">
+                <div class="ranking-left">
+                  <div class="rank-position">6</div>
+                  <div class="rank-avatar">C</div>
+                  <div class="rank-info">
+                    <p class="rank-name">Carla Dias</p>
+                    <p class="rank-level">Nível 7</p>
+                  </div>
+                </div>
+                <div class="rank-right">
+                  <span class="rank-points">850</span>
+                  <span class="rank-pts-label">pts</span>
+                </div>
               </div>
-  
-              <div class="ranking-item">  
-                <div class="rk-left">  
-                  <span class="rk-pos">7°</span>  
-                  <div class="rk-avatar"></div>  
-                  <div>  
-                    <p class="rk-name">Lucas Souza</p>  
-                    <p class="rk-level">Nível 6</p>  
-                  </div>  
-                </div>  
-                <div class="rk-right">  
-                  <span class="rk-points">720</span>  
-                  <span class="rk-pts-label">pts</span>  
-                </div>  
-              </div>  
-            </div>  
-          </div>  
-        </aside>  
-      </section>  
-    </main>  
-  </div>  
-</body>  
+
+              <div class="ranking-item">
+                <div class="ranking-left">
+                  <div class="rank-position">7</div>
+                  <div class="rank-avatar">L</div>
+                  <div class="rank-info">
+                    <p class="rank-name">Lucas Souza</p>
+                    <p class="rank-level">Nível 6</p>
+                  </div>
+                </div>
+                <div class="rank-right">
+                  <span class="rank-points">720</span>
+                  <span class="rank-pts-label">pts</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </aside>
+
+      </div>
+
+    </main>
+  </div>
+</body>
 </html>
