@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EcoLoop - Redefinir Senha</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif; }
+    body { background:#eef8f0; color:#0f3d2b; display:flex; align-items:center; justify-content:center; min-height:100vh; padding:20px; }
+    .container { max-width:480px; width:100%; }
+    .header { text-align:center; margin-bottom:28px; }
+    .logo { display:inline-flex; align-items:center; gap:12px; font-size:22px; font-weight:700; color:#165c33; margin-bottom:12px; }
+    .logo-icon { width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg,#64d47c,#2f9e44); display:flex; align-items:center; justify-content:center; font-size:18px; }
+    .header h1 { font-size:30px; color:#165c33; margin-bottom:6px; }
+    .header p { font-size:15px; color:#6b8576; }
+    .card { background:white; border-radius:28px; box-shadow:0 10px 25px rgba(22,92,51,0.08); padding:32px; }
+    .alert { padding:14px 16px; border-radius:14px; margin-bottom:20px; font-size:14px; font-weight:600; display:flex; align-items:center; gap:10px; }
+    .alert-success { background:#d8f1dd; color:#165c33; border:1px solid #2f9e44; }
+    .alert-error { background:#ffe0e0; color:#c41e3a; border:1px solid #ff6b6b; }
+    .form-group { margin-bottom:18px; }
+    label { display:block; font-size:14px; font-weight:600; color:#456757; margin-bottom:8px; }
+    input { width:100%; border:1px solid #e3efe6; background:#f8fcf8; border-radius:14px; padding:14px 16px; font-size:15px; color:#0f3d2b; outline:none; transition:0.2s ease; }
+    input:focus { border-color:#2f9e44; box-shadow:0 0 0 4px rgba(47,158,68,0.12); }
+    .hint { font-size:12px; color:#6b8576; margin-top:6px; }
+    .actions { display:flex; gap:12px; margin-top:24px; flex-wrap:wrap; }
+    .btn { border:none; border-radius:14px; padding:13px 20px; font-size:15px; font-weight:700; cursor:pointer; transition:0.25s ease; text-decoration:none; display:inline-block; flex:1; text-align:center; }
+    .btn-primary { background:#2f9e44; color:white; box-shadow:0 8px 20px rgba(47,158,68,0.22); }
+    .btn-primary:hover { background:#27873a; transform:translateY(-1px); }
+    .btn-secondary { background:#edf6ef; color:#165c33; }
+    .btn-secondary:hover { background:#e2efe5; }
+    .hidden { display:none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo">
+        <div class="logo-icon">🌎</div>
+        <span>EcoLoop</span>
+      </div>
+      <h1>Redefinir Senha</h1>
+      <p>Digite e confirme sua nova senha</p>
+    </div>
+
+    <div class="card">
+
+      <!-- Erro inicial vindo do controller (token inválido/expirado/ausente) -->
+      <div th:if="${erro}" class="alert alert-error">
+        <span>⚠️</span><span th:text="${erro}"></span>
+      </div>
+
+      <!-- Mensagens dinâmicas preenchidas pelo JS após chamar a API REST -->
+      <div id="alertaErro" class="alert alert-error hidden">
+        <span>⚠️</span><span id="erroTexto"></span>
+      </div>
+
+      <div id="alertaSucesso" class="alert alert-success hidden">
+        <span>✅</span><span id="sucessoTexto"></span>
+      </div>
+
+      <!-- Formulário só aparece se o token for válido -->
+      <form id="formRedefinir" th:if="${token != null}">
+        <input type="hidden" id="token" th:value="${token}" />
+
+        <div class="form-group">
+          <label for="novaSenha">Nova senha</label>
+          <input type="password" id="novaSenha" name="novaSenha"
+                 placeholder="Digite sua nova senha" required minlength="6" />
+          <p class="hint">Mínimo de 6 caracteres.</p>
+        </div>
+
+        <div class="form-group">
+          <label for="confirmarSenha">Confirmar nova senha</label>
+          <input type="password" id="confirmarSenha" name="confirmarSenha"
+                 placeholder="Repita a nova senha" required minlength="6" />
+        </div>
+
+        <div class="actions">
+          <a href="/login" class="btn btn-secondary">Cancelar</a>
+          <button type="submit" class="btn btn-primary">🔒 Redefinir Senha</button>
+        </div>
+      </form>
+
+      <!-- Botão para login: aparece se token inválido OU após sucesso -->
+      <div id="acoesLogin" th:if="${token == null}" style="text-align:center; margin-top:8px;">
+        <a href="/login" class="btn btn-primary" style="display:inline-block; width:100%;">
+          Ir para Login
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('formRedefinir');
+    if (form) {
+      // Consome o microsserviço REST: POST /recuperacao/redefinir
+      form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        const token = document.getElementById('token').value;
+        const novaSenha = document.getElementById('novaSenha').value;
+        const confirmarSenha = document.getElementById('confirmarSenha').value;
+
+        const alertaErro = document.getElementById('alertaErro');
+        const alertaSucesso = document.getElementById('alertaSucesso');
+
+        alertaErro.classList.add('hidden');
+        alertaSucesso.classList.add('hidden');
+
+        try {
+          const params = new URLSearchParams();
+          params.append('token', token);
+          params.append('novaSenha', novaSenha);
+          params.append('confirmarSenha', confirmarSenha);
+
+          const resp = await fetch('/recuperacao/redefinir', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: params
+          });
+
+          const dados = await resp.json();
+
+          if (dados.status === 'sucesso') {
+            document.getElementById('sucessoTexto').textContent = dados.mensagem;
+            alertaSucesso.classList.remove('hidden');
+            form.classList.add('hidden');
+
+            // Redireciona para o login após 2 segundos com mensagem de sucesso
+            setTimeout(function() {
+              window.location.href = '/login?senha=redefinida';
+            }, 2000);
+          } else {
+            document.getElementById('erroTexto').textContent = dados.mensagem;
+            alertaErro.classList.remove('hidden');
+          }
+        } catch (err) {
+          document.getElementById('erroTexto').textContent = 'Erro ao processar a solicitação. Tente novamente.';
+          alertaErro.classList.remove('hidden');
+        }
+      });
+    }
+  </script>
+</body>
+</html>

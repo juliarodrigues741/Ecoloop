@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title>Recompensa - EcoLoop</title>
+  <link rel="stylesheet" th:href="@{/admin-dashboard.css}" href="/admin-dashboard.css" />
+  <style>
+    .form-section { background:white; border-radius:20px; padding:30px; box-shadow:0 4px 16px rgba(0,0,0,0.06); }
+    .form-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; flex-wrap:wrap; gap:12px; }
+    .form-header h2 { font-size:28px; color:#165c33; }
+    .badge-pill { background:#dff3e3; color:#165c33; padding:8px 16px; border-radius:999px; font-size:13px; font-weight:600; }
+    .form-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:18px; margin-bottom:20px; }
+    .form-group { display:flex; flex-direction:column; gap:8px; }
+    .form-group.full { grid-column:1 / -1; }
+    .form-group label { font-size:14px; font-weight:600; color:#456757; }
+    .form-group input, .form-group select, .form-group textarea { width:100%; border:1px solid #e4efe7; background:#f8fcf8; border-radius:12px; padding:12px 14px; font-size:15px; color:#0f3d2b; outline:none; transition:0.2s ease; font-family:inherit; }
+    .form-group textarea { min-height:100px; resize:vertical; }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color:#2f9e44; box-shadow:0 0 0 3px rgba(47,158,68,0.1); }
+    .form-actions { display:flex; gap:12px; justify-content:flex-end; margin-top:24px; flex-wrap:wrap; }
+    .btn { border:none; border-radius:12px; padding:12px 20px; font-size:15px; font-weight:600; cursor:pointer; transition:0.2s ease; text-decoration:none; display:inline-block; }
+    .btn-secondary { background:#edf6ef; color:#165c33; }
+    .btn-secondary:hover { background:#e2efe5; }
+    .btn-primary { background:#2f9e44; color:white; box-shadow:0 4px 12px rgba(47,158,68,0.2); }
+    .btn-primary:hover { background:#27873a; transform:translateY(-1px); }
+    .hint-box { background:#f7fbf8; border:1px solid #e4efe7; border-radius:12px; padding:16px; margin-bottom:20px; font-size:14px; color:#6b8576; line-height:1.6; }
+    @media (max-width:768px) { .form-grid { grid-template-columns:1fr; } }
+    /* ===== DARK MODE ===== */
+    body.dark .form-section { background:#1c2d22; box-shadow:0 4px 16px rgba(0,0,0,0.4); }
+    body.dark .form-section h2,
+    body.dark .form-section h3 { color:#e0f4e6; }
+    body.dark label { color:#a0c8a8; }
+    body.dark input[type="text"],
+    body.dark input[type="number"],
+    body.dark input[type="url"],
+    body.dark textarea,
+    body.dark select { background:#163f25; border-color:#2d4f33; color:#e0f4e6; }
+    body.dark input::placeholder,
+    body.dark textarea::placeholder { color:#6b9474; }
+    body.dark .hint-box { background:#163f25; border-color:#2d4f33; color:#a0c8a8; }
+    body.dark .badge-pill { background:#163f25; color:#a0e0b0; }
+    body.dark .btn-secondary { background:#163f25; color:#a0e0b0; }
+    body.dark .btn-secondary:hover { background:#1e4d2e; }
+
+  </style>
+</head>
+<body>
+  <script>if (localStorage.getItem('tema') === 'escuro') document.body.classList.add('dark');</script>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="logo-row">
+        <div class="logo-circle"><span style="font-size:22px">🌍</span></div>
+        <span class="logo-text">EcoLoop</span>
+      </div>
+      <p class="sidebar-section">MENU</p>
+      <nav class="nav">
+        <a th:href="@{/admin/dashboard}" href="/admin/dashboard" class="nav-item"><span class="nav-icon">🏠</span> Home</a>
+        <a th:href="@{/admin/adicionar-usuario}" href="/admin/adicionar-usuario" class="nav-item"><span class="nav-icon">👤</span> Adicionar Usuário</a>
+        <a th:href="@{/admin/adicionar-recompensa}" href="/admin/adicionar-recompensa" class="nav-item active"><span class="nav-icon">🎁</span> Adicionar Recompensa</a>
+        <a th:href="@{/admin/conquistas}" href="/admin/conquistas" class="nav-item"><span class="nav-icon">🏆</span> Conquistas</a>
+        <a th:href="@{/admin/uploads}" href="/admin/uploads" class="nav-item"><span class="nav-icon">📤</span> Upload Usuário</a>
+        <a th:href="@{/admin/config}" href="/admin/config" class="nav-item"><span class="nav-icon">⚙️</span> Configurações</a>
+      </nav>
+      <a th:href="@{/logout}" href="/logout" class="nav-item sair-btn"><span class="nav-icon">🚪</span> Sair</a>
+    </aside>
+
+    <main class="main">
+      <div class="top-bar">
+        <div>
+          <h1 class="page-title" th:text="${modoEdicao} ? 'Editar Recompensa' : 'Nova Recompensa'">Recompensa</h1>
+          <p class="page-sub" th:text="${modoEdicao} ? 'Atualize os dados da recompensa' : 'Cadastre uma nova recompensa para os usuários resgatarem'">-</p>
+        </div>
+        <div class="admin-badge">
+          <div class="admin-avatar" style="overflow:hidden; padding:0;">
+            <img th:if="${usuario != null and usuario.fotoPerfil != null and !usuario.fotoPerfil.isEmpty()}"
+                 th:src="${usuario.fotoPerfil}"
+                 style="width:100%; height:100%; object-fit:cover; border-radius:50%;" alt="foto" />
+            <span th:unless="${usuario != null and usuario.fotoPerfil != null and !usuario.fotoPerfil.isEmpty()}"
+                  th:text="${usuario != null ? usuario.nome.substring(0,1).toUpperCase() : 'A'}">A</span>
+          </div>
+          <span th:text="${usuario != null ? usuario.nome.split(' ')[0] : 'Admin'}"
+                style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:120px;">Admin</span>
+        </div>
+      </div>
+
+      <section class="form-section">
+        <div class="form-header">
+          <h2 th:text="${modoEdicao} ? 'Editar Recompensa' : 'Formulário de Recompensa'">Formulário</h2>
+          <div class="badge-pill">Preencha os dados abaixo</div>
+        </div>
+
+        <div class="hint-box">
+          🎁 As recompensas cadastradas ficarão disponíveis para os usuários resgatarem usando seus pontos acumulados.
+        </div>
+
+        <form method="post" th:action="@{/admin/beneficios/salvar}" action="/admin/beneficios/salvar">
+          <input type="hidden" name="id" th:value="${beneficio.id}" />
+
+          <div class="form-grid">
+            <div class="form-group full">
+              <label for="nome">Nome da recompensa</label>
+              <input type="text" id="nome" name="nome"
+                     placeholder="Ex: Desconto 10% em produtos sustentáveis"
+                     required th:value="${beneficio.nome}" />
+            </div>
+            <div class="form-group full">
+              <label for="descricao">Descrição</label>
+              <textarea id="descricao" name="descricao"
+                        placeholder="Descreva os detalhes da recompensa..."
+                        required th:text="${beneficio.descricao}"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="categoria">Categoria</label>
+              <select id="categoria" name="categoria" required>
+                <option value="" th:selected="${beneficio.categoria == null or beneficio.categoria == ''}">Selecione a categoria</option>
+                <option value="Desconto"    th:selected="${beneficio.categoria == 'Desconto'}">Desconto</option>
+                <option value="Produto"     th:selected="${beneficio.categoria == 'Produto'}">Produto</option>
+                <option value="Voucher"     th:selected="${beneficio.categoria == 'Voucher'}">Voucher</option>
+                <option value="Serviço"     th:selected="${beneficio.categoria == 'Serviço'}">Serviço</option>
+                <option value="Experiência" th:selected="${beneficio.categoria == 'Experiência'}">Experiência</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="pontosNecessarios">Pontos necessários</label>
+              <input type="number" id="pontosNecessarios" name="pontosNecessarios"
+                     placeholder="Ex: 100" min="0" required
+                     th:value="${beneficio.pontosNecessarios}" />
+            </div>
+            <div class="form-group full">
+              <label for="imagemUrl">URL da imagem (opcional)</label>
+              <input type="url" id="imagemUrl" name="imagemUrl"
+                     placeholder="https://exemplo.com/imagem.jpg"
+                     th:value="${beneficio.imagemUrl}" />
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <a th:href="@{/admin/adicionar-recompensa}" class="btn btn-secondary">Cancelar</a>
+            <button type="submit" class="btn btn-primary"
+                    th:text="${modoEdicao} ? '💾 Salvar Alterações' : '✅ Criar Recompensa'">Salvar</button>
+          </div>
+        </form>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

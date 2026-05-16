@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title>Configurações - EcoLoop</title>
+  <link rel="stylesheet" th:href="@{/admin-dashboard.css}" href="/admin-dashboard.css" />
+  <style>
+    .settings-wrapper { max-width:720px; display:flex; flex-direction:column; gap:20px; }
+    .settings-card { background:white; border-radius:20px; padding:28px; box-shadow:0 4px 16px rgba(0,0,0,0.06); }
+    .settings-card h2 { font-size:20px; color:#165c33; margin:0 0 24px 0; }
+    .setting-item { display:flex; justify-content:space-between; align-items:center; padding:18px 0; border-bottom:1px solid #e4efe7; }
+    .setting-item:last-child { border-bottom:none; padding-bottom:0; }
+    .setting-item:first-child { padding-top:0; }
+    .setting-info { flex:1; display:flex; flex-direction:column; gap:4px; }
+    .setting-label { font-size:15px; font-weight:600; color:#165c33; margin:0; }
+    .setting-value, .setting-desc { font-size:14px; color:#6b8576; margin:0; }
+    .toggle { position:relative; display:inline-block; width:52px; height:28px; }
+    .toggle input { opacity:0; width:0; height:0; }
+    .slider { position:absolute; inset:0; background:#d4e4d8; border-radius:999px; cursor:pointer; transition:.3s; }
+    .slider::before { content:""; position:absolute; width:22px; height:22px; left:3px; top:3px; background:white; border-radius:50%; transition:.3s; box-shadow:0 2px 6px rgba(0,0,0,.15); }
+    .toggle input:checked + .slider { background:#2f9e44; }
+    .toggle input:checked + .slider::before { transform:translateX(24px); }
+    .btn-save { background:#2f9e44; color:white; border:none; border-radius:12px; padding:12px 22px; font-size:14px; font-weight:600; cursor:pointer; }
+    /* ===== DARK MODE ===== */
+    body.dark .settings-card { background:#1c2d22; box-shadow:0 4px 16px rgba(0,0,0,0.4); }
+    body.dark .settings-card h2,
+    body.dark .settings-card h3 { color:#e0f4e6; }
+    body.dark .setting-item,
+    body.dark .settings-item { border-color:#2d3f33; }
+    body.dark .setting-label { color:#e0f4e6; }
+    body.dark .setting-desc { color:#a0c8a8; }
+
+  </style>
+</head>
+<body>
+  <script>if (localStorage.getItem('tema') === 'escuro') document.body.classList.add('dark');</script>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="logo-row">
+        <div class="logo-circle"><span style="font-size:22px">🌍</span></div>
+        <span class="logo-text">EcoLoop</span>
+      </div>
+      <p class="sidebar-section">MENU</p>
+      <nav class="nav">
+        <a th:href="@{/dashboard}" href="/dashboard" class="nav-item"><span class="nav-icon">🏠</span> Home</a>
+        <a th:href="@{/enviar}" href="/enviar" class="nav-item"><span class="nav-icon">📸</span> Enviar</a>
+        <a th:href="@{/beneficios}" href="/beneficios" class="nav-item"><span class="nav-icon">🎁</span> Benefícios</a>
+        <a th:href="@{/conquistas}" href="/conquistas" class="nav-item"><span class="nav-icon">🏆</span> Conquistas</a>
+        <a th:href="@{/perfil}" href="/perfil" class="nav-item"><span class="nav-icon">👤</span> Perfil</a>
+        <a th:href="@{/configuracoes}" href="/configuracoes" class="nav-item active"><span class="nav-icon">⚙️</span> Configurações</a>
+      </nav>
+      <a th:href="@{/logout}" href="/logout" class="nav-item sair-btn"><span class="nav-icon">🚪</span> Sair</a>
+    </aside>
+
+    <main class="main">
+      <div class="top-bar">
+        <div>
+          <h1 class="page-title">Configurações</h1>
+          <p class="page-sub">Gerencie suas preferências</p>
+        </div>
+        <div class="admin-badge">
+          <div class="admin-avatar" style="overflow:hidden; padding:0;">
+            <img th:if="${usuario != null and usuario.fotoPerfil != null and !usuario.fotoPerfil.isEmpty()}"
+                 th:src="${usuario.fotoPerfil}"
+                 style="width:100%; height:100%; object-fit:cover; border-radius:50%;" alt="foto" />
+            <span th:unless="${usuario != null and usuario.fotoPerfil != null and !usuario.fotoPerfil.isEmpty()}"
+                  th:text="${usuario != null and usuario.nome != null ? usuario.nome.substring(0,1).toUpperCase() : 'U'}">U</span>
+          </div>
+          <span th:text="${usuario != null and usuario.nome != null ? usuario.nome.split(' ')[0] : 'Usuário'}"
+                style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:120px;">Usuário</span>
+        </div>
+      </div>
+
+      <div class="settings-wrapper">
+        <div class="settings-card">
+          <h2>👤 Conta</h2>
+          <div class="setting-item">
+            <div class="setting-info"><p class="setting-label">Nome</p><p class="setting-value" th:text="${usuario != null ? usuario.nome : '-'}">-</p></div>
+          </div>
+          <div class="setting-item">
+            <div class="setting-info"><p class="setting-label">E-mail</p><p class="setting-value" th:text="${usuario != null ? usuario.email : '-'}">-</p></div>
+          </div>
+          <div class="setting-item">
+            <div class="setting-info"><p class="setting-label">Nível</p><p class="setting-value" th:text="${usuario != null and usuario.nivel != null ? usuario.nivel : 'Bronze'}">Bronze</p></div>
+          </div>
+        </div>
+
+        <form th:action="@{/configuracoes}" action="/configuracoes" method="post" class="settings-card">
+          <h2>🔔 Notificações</h2>
+          <div class="setting-item">
+            <div class="setting-info">
+              <p class="setting-label">Notificações por E-mail</p>
+              <p class="setting-desc">Receber atualizações sobre uploads e conta.</p>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" name="notificacaoEmail" th:checked="${config != null and config.notificacaoEmail}">
+              <span class="slider"></span>
+            </label>
+          </div>
+          <button type="submit" class="btn-save">Salvar Preferências</button>
+        </form>
+
+        <div class="settings-card">
+          <h2>🎨 Aparência</h2>
+          <div class="setting-item">
+            <div class="setting-info">
+              <p class="setting-label">Tema Escuro</p>
+              <p class="setting-desc">Ativa apenas no navegador atual.</p>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="tema-toggle">
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    document.getElementById('tema-toggle')?.addEventListener('change', function(e) {
+      if (e.target.checked) { document.body.classList.add('dark'); localStorage.setItem('tema', 'escuro'); }
+      else { document.body.classList.remove('dark'); localStorage.removeItem('tema'); }
+    });
+    if (localStorage.getItem('tema') === 'escuro') {
+      document.body.classList.add('dark');
+      const toggle = document.getElementById('tema-toggle');
+      if (toggle) toggle.checked = true;
+    }
+  </script>
+</body>
+</html>

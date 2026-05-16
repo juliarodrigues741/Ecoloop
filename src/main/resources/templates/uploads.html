@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title>Meus Uploads - EcoLoop</title>
+  <link rel="stylesheet" th:href="@{/admin-dashboard.css}" href="/admin-dashboard.css" />
+  <style>
+    .uploads-list { display:flex; flex-direction:column; gap:16px; }
+    .upload-card {
+      background:white; border-radius:16px; padding:20px; box-shadow:0 4px 16px rgba(0,0,0,0.06);
+      display:grid; grid-template-columns:80px 1fr auto; gap:20px; align-items:center;
+    }
+    .upload-thumbnail {
+      width:80px; height:80px; border-radius:12px; background:#f8fcf8;
+      display:flex; align-items:center; justify-content:center; font-size:36px; overflow:hidden;
+    }
+    .upload-thumbnail img { width:100%; height:100%; object-fit:cover; }
+    .upload-info { display:flex; flex-direction:column; gap:8px; }
+    .upload-info h3 { font-size:18px; color:#165c33; margin:0; }
+    .upload-meta { display:flex; gap:16px; flex-wrap:wrap; }
+    .upload-meta-item { font-size:14px; color:#6b8576; }
+    .upload-actions { display:flex; flex-direction:column; gap:10px; align-items:flex-end; }
+    .status-badge { padding:8px 14px; border-radius:10px; font-size:13px; font-weight:600; }
+    .status-badge.aprovado { background:#dff3e3; color:#2f9e44; }
+    .status-badge.pendente { background:#fff8e1; color:#f59e0b; }
+    .status-badge.recusado { background:#fee2e2; color:#dc2626; }
+    .upload-points { font-size:18px; font-weight:700; color:#2f9e44; }
+    .empty-state {
+      background:white; border-radius:20px; padding:60px 30px; text-align:center;
+      box-shadow:0 4px 16px rgba(0,0,0,0.06);
+    }
+    .btn-upload {
+      background:#2f9e44; color:white; border:none; border-radius:12px; padding:14px 28px;
+      font-size:15px; font-weight:600; text-decoration:none; display:inline-block;
+    }
+
+    @media (max-width:768px) {
+      .upload-card { grid-template-columns:1fr; }
+      .upload-actions { align-items:flex-start; }
+    }
+    /* ===== DARK MODE ===== */
+    body.dark .upload-card { background:#1c2d22; box-shadow:0 4px 16px rgba(0,0,0,0.4); border-color:#2d3f33; }
+    body.dark .upload-descricao,
+    body.dark .upload-info { color:#e0f4e6; }
+    body.dark .upload-meta,
+    body.dark .upload-meta-item { color:#a0c8a8; }
+    body.dark .upload-thumbnail { background:#163f25; }
+    body.dark .upload-icone { background:#163f25; color:#a0c8a8; }
+    body.dark .vazio { background:#1c2d22; color:#a0c8a8; }
+
+  </style>
+</head>
+<body>
+  <script>if (localStorage.getItem('tema') === 'escuro') document.body.classList.add('dark');</script>
+  <div class="app">
+
+    <aside class="sidebar">
+      <div class="logo-row">
+        <div class="logo-circle"><span style="font-size:22px">🌍</span></div>
+        <span class="logo-text">EcoLoop</span>
+      </div>
+
+      <p class="sidebar-section">MENU</p>
+
+      <nav class="nav">
+        <a th:href="@{/dashboard}" href="/dashboard" class="nav-item"><span class="nav-icon">🏠</span> Home</a>
+        <a th:href="@{/enviar}" href="/enviar" class="nav-item"><span class="nav-icon">📸</span> Enviar</a>
+        <a th:href="@{/beneficios}" href="/beneficios" class="nav-item"><span class="nav-icon">🎁</span> Benefícios</a>
+        <a th:href="@{/conquistas}" href="/conquistas" class="nav-item"><span class="nav-icon">🏆</span> Conquistas</a>
+        <a th:href="@{/perfil}" href="/perfil" class="nav-item"><span class="nav-icon">👤</span> Perfil</a>
+        <a th:href="@{/configuracoes}" href="/configuracoes" class="nav-item"><span class="nav-icon">⚙️</span> Configurações</a>
+      </nav>
+
+      <a th:href="@{/logout}" href="/logout" class="nav-item sair-btn"><span class="nav-icon">🚪</span> Sair</a>
+    </aside>
+
+    <main class="main">
+
+      <div class="top-bar">
+        <div>
+          <h1 class="page-title">Meus Uploads</h1>
+          <p class="page-sub">Acompanhe o histórico dos seus envios</p>
+        </div>
+        <div class="admin-badge">
+          <div class="admin-avatar"
+               th:text="${usuario != null and usuario.nome != null ? usuario.nome.substring(0,1).toUpperCase() : 'U'}">U</div>
+          <span th:text="${usuario != null and usuario.nome != null ? usuario.nome.split(' ')[0] : 'Usuário'}">Usuário</span>
+        </div>
+      </div>
+
+      <section class="cards-row">
+        <article class="stat-card green">
+          <div class="stat-icon">📤</div>
+          <div>
+            <p class="stat-label">Total de Uploads</p>
+            <p class="stat-value" th:text="${materiais != null ? #lists.size(materiais) : 0}">0</p>
+          </div>
+        </article>
+
+        <article class="stat-card pink">
+          <div class="stat-icon">✅</div>
+          <div>
+            <p class="stat-label">Aprovados</p>
+            <p class="stat-value" th:text="${materiais != null ? #lists.size(materiais.?[status == 'aprovado']) : 0}">0</p>
+          </div>
+        </article>
+
+        <article class="stat-card blue">
+          <div class="stat-icon">⏳</div>
+          <div>
+            <p class="stat-label">Pendentes</p>
+            <p class="stat-value" th:text="${materiais != null ? #lists.size(materiais.?[status == 'pendente']) : 0}">0</p>
+          </div>
+        </article>
+
+        <article class="stat-card orange">
+          <div class="stat-icon">❌</div>
+          <div>
+            <p class="stat-label">Recusados</p>
+            <p class="stat-value" th:text="${materiais != null ? #lists.size(materiais.?[status == 'recusado']) : 0}">0</p>
+          </div>
+        </article>
+      </section>
+
+      <div class="uploads-list" th:if="${materiais != null and !#lists.isEmpty(materiais)}">
+
+        <div class="upload-card" th:each="material : ${materiais}">
+          <div class="upload-thumbnail">
+            <img th:if="${material.tipoArquivo == 'foto' and material.caminhoArquivo != null}"
+                 th:src="@{${material.caminhoArquivo}}" alt="Upload">
+            <span th:if="${material.tipoArquivo != 'foto'}">🎥</span>
+          </div>
+
+          <div class="upload-info">
+            <h3 th:text="${material.descricao != null ? material.descricao : 'Material enviado'}">Material enviado</h3>
+            <div class="upload-meta">
+              <span class="upload-meta-item">
+                <strong>Tipo:</strong>
+                <span th:text="${material.material != null ? material.material : 'Não informado'}">Não informado</span>
+              </span>
+              <span class="upload-meta-item">
+                <strong>Arquivo:</strong>
+                <span th:text="${material.tipoArquivo != null ? material.tipoArquivo : '-'}">foto</span>
+              </span>
+              <span class="upload-meta-item" th:if="${material.comentarioAvaliacao != null and !#strings.isEmpty(material.comentarioAvaliacao)}">
+                <strong>Avaliação:</strong>
+                <span th:text="${material.comentarioAvaliacao}">Comentário</span>
+              </span>
+            </div>
+          </div>
+
+          <div class="upload-actions">
+            <span class="status-badge"
+                  th:classappend="${material.status == 'aprovado'} ? ' aprovado' : (${material.status == 'pendente'} ? ' pendente' : ' recusado')"
+                  th:text="${material.status != null ? material.status : 'pendente'}">pendente</span>
+
+            <span class="upload-points"
+                  th:text="${material.pontosGerados != null and material.pontosGerados > 0 ? '+' + material.pontosGerados + ' pts' : '0 pts'}"
+                  th:style="${material.pontosGerados != null and material.pontosGerados > 0} ? 'color:#2f9e44' : 'color:#6b8576'">0 pts</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="empty-state" th:if="${materiais == null or #lists.isEmpty(materiais)}">
+        <div class="icon">📭</div>
+        <h3>Nenhum upload encontrado</h3>
+        <p>Você ainda não enviou materiais para avaliação.</p>
+        <a th:href="@{/enviar}" href="/enviar" class="btn-upload">Enviar Material</a>
+      </div>
+
+    </main>
+  </div>
+</body>
+</html>

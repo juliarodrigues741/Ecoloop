@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title>Conquista - EcoLoop</title>
+  <link rel="stylesheet" th:href="@{/admin-dashboard.css}" href="/admin-dashboard.css" />
+  <style>
+    .form-section {
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    }
+
+    .form-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .form-header h2 {
+      font-size: 28px;
+      color: #165c33;
+    }
+
+    .badge-pill {
+      background: #dff3e3;
+      color: #165c33;
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    .form-group label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #456757;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      border: 1px solid #e4efe7;
+      background: #f8fcf8;
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 15px;
+      color: #0f3d2b;
+      outline: none;
+      transition: 0.2s ease;
+      font-family: inherit;
+    }
+
+    .form-group textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: #2f9e44;
+      box-shadow: 0 0 0 3px rgba(47, 158, 68, 0.1);
+    }
+
+    .section-title {
+      font-size: 20px;
+      color: #165c33;
+      margin: 24px 0 16px;
+      font-weight: 600;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+      margin-top: 24px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 12px;
+      padding: 12px 20px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .btn-secondary {
+      background: #edf6ef;
+      color: #165c33;
+    }
+
+    .btn-secondary:hover {
+      background: #e2efe5;
+    }
+
+    .btn-primary {
+      background: #2f9e44;
+      color: white;
+      box-shadow: 0 4px 12px rgba(47, 158, 68, 0.2);
+    }
+
+    .btn-primary:hover {
+      background: #27873a;
+      transform: translateY(-1px);
+    }
+
+    .btn-danger {
+      background: #ffe0e0;
+      color: #c41e3a;
+    }
+
+    .btn-danger:hover {
+      background: #ffc5c5;
+    }
+
+    .alert {
+      padding: 14px 18px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .alert-success {
+      background: #d8f1dd;
+      color: #165c33;
+      border: 1px solid #2f9e44;
+    }
+
+    .alert-error {
+      background: #ffe0e0;
+      color: #c41e3a;
+      border: 1px solid #ff6b6b;
+    }
+
+    .hint-box {
+      background: #f7fbf8;
+      border: 1px solid #e4efe7;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      color: #6b8576;
+      line-height: 1.6;
+    }
+
+    .preview-box {
+      background: #f7fbf8;
+      border: 1px solid #e4efe7;
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 8px;
+    }
+
+    .preview-img {
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      object-fit: cover;
+      border: 2px solid #e4efe7;
+      display: none;
+    }
+
+    .preview-placeholder {
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      background: #dff3e3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+    }
+
+    @media (max-width: 768px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    /* ===== DARK MODE ===== */
+    body.dark .form-section,
+    body.dark .conquista-card,
+    body.dark .card { background:#1c2d22; box-shadow:0 4px 16px rgba(0,0,0,0.4); }
+    body.dark h2, body.dark h3 { color:#e0f4e6; }
+    body.dark label { color:#a0c8a8; }
+    body.dark input[type="text"],
+    body.dark input[type="number"],
+    body.dark input[type="url"],
+    body.dark textarea,
+    body.dark select { background:#163f25; border-color:#2d4f33; color:#e0f4e6; }
+    body.dark input::placeholder,
+    body.dark textarea::placeholder { color:#6b9474; }
+    body.dark .hint-box { background:#163f25; border-color:#2d4f33; color:#a0c8a8; }
+    body.dark .badge-pill { background:#163f25; color:#a0e0b0; }
+    body.dark .btn-secondary { background:#163f25; color:#a0e0b0; }
+    body.dark .btn-secondary:hover { background:#1e4d2e; }
+    body.dark .preview-box { background:#163f25; border-color:#2d4f33; }
+    body.dark .preview-box span { color:#a0c8a8 !important; }
+    body.dark .preview-placeholder { background:#1e4d2e; }
+
+  </style>
+</head>
+<body>
+  <script>if (localStorage.getItem('tema') === 'escuro') document.body.classList.add('dark');</script>
+  <div class="app">
+
+    <aside class="sidebar">
+      <div class="logo-row">
+        <div class="logo-circle">
+          <span style="font-size:22px">🌍</span>
+        </div>
+        <span class="logo-text">EcoLoop</span>
+      </div>
+
+      <p class="sidebar-section">MENU</p>
+
+      <nav class="nav">
+        <a th:href="@{/admin/dashboard}" href="/admin/dashboard" class="nav-item">
+          <span class="nav-icon">🏠</span> Home
+        </a>
+        <a th:href="@{/admin/adicionar-usuario}" href="/admin/adicionar-usuario" class="nav-item">
+          <span class="nav-icon">👤</span> Adicionar Usuário
+        </a>
+        <a th:href="@{/admin/adicionar-recompensa}" href="/admin/adicionar-recompensa" class="nav-item">
+          <span class="nav-icon">🎁</span> Adicionar Recompensa
+        </a>
+        <a th:href="@{/admin/conquistas}" href="/admin/conquistas" class="nav-item active">
+          <span class="nav-icon">🏆</span> Adcionar Conquistas
+        </a>
+        <a th:href="@{/admin/uploads}" href="/admin/uploads" class="nav-item">
+          <span class="nav-icon">📤</span> Upload Usuário
+        </a>
+        <a th:href="@{/admin/config}" href="/admin/config" class="nav-item">
+          <span class="nav-icon">⚙️</span> Configurações
+        </a>
+      </nav>
+
+      <a th:href="@{/logout}" href="/logout" class="nav-item sair-btn">
+        <span class="nav-icon">🚪</span> Sair
+      </a>
+    </aside>
+
+    <main class="main">
+
+      <div class="top-bar">
+        <div>
+          <h1 class="page-title"
+              th:text="${conquista.id != null} ? 'Editar Conquista' : 'Nova Conquista'">
+            Nova Conquista
+          </h1>
+          <p class="page-sub">
+            <span th:text="${conquista.id != null} ? 'Atualize os dados da conquista' : 'Cadastre uma nova conquista para os usuários desbloquearem'">
+              Cadastre uma nova conquista para os usuários desbloquearem
+            </span>
+          </p>
+        </div>
+        <div class="admin-badge">
+          <div class="admin-avatar"
+               th:text="${usuario != null ? usuario.nome.substring(0,1).toUpperCase() : 'A'}">A</div>
+          <span th:text="${usuario != null ? usuario.nome.split(' ')[0] : 'Admin'}">Admin</span>
+        </div>
+      </div>
+
+      <section class="form-section">
+        <div class="form-header">
+          <h2 th:text="${conquista.id != null} ? 'Editar Conquista' : 'Formulário de Conquista'">
+            Formulário de Conquista
+          </h2>
+          <div class="badge-pill">Preencha os dados abaixo</div>
+        </div>
+
+        <div class="hint-box">
+          🏆 As conquistas são desbloqueadas automaticamente pelos usuários ao atingir metas de reciclagem.
+          Defina o título, descrição, pontos de recompensa, nível necessário e uma imagem representativa.
+        </div>
+
+        <form method="post"
+              th:action="@{/admin/conquistas/salvar}"
+              action="/admin/conquistas/salvar">
+
+          <!-- Campo oculto para edição -->
+          <input type="hidden" name="id" th:value="${conquista.id}" />
+
+          <h3 class="section-title">Informações da Conquista</h3>
+
+          <div class="form-grid">
+
+            <div class="form-group full">
+              <label for="titulo">Título da conquista</label>
+              <input type="text" id="titulo" name="titulo"
+                     placeholder="Ex: Reciclador Iniciante"
+                     required
+                     th:value="${conquista.titulo}" />
+            </div>
+
+            <div class="form-group full">
+              <label for="descricao">Descrição</label>
+              <textarea id="descricao" name="descricao"
+                        placeholder="Ex: Aprovou 5 materiais recicláveis na plataforma."
+                        required
+                        th:text="${conquista.descricao}"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="pontosRecompensa">Pontos de recompensa</label>
+              <input type="number" id="pontosRecompensa" name="pontosRecompensa"
+                     placeholder="Ex: 10"
+                     min="0" required
+                     th:value="${conquista.pontosRecompensa}" />
+            </div>
+
+            <div class="form-group">
+              <label for="nivelRequerido">Nível requerido</label>
+              <select id="nivelRequerido" name="nivelRequerido" required>
+                <option value="" th:selected="${conquista.nivelRequerido == null or conquista.nivelRequerido == ''}">
+                  Selecione o nível
+                </option>
+                <option value="Bronze"
+                        th:selected="${conquista.nivelRequerido == 'Bronze'}">Bronze</option>
+                <option value="Prata"
+                        th:selected="${conquista.nivelRequerido == 'Prata'}">Prata</option>
+                <option value="Ouro"
+                        th:selected="${conquista.nivelRequerido == 'Ouro'}">Ouro</option>
+                <option value="Platina"
+                        th:selected="${conquista.nivelRequerido == 'Platina'}">Platina</option>
+                <option value="Diamante"
+                        th:selected="${conquista.nivelRequerido == 'Diamante'}">Diamante</option>
+              </select>
+            </div>
+
+            <div class="form-group full">
+              <label for="imagemUrl">URL da imagem (opcional)</label>
+              <input type="url" id="imagemUrl" name="imagemUrl"
+                     placeholder="https://exemplo.com/icone-conquista.png"
+                     th:value="${conquista.imagemUrl}"
+                     oninput="previewImagem(this.value)" />
+              <div class="preview-box">
+                <div class="preview-placeholder" id="placeholder">🏆</div>
+                <img id="previewImg" class="preview-img" src="" alt="Preview da imagem" />
+                <span style="font-size:13px; color:#6b8576;">
+                  Pré-visualização da imagem da conquista
+                </span>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="form-actions">
+            <a th:href="@{/admin/conquistas}" href="/admin/conquistas"
+               class="btn btn-secondary">Cancelar</a>
+            <button type="submit" class="btn btn-primary">
+              <span th:text="${conquista.id != null} ? '💾 Salvar Alterações' : '✅ Criar Conquista'">
+                ✅ Criar Conquista
+              </span>
+            </button>
+          </div>
+
+        </form>
+      </section>
+
+    </main>
+  </div>
+
+  <script>
+    function previewImagem(url) {
+      const img = document.getElementById('previewImg');
+      const placeholder = document.getElementById('placeholder');
+      if (url && url.trim() !== '') {
+        img.src = url;
+        img.style.display = 'block';
+        placeholder.style.display = 'none';
+        img.onerror = function() {
+          img.style.display = 'none';
+          placeholder.style.display = 'flex';
+        };
+      } else {
+        img.style.display = 'none';
+        placeholder.style.display = 'flex';
+      }
+    }
+
+    // Carrega preview se já tiver imagem (modo edição)
+    window.onload = function() {
+      const input = document.getElementById('imagemUrl');
+      if (input && input.value) previewImagem(input.value);
+    };
+  </script>
+</body>
+</html>

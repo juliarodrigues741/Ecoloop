@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Login - Ecoloop</title>
+<link rel="stylesheet" href="/styles.css">
+<style>
+  .alert {
+    padding: 12px 14px;
+    border-radius: 10px;
+    margin-bottom: 14px;
+    font-size: 14px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .alert-success { background: #d8f1dd; color: #165c33; border: 1px solid #2f9e44; }
+  .alert-error   { background: #ffe0e0; color: #c41e3a; border: 1px solid #ff6b6b; }
+</style>
+</head>
+<body>
+  <div class="login-wrapper">
+    <div class="login-card card">
+      <h2>Entrar</h2>
+      <p>Usuário e senha para acessar o painel</p>
+
+      <!-- Mensagens para o usuário -->
+      <div th:if="${param.erro != null and param.erro[0] == 'true'}" class="alert alert-error">
+        <span>⚠️</span><span>E-mail ou senha incorretos. Verifique seus dados e tente novamente.</span>
+      </div>
+      <div th:if="${param.erro != null and param.erro[0] == 'sessao'}" class="alert alert-error">
+        <span>⏱️</span><span>Sua sessão expirou. Faça login novamente.</span>
+      </div>
+      <div th:if="${param.logout != null}" class="alert alert-success">
+        <span>✅</span><span>Você saiu da sua conta com sucesso.</span>
+      </div>
+      <div th:if="${param.senha != null and param.senha[0] == 'redefinida'}" class="alert alert-success">
+        <span>✅</span><span>Senha redefinida com sucesso! Faça login com sua nova senha.</span>
+      </div>
+
+      <form action="/login" method="post">
+        <input class="input" name="username" placeholder="Usuário" required>
+        <input class="input" name="password" type="password" placeholder="Senha" required>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
+          <a href="/esqueceu-senha" style="font-size:13px;color:rgba(6,58,42,0.8)">Esqueceu a senha?</a>
+          <button class="btn" type="submit">Entrar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

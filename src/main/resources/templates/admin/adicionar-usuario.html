@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title>Usuários - EcoLoop</title>
+  <link rel="stylesheet" th:href="@{/admin-dashboard.css}" href="/admin-dashboard.css" />
+  <style>
+    .page-actions { display:flex; justify-content:flex-end; margin-bottom:20px; }
+    .btn-nova { background:#2f9e44; color:white; border:none; border-radius:12px; padding:12px 20px; font-size:15px; font-weight:600; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:8px; box-shadow:0 4px 12px rgba(47,158,68,0.2); transition:0.2s ease; }
+    .btn-nova:hover { background:#27873a; transform:translateY(-1px); }
+    .table-section { background:white; border-radius:20px; padding:24px; box-shadow:0 4px 16px rgba(0,0,0,0.06); }
+    .table-section h2 { font-size:22px; color:#165c33; margin-bottom:20px; }
+    table { width:100%; border-collapse:collapse; font-size:14px; }
+    thead tr { background:#f0f9f2; }
+    th { padding:12px 16px; text-align:left; font-weight:700; color:#456757; border-bottom:2px solid #e4efe7; }
+    td { padding:14px 16px; border-bottom:1px solid #f0f4f1; color:#0f3d2b; vertical-align:middle; }
+    tr:last-child td { border-bottom:none; }
+    tr:hover td { background:#f7fbf8; }
+    .badge-role { padding:4px 12px; border-radius:999px; font-size:12px; font-weight:700; display:inline-block; }
+    .badge-user { background:#dff3e3; color:#165c33; }
+    .badge-admin { background:#fff3cd; color:#856404; }
+    .badge-moderador { background:#e0f0ff; color:#0a58ca; }
+    .avatar-sm { width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg,#2f9e44,#165c33); color:white; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px; overflow:hidden; flex-shrink:0; }
+    .avatar-sm img { width:100%; height:100%; object-fit:cover; }
+    .user-cell { display:flex; align-items:center; gap:10px; }
+    .acoes { display:flex; gap:8px; align-items:center; }
+    .btn-editar { background:#e8f5e9; color:#165c33; border:none; border-radius:8px; padding:7px 14px; font-size:13px; font-weight:600; cursor:pointer; text-decoration:none; transition:0.2s; }
+    .btn-editar:hover { background:#d4edda; }
+    .btn-deletar { background:#ffe0e0; color:#c41e3a; border:none; border-radius:8px; padding:7px 14px; font-size:13px; font-weight:600; cursor:pointer; transition:0.2s; }
+    .btn-deletar:hover { background:#ffc5c5; }
+    .empty-state { text-align:center; padding:48px 20px; color:#6b8576; }
+    .empty-state .icon { font-size:48px; margin-bottom:12px; }
+    .empty-state p { font-size:15px; }
+    /* ===== DARK MODE ===== */
+    body.dark .table-section { background:#1c2d22; box-shadow:0 4px 16px rgba(0,0,0,0.4); }
+    body.dark .table-section h2,
+    body.dark .table-section h3 { color:#e0f4e6; }
+    body.dark table { background:transparent; color:#e0f4e6; }
+    body.dark th { background:#163f25; color:#c8e6cc; }
+    body.dark td { border-color:#2d3f33; color:#c8e6cc; }
+
+  </style>
+</head>
+<body>
+  <script>if (localStorage.getItem('tema') === 'escuro') document.body.classList.add('dark');</script>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="logo-row">
+        <div class="logo-circle"><span style="font-size:22px">🌍</span></div>
+        <span class="logo-text">EcoLoop</span>
+      </div>
+      <p class="sidebar-section">MENU</p>
+      <nav class="nav">
+        <a th:href="@{/admin/dashboard}" href="/admin/dashboard" class="nav-item"><span class="nav-icon">🏠</span> Home</a>
+        <a th:href="@{/admin/adicionar-usuario}" href="/admin/adicionar-usuario" class="nav-item active"><span class="nav-icon">👤</span> Adicionar Usuário</a>
+        <a th:href="@{/admin/adicionar-recompensa}" href="/admin/adicionar-recompensa" class="nav-item"><span class="nav-icon">🎁</span> Adicionar Recompensa</a>
+        <a th:href="@{/admin/conquistas}" href="/admin/conquistas" class="nav-item"><span class="nav-icon">🏆</span> Conquistas</a>
+        <a th:href="@{/admin/uploads}" href="/admin/uploads" class="nav-item"><span class="nav-icon">📤</span> Upload Usuário</a>
+        <a th:href="@{/admin/config}" href="/admin/config" class="nav-item"><span class="nav-icon">⚙️</span> Configurações</a>
+      </nav>
+      <a th:href="@{/logout}" href="/logout" class="nav-item sair-btn"><span class="nav-icon">🚪</span> Sair</a>
+    </aside>
+
+    <main class="main">
+      <div class="top-bar">
+        <div>
+          <h1 class="page-title">Usuários</h1>
+          <p class="page-sub">Gerencie os usuários da plataforma EcoLoop</p>
+        </div>
+        <div class="admin-badge">
+          <div class="admin-avatar" style="overflow:hidden; padding:0;">
+            <img th:if="${usuario != null and usuario.fotoPerfil != null and !usuario.fotoPerfil.isEmpty()}"
+                 th:src="${usuario.fotoPerfil}"
+                 style="width:100%; height:100%; object-fit:cover; border-radius:50%;" alt="foto" />
+            <span th:unless="${usuario != null and usuario.fotoPerfil != null and !usuario.fotoPerfil.isEmpty()}"
+                  th:text="${usuario != null ? usuario.nome.substring(0,1).toUpperCase() : 'A'}">A</span>
+          </div>
+          <span th:text="${usuario != null ? usuario.nome.split(' ')[0] : 'Admin'}"
+                style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:120px;">Admin</span>
+        </div>
+      </div>
+
+      <div class="page-actions">
+        <a th:href="@{/admin/adicionar-usuario/novo}" class="btn-nova">➕ Novo Usuário</a>
+      </div>
+
+      <div class="table-section">
+        <h2>👥 Usuários cadastrados</h2>
+
+        <div th:if="${usuarios == null or usuarios.isEmpty()}" class="empty-state">
+          <div class="icon">👤</div>
+          <p>Nenhum usuário cadastrado ainda.</p>
+        </div>
+
+        <table th:if="${usuarios != null and !usuarios.isEmpty()}">
+          <thead>
+            <tr>
+              <th>Usuário</th>
+              <th>E-mail</th>
+              <th>Nível</th>
+              <th>Pontos</th>
+              <th>Tipo</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="u : ${usuarios}">
+              <td>
+                <div class="user-cell">
+                  <div class="avatar-sm">
+                    <img th:if="${u.fotoPerfil != null and !u.fotoPerfil.isEmpty()}"
+                         th:src="${u.fotoPerfil}" alt="foto" />
+                    <span th:unless="${u.fotoPerfil != null and !u.fotoPerfil.isEmpty()}"
+                          th:text="${u.nome.substring(0,1).toUpperCase()}">U</span>
+                  </div>
+                  <span th:text="${u.nome}">Nome</span>
+                </div>
+              </td>
+              <td th:text="${u.email}">email</td>
+              <td th:text="${u.nivel != null ? u.nivel : 'Bronze'}">Bronze</td>
+              <td th:text="${u.pontos != null ? u.pontos : 0}">0</td>
+              <td>
+                <span th:class="${'ADMIN'.equalsIgnoreCase(u.role)} ? 'badge-role badge-admin' : (${'MODERADOR'.equalsIgnoreCase(u.role)} ? 'badge-role badge-moderador' : 'badge-role badge-user')"
+                      th:text="${u.role}">USER</span>
+              </td>
+              <td>
+                <div class="acoes">
+                  <a th:href="@{/admin/usuarios/editar/{id}(id=${u.id})}" class="btn-editar">✏️ Editar</a>
+                  <form th:action="@{/admin/usuarios/deletar}" method="post"
+                        onsubmit="return confirm('Deletar este usuário?')">
+                    <input type="hidden" name="id" th:value="${u.id}" />
+                    <button type="submit" class="btn-deletar">🗑️ Deletar</button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

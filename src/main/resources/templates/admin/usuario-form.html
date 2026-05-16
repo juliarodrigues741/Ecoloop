@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title>Usuário - EcoLoop</title>
+  <link rel="stylesheet" th:href="@{/admin-dashboard.css}" href="/admin-dashboard.css" />
+  <style>
+    .form-section { background:white; border-radius:20px; padding:30px; box-shadow:0 4px 16px rgba(0,0,0,0.06); }
+    .form-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; flex-wrap:wrap; gap:12px; }
+    .form-header h2 { font-size:28px; color:#165c33; }
+    .badge-pill { background:#dff3e3; color:#165c33; padding:8px 16px; border-radius:999px; font-size:13px; font-weight:600; }
+    .form-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:18px; margin-bottom:20px; }
+    .form-group { display:flex; flex-direction:column; gap:8px; }
+    .form-group.full { grid-column:1 / -1; }
+    .form-group label { font-size:14px; font-weight:600; color:#456757; }
+    .form-group input, .form-group select { width:100%; border:1px solid #e4efe7; background:#f8fcf8; border-radius:12px; padding:12px 14px; font-size:15px; color:#0f3d2b; outline:none; transition:0.2s ease; }
+    .form-group input:focus, .form-group select:focus { border-color:#2f9e44; box-shadow:0 0 0 3px rgba(47,158,68,0.1); }
+    .section-title { font-size:20px; color:#165c33; margin:24px 0 16px; font-weight:600; }
+    .form-divider { height:1px; background:#e4efe7; margin:24px 0; }
+    .form-actions { display:flex; gap:12px; justify-content:flex-end; margin-top:24px; flex-wrap:wrap; }
+    .btn { border:none; border-radius:12px; padding:12px 20px; font-size:15px; font-weight:600; cursor:pointer; transition:0.2s ease; text-decoration:none; display:inline-block; }
+    .btn-secondary { background:#edf6ef; color:#165c33; }
+    .btn-secondary:hover { background:#e2efe5; }
+    .btn-primary { background:#2f9e44; color:white; box-shadow:0 4px 12px rgba(47,158,68,0.2); }
+    .btn-primary:hover { background:#27873a; transform:translateY(-1px); }
+    .hint-box { background:#f7fbf8; border:1px solid #e4efe7; border-radius:12px; padding:16px; margin-bottom:20px; font-size:14px; color:#6b8576; line-height:1.6; }
+    @media (max-width:768px) { .form-grid { grid-template-columns:1fr; } }
+    /* ===== DARK MODE ===== */
+    body.dark .form-section { background:#1c2d22; box-shadow:0 4px 16px rgba(0,0,0,0.4); }
+    body.dark .form-section h2,
+    body.dark .form-section h3 { color:#e0f4e6; }
+    body.dark label { color:#a0c8a8; }
+    body.dark input[type="text"],
+    body.dark input[type="email"],
+    body.dark input[type="password"],
+    body.dark input[type="number"],
+    body.dark input[type="url"],
+    body.dark textarea,
+    body.dark select { background:#163f25; border-color:#2d4f33; color:#e0f4e6; }
+    body.dark input::placeholder,
+    body.dark textarea::placeholder { color:#6b9474; }
+    body.dark .hint-box { background:#163f25; border-color:#2d4f33; color:#a0c8a8; }
+    body.dark .badge-pill { background:#163f25; color:#a0e0b0; }
+    body.dark .btn-secondary { background:#163f25; color:#a0e0b0; }
+    body.dark .btn-secondary:hover { background:#1e4d2e; }
+
+  </style>
+</head>
+<body>
+  <script>if (localStorage.getItem('tema') === 'escuro') document.body.classList.add('dark');</script>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="logo-row">
+        <div class="logo-circle"><span style="font-size:22px">🌍</span></div>
+        <span class="logo-text">EcoLoop</span>
+      </div>
+      <p class="sidebar-section">MENU</p>
+      <nav class="nav">
+        <a th:href="@{/admin/dashboard}" href="/admin/dashboard" class="nav-item"><span class="nav-icon">🏠</span> Home</a>
+        <a th:href="@{/admin/adicionar-usuario}" href="/admin/adicionar-usuario" class="nav-item active"><span class="nav-icon">👤</span> Adicionar Usuário</a>
+        <a th:href="@{/admin/adicionar-recompensa}" href="/admin/adicionar-recompensa" class="nav-item"><span class="nav-icon">🎁</span> Adicionar Recompensa</a>
+        <a th:href="@{/admin/conquistas}" href="/admin/conquistas" class="nav-item"><span class="nav-icon">🏆</span> Conquistas</a>
+        <a th:href="@{/admin/uploads}" href="/admin/uploads" class="nav-item"><span class="nav-icon">📤</span> Upload Usuário</a>
+        <a th:href="@{/admin/config}" href="/admin/config" class="nav-item"><span class="nav-icon">⚙️</span> Configurações</a>
+      </nav>
+      <a th:href="@{/logout}" href="/logout" class="nav-item sair-btn"><span class="nav-icon">🚪</span> Sair</a>
+    </aside>
+
+    <main class="main">
+      <div class="top-bar">
+        <div>
+          <h1 class="page-title" th:text="${modoEdicao} ? 'Editar Usuário' : 'Novo Usuário'">Usuário</h1>
+          <p class="page-sub" th:text="${modoEdicao} ? 'Atualize os dados do usuário' : 'Cadastre um novo usuário na plataforma'">-</p>
+        </div>
+        <div class="admin-badge">
+          <div class="admin-avatar" style="overflow:hidden; padding:0;">
+            <img th:if="${usuario != null and usuario.fotoPerfil != null and !usuario.fotoPerfil.isEmpty()}"
+                 th:src="${usuario.fotoPerfil}"
+                 style="width:100%; height:100%; object-fit:cover; border-radius:50%;" alt="foto" />
+            <span th:unless="${usuario != null and usuario.fotoPerfil != null and !usuario.fotoPerfil.isEmpty()}"
+                  th:text="${usuario != null ? usuario.nome.substring(0,1).toUpperCase() : 'A'}">A</span>
+          </div>
+          <span th:text="${usuario != null ? usuario.nome.split(' ')[0] : 'Admin'}"
+                style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:120px;">Admin</span>
+        </div>
+      </div>
+
+      <section class="form-section">
+        <div class="form-header">
+          <h2 th:text="${modoEdicao} ? 'Editar Usuário' : 'Formulário de Cadastro'">Formulário</h2>
+          <div class="badge-pill">Preencha os dados abaixo</div>
+        </div>
+
+        <div class="hint-box" th:if="${modoEdicao}">
+          💡 Deixe a senha em branco para manter a senha atual do usuário.
+        </div>
+
+        <form method="post" th:action="@{/admin/usuarios/salvar}" action="/admin/usuarios/salvar">
+          <input type="hidden" name="id" th:value="${usuarioEdicao.id}" />
+          <input type="hidden" name="fotoPerfil" th:value="${usuarioEdicao.fotoPerfil}" />
+
+          <h3 class="section-title">Dados Pessoais</h3>
+          <div class="form-grid">
+            <div class="form-group full">
+              <label for="nome">Nome completo</label>
+              <input type="text" id="nome" name="nome" placeholder="Digite o nome completo" required th:value="${usuarioEdicao.nome}" />
+            </div>
+            <div class="form-group">
+              <label for="email">E-mail</label>
+              <input type="email" id="email" name="email" placeholder="Digite o e-mail" required th:value="${usuarioEdicao.email}" />
+            </div>
+            <div class="form-group">
+              <label for="telefone">Telefone</label>
+              <input type="text" id="telefone" name="telefone" placeholder="(00) 00000-0000" th:value="${usuarioEdicao.telefone}" />
+            </div>
+            <div class="form-group">
+              <label for="cpf">CPF</label>
+              <input type="text" id="cpf" name="cpf" placeholder="000.000.000-00" th:value="${usuarioEdicao.cpf}" />
+            </div>
+            <div class="form-group">
+              <label for="role">Tipo de usuário</label>
+              <select id="role" name="role" required>
+                <option value="USER"      th:selected="${usuarioEdicao.role == 'USER' or usuarioEdicao.role == null}">Usuário</option>
+                <option value="ADMIN"     th:selected="${usuarioEdicao.role == 'ADMIN'}">Administrador</option>
+                <option value="MODERADOR" th:selected="${usuarioEdicao.role == 'MODERADOR'}">Moderador</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-divider"></div>
+          <h3 class="section-title">Pontos e Nível</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="pontos">Pontos</label>
+              <input type="number" id="pontos" name="pontos" min="0" placeholder="0"
+                     th:value="${usuarioEdicao.pontos != null ? usuarioEdicao.pontos : 0}" />
+            </div>
+            <div class="form-group">
+              <label for="nivel">Nível</label>
+              <select id="nivel" name="nivel">
+                <option value="Bronze"   th:selected="${usuarioEdicao.nivel == 'Bronze'   or usuarioEdicao.nivel == null}">Bronze</option>
+                <option value="Prata"    th:selected="${usuarioEdicao.nivel == 'Prata'}">Prata</option>
+                <option value="Ouro"     th:selected="${usuarioEdicao.nivel == 'Ouro'}">Ouro</option>
+                <option value="Platina"  th:selected="${usuarioEdicao.nivel == 'Platina'}">Platina</option>
+                <option value="Diamante" th:selected="${usuarioEdicao.nivel == 'Diamante'}">Diamante</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-divider"></div>
+          <h3 class="section-title" th:text="${modoEdicao} ? 'Nova Senha (opcional)' : 'Dados de Acesso'">Senha</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="senhaHash">Senha</label>
+              <input type="password" id="senhaHash" name="senhaHash"
+                     th:placeholder="${modoEdicao} ? 'Deixe em branco para manter' : 'Digite a senha'"
+                     th:required="${!modoEdicao}" />
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <a th:href="@{/admin/adicionar-usuario}" class="btn btn-secondary">Cancelar</a>
+            <button type="submit" class="btn btn-primary"
+                    th:text="${modoEdicao} ? '💾 Salvar Alterações' : '✅ Criar Usuário'">Salvar</button>
+          </div>
+        </form>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

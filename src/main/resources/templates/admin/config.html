@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title>Configurações - EcoLoop Admin</title>
+  <link rel="stylesheet" href="/admin-config.css" />
+</head>
+<body>
+  <div class="app">
+
+    <!-- SIDEBAR ADMIN -->
+    <aside class="sidebar">
+      <div class="logo-row">
+        <div class="logo-circle">
+          <span style="font-size:22px">🌍</span>
+        </div>
+        <span class="logo-text">EcoLoop</span>
+      </div>
+
+      <p class="sidebar-section">MENU</p>
+
+      <nav class="nav">
+        <a href="/admin/dashboard" class="nav-item"><span class="nav-icon">🏠</span> Home</a>
+        <a href="/admin/adicionar-usuario" class="nav-item"><span class="nav-icon">👤</span> Adicionar Usuário</a>
+        <a href="/admin/adicionar-recompensa" class="nav-item"><span class="nav-icon">🎁</span> Adicionar Recompensa</a>
+        <a href="/admin/conquistas" class="nav-item">
+        <span class="nav-icon">🏆</span> Adcionar Conquistas
+        </a>
+        <a href="/admin/uploads" class="nav-item"><span class="nav-icon">📤</span> Upload Usuário</a>
+        <a href="/admin/config" class="nav-item active"><span class="nav-icon">⚙️</span> Configurações</a>
+      </nav>
+
+      <a href="/logout" class="nav-item sair-btn"><span class="nav-icon">🚪</span> Sair</a>
+    </aside>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="main">
+      <div class="page-header">
+        <h1 class="page-title">Configurações</h1>
+        <p class="page-sub">Gerencie suas preferências e conta</p>
+      </div>
+
+      <div class="settings-wrapper">
+
+        <!-- CARD CONTA -->
+        <div class="settings-card">
+          <div class="card-header">
+            <span class="card-icon">👤</span>
+            <h2 class="card-title">Conta</h2>
+          </div>
+
+          <a href="/esqueceu-senha" class="settings-item">
+            <div class="item-left">
+              <span class="item-icon">🔑</span>
+              <div>
+                <p class="item-label">Alterar senha</p>
+                <p class="item-sub">Atualize sua senha de acesso</p>
+              </div>
+            </div>
+            <span class="arrow">›</span>
+          </a>
+
+          <div class="item-divider"></div>
+
+          <a href="#" class="settings-item">
+            <div class="item-left">
+              <span class="item-icon">📧</span>
+              <div>
+                <p class="item-label">Notificação por email</p>
+                <p class="item-sub">Receba atualizações no seu email</p>
+              </div>
+            </div>
+            <span class="arrow">›</span>
+          </a>
+        </div>
+
+        <!-- CARD GERAL -->
+        <div class="settings-card">
+          <div class="card-header">
+            <span class="card-icon">🌐</span>
+            <h2 class="card-title">Geral</h2>
+          </div>
+
+          <div class="settings-item">
+            <div class="item-left">
+              <span class="item-icon">🌙</span>
+              <div>
+                <p class="item-label">Tema Escuro</p>
+                <p class="item-sub">Alternar aparência do sistema</p>
+              </div>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="darkToggle" />
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- CARD SOBRE -->
+        <div class="settings-card">
+          <div class="card-header">
+            <span class="card-icon">ℹ️</span>
+            <h2 class="card-title">Sobre</h2>
+          </div>
+
+          <a href="#" class="settings-item">
+            <div class="item-left">
+              <span class="item-icon">📱</span>
+              <div>
+                <p class="item-label">EcoLoop</p>
+                <p class="item-sub">Versão 1.0.0</p>
+              </div>
+            </div>
+            <span class="arrow">›</span>
+          </a>
+        </div>
+
+        <!-- BOTÃO SAIR -->
+        <div class="sair-section">
+          <a href="/logout" class="btn-sair">🚪 Sair da conta</a>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const toggle = document.getElementById('darkToggle');
+    const body = document.body;
+    if (localStorage.getItem('tema') === 'escuro') {
+      body.classList.add('dark');
+      toggle.checked = true;
+    }
+    toggle.addEventListener('change', () => {
+      if (toggle.checked) {
+        body.classList.add('dark');
+        localStorage.setItem('tema', 'escuro');
+      } else {
+        body.classList.remove('dark');
+        localStorage.setItem('tema', 'claro');
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EcoLoop - Esqueceu a Senha</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif; }
+    body { background:#eef8f0; color:#0f3d2b; display:flex; align-items:center; justify-content:center; min-height:100vh; padding:20px; }
+    .container { max-width:860px; width:100%; }
+    .header { text-align:center; margin-bottom:32px; }
+    .logo { display:inline-flex; align-items:center; gap:12px; font-size:24px; font-weight:700; color:#165c33; margin-bottom:16px; }
+    .logo-icon { width:40px; height:40px; border-radius:50%; background:linear-gradient(135deg,#64d47c,#2f9e44); display:flex; align-items:center; justify-content:center; font-size:20px; }
+    .header h1 { font-size:36px; color:#165c33; margin-bottom:8px; }
+    .header p { font-size:16px; color:#6b8576; }
+    .content-grid { display:grid; grid-template-columns:1.5fr 1fr; gap:20px; }
+    .form-card, .side-card { background:white; border-radius:28px; box-shadow:0 10px 25px rgba(22,92,51,0.08); padding:28px; }
+    .form-card-header { display:flex; justify-content:space-between; align-items:center; gap:16px; margin-bottom:20px; }
+    .form-card-header h2 { font-size:28px; color:#165c33; }
+    .pill { background:#dff3e3; color:#165c33; padding:8px 14px; border-radius:999px; font-size:13px; font-weight:700; }
+    .description-box { background:#f7fbf8; border:1px solid #e3efe6; border-radius:16px; padding:16px; color:#6b8576; line-height:1.6; margin-bottom:20px; font-size:14px; }
+    .alert { padding:14px 16px; border-radius:14px; margin-bottom:18px; font-size:14px; font-weight:600; display:flex; align-items:flex-start; gap:10px; }
+    .alert-success { background:#d8f1dd; color:#165c33; border:1px solid #2f9e44; }
+    .alert-error { background:#ffe0e0; color:#c41e3a; border:1px solid #ff6b6b; }
+    .link-box { background:#f0f9f4; border:2px solid #2f9e44; border-radius:14px; padding:16px; margin-top:8px; word-break:break-all; }
+    .link-box p { font-size:12px; color:#6b8576; margin-bottom:8px; font-weight:600; }
+    .link-box a { color:#2f9e44; font-size:14px; font-weight:600; text-decoration:none; }
+    .link-box a:hover { text-decoration:underline; }
+    .btn-copy { margin-top:10px; background:#2f9e44; color:white; border:none; border-radius:10px; padding:8px 16px; font-size:13px; font-weight:600; cursor:pointer; }
+    .btn-copy:hover { background:#27873a; }
+    .form-group { margin-bottom:16px; }
+    label { display:block; font-size:14px; font-weight:600; color:#456757; margin-bottom:8px; }
+    input { width:100%; border:1px solid #e3efe6; background:#f8fcf8; border-radius:14px; padding:14px 16px; font-size:15px; color:#0f3d2b; outline:none; transition:0.2s ease; }
+    input:focus { border-color:#2f9e44; box-shadow:0 0 0 4px rgba(47,158,68,0.12); }
+    .form-note { font-size:13px; color:#6b8576; margin-top:-6px; margin-bottom:16px; line-height:1.5; }
+    .actions { display:flex; gap:12px; flex-wrap:wrap; margin-top:16px; }
+    .btn { border:none; border-radius:14px; padding:13px 20px; font-size:15px; font-weight:700; cursor:pointer; transition:0.25s ease; text-decoration:none; display:inline-block; }
+    .btn-primary { background:#2f9e44; color:white; box-shadow:0 8px 20px rgba(47,158,68,0.22); }
+    .btn-primary:hover { background:#27873a; transform:translateY(-1px); }
+    .btn-secondary { background:#edf6ef; color:#165c33; }
+    .btn-secondary:hover { background:#e2efe5; }
+    .side-card h3 { font-size:22px; color:#165c33; margin-bottom:16px; }
+    .steps { display:flex; flex-direction:column; gap:12px; margin-bottom:18px; }
+    .step { display:flex; align-items:flex-start; gap:12px; background:#f8fbf8; border-radius:16px; padding:14px; }
+    .step-number { width:32px; height:32px; border-radius:50%; background:#2f9e44; color:white; display:flex; align-items:center; justify-content:center; font-weight:700; flex-shrink:0; font-size:14px; }
+    .step-text strong { display:block; color:#165c33; margin-bottom:4px; font-size:14px; }
+    .step-text span { font-size:13px; color:#6b8576; line-height:1.5; }
+    .security-box { background:#f8e7c8; border-radius:18px; padding:16px; margin-top:8px; }
+    .security-box strong { display:block; color:#165c33; margin-bottom:6px; font-size:14px; }
+    .security-box p { font-size:13px; color:#597464; line-height:1.6; }
+    .hidden { display:none; }
+    @media (max-width:768px) { .content-grid { grid-template-columns:1fr; } .header h1 { font-size:28px; } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo">
+        <div class="logo-icon">🌎</div>
+        <span>EcoLoop</span>
+      </div>
+      <h1>Esqueceu a Senha</h1>
+      <p>Informe seu e-mail para receber o link de redefinição</p>
+    </div>
+
+    <section class="content-grid">
+      <div class="form-card">
+        <div class="form-card-header">
+          <h2>Recuperar Senha</h2>
+          <div class="pill">Link seguro</div>
+        </div>
+
+        <div class="description-box">
+          Informe o e-mail cadastrado. Um link de redefinição será gerado e válido por <strong>30 minutos</strong>.
+        </div>
+
+        <!-- Mensagens dinâmicas (preenchidas pelo JS após chamar a API REST) -->
+        <div id="alertaErro" class="alert alert-error hidden">
+          <span>⚠️</span><span id="erroTexto"></span>
+        </div>
+
+        <div id="alertaSucesso" class="alert alert-success hidden">
+          <div style="width:100%;">
+            <span>✅ Link gerado com sucesso! Acesse para redefinir sua senha:</span>
+            <div class="link-box">
+              <p>🔗 Link de redefinição (válido por 30 minutos):</p>
+              <a id="linkGerado" href="#" target="_blank"></a>
+              <br/>
+              <button class="btn-copy" type="button" onclick="copiarLink()">📋 Copiar link</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Formulário enviado via fetch para o microsserviço REST -->
+        <form id="formSolicitar">
+          <div class="form-group">
+            <label for="email">E-mail cadastrado</label>
+            <input type="email" id="email" name="email" placeholder="Digite seu e-mail" required />
+          </div>
+          <p class="form-note">Verifique se o endereço digitado está correto.</p>
+          <div class="actions">
+            <a href="/login" class="btn btn-secondary">Voltar ao Login</a>
+            <button type="submit" class="btn btn-primary">Gerar Link</button>
+          </div>
+        </form>
+
+        <div id="acoesSucesso" class="hidden" style="margin-top:16px;">
+          <a href="/esqueceu-senha" class="btn btn-secondary">Gerar novo link</a>
+          <a href="/login" class="btn btn-primary" style="margin-left:8px;">Ir para Login</a>
+        </div>
+      </div>
+
+      <aside class="side-card">
+        <h3>Como funciona</h3>
+        <div class="steps">
+          <div class="step">
+            <div class="step-number">1</div>
+            <div class="step-text">
+              <strong>Digite seu e-mail</strong>
+              <span>Informe o e-mail cadastrado na plataforma.</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-number">2</div>
+            <div class="step-text">
+              <strong>Acesse o link gerado</strong>
+              <span>Copie e acesse o link de redefinição exibido na tela.</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-number">3</div>
+            <div class="step-text">
+              <strong>Defina sua nova senha</strong>
+              <span>Digite e confirme sua nova senha. O link expira em 30 minutos.</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-number">4</div>
+            <div class="step-text">
+              <strong>Faça login</strong>
+              <span>Use a nova senha para acessar sua conta.</span>
+            </div>
+          </div>
+        </div>
+        <div class="security-box">
+          <strong>⏱️ Atenção</strong>
+          <p>O link expira em 30 minutos e só pode ser usado uma vez por segurança.</p>
+        </div>
+      </aside>
+    </section>
+  </div>
+
+  <script>
+    // Consome o microsserviço REST: POST /recuperacao/solicitar
+    document.getElementById('formSolicitar').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const email = document.getElementById('email').value;
+      const alertaErro = document.getElementById('alertaErro');
+      const alertaSucesso = document.getElementById('alertaSucesso');
+      const acoesSucesso = document.getElementById('acoesSucesso');
+      const form = document.getElementById('formSolicitar');
+
+      alertaErro.classList.add('hidden');
+      alertaSucesso.classList.add('hidden');
+
+      try {
+        const params = new URLSearchParams();
+        params.append('email', email);
+
+        const resp = await fetch('/recuperacao/solicitar', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: params
+        });
+
+        const dados = await resp.json();
+
+        if (dados.status === 'sucesso') {
+          document.getElementById('linkGerado').href = dados.link;
+          document.getElementById('linkGerado').textContent = dados.link;
+          alertaSucesso.classList.remove('hidden');
+          form.classList.add('hidden');
+          acoesSucesso.classList.remove('hidden');
+        } else {
+          document.getElementById('erroTexto').textContent = dados.mensagem;
+          alertaErro.classList.remove('hidden');
+        }
+      } catch (err) {
+        document.getElementById('erroTexto').textContent = 'Erro ao processar a solicitação. Tente novamente.';
+        alertaErro.classList.remove('hidden');
+      }
+    });
+
+    function copiarLink() {
+      const link = document.getElementById('linkGerado').textContent;
+      navigator.clipboard.writeText(link);
+      event.target.textContent = '✅ Copiado!';
+    }
+  </script>
+</body>
+</html>
