@@ -1,1 +1,7 @@
 /target/
+
+# Arquivos enviados pelos usuarios em runtime (nao versionar)
+/uploads/
+
+# Configuracoes locais da IDE
+/.settings/

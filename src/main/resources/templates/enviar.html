@@ -170,6 +170,19 @@
       border: 2px solid #e4efe7;
     }
 
+    .status-box {
+      display: none;
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .status-box .status-titulo { font-weight: 700; display: block; margin-bottom: 4px; }
+    .status-box.pendente { background: #fff8e1; border-left: 4px solid #ffc107; color: #7a5b00; }
+    .status-box.aprovado { background: #d8f1dd; border-left: 4px solid #2f9e44; color: #165c33; }
+    .status-box.recusado { background: #ffe0e0; border-left: 4px solid #ff6b6b; color: #c41e3a; }
+
     @media (max-width: 768px) {
       .form-grid {
         grid-template-columns: 1fr;
@@ -232,6 +245,9 @@
         </div>
       </div>
 
+      <!-- NOTIFICAÇÕES DE AVALIAÇÃO (preenchidas pela API /material/notificacoes) -->
+      <div id="notificacoesBox"></div>
+
       <!-- CARDS DE RESUMO -->
       <section class="cards-row">
         <article class="stat-card green">
@@ -265,18 +281,21 @@
           <div class="badge-pill">Preencha os dados</div>
         </div>
 
+        <!-- Mensagem de status preenchida pela API /material/status/{id} -->
+        <div id="statusBox" class="status-box"></div>
+
         <div class="info-box">
           <strong>💡 Dica</strong>
           <p>Tire fotos claras dos materiais recicláveis. Quanto melhor a qualidade, mais rápida será a aprovação!</p>
         </div>
 
-        <form>
+        <form action="/enviar" method="post" enctype="multipart/form-data">
           <!-- Área de Upload -->
           <div class="upload-area" onclick="document.getElementById('fileInput').click()">
             <div class="upload-icon">📸</div>
             <h3>Clique para selecionar uma foto</h3>
             <p>Ou arraste e solte aqui (JPG, PNG - Máx. 5MB)</p>
-            <input type="file" id="fileInput" class="file-input" accept="image/*" onchange="previewImage(event)">
+            <input type="file" id="fileInput" name="file" class="file-input" accept="image/*" onchange="previewImage(event)">
             <img id="preview" class="preview-image" style="display:none">
           </div>
 
@@ -302,7 +321,7 @@
 
             <div class="form-group full">
               <label for="descricao">Descrição (opcional)</label>
-              <textarea id="descricao" placeholder="Descreva o material enviado..."></textarea>
+              <textarea id="descricao" name="descricao" placeholder="Descreva o material enviado..."></textarea>
             </div>
 
             <div class="form-group">
@@ -372,6 +391,68 @@
 
     // Definir data de hoje como padrão
     document.getElementById('data').valueAsDate = new Date();
+
+    // Exibe a mensagem de status consumindo a API /material/status/{id}
+    (function () {
+      const params = new URLSearchParams(window.location.search);
+      const box = document.getElementById('statusBox');
+
+      // Caso o envio tenha falhado por falta de arquivo
+      if (params.get('erro') === 'arquivo') {
+        box.className = 'status-box recusado';
+        box.innerHTML = '<span class="status-titulo">⚠️ Nenhum arquivo selecionado</span>'
+                      + 'Escolha um arquivo antes de clicar em "Enviar Material".';
+        box.style.display = 'block';
+        return;
+      }
+
+      // Após o envio, o backend redireciona com ?enviado={id}
+      const id = params.get('enviado');
+      if (!id) return;
+
+      fetch('/material/status/' + id)
+        .then(resp => resp.json())
+        .then(mensagens => {
+          if (!Array.isArray(mensagens) || mensagens.length === 0) return;
+
+          const texto = mensagens.join(' ');
+          let classe = 'pendente';
+          if (texto.includes('aprovado')) classe = 'aprovado';
+          else if (texto.includes('recusado')) classe = 'recusado';
+
+          box.className = 'status-box ' + classe;
+          box.innerHTML = '<span class="status-titulo">' + mensagens[0] + '</span>'
+                        + mensagens.slice(1).join('<br>');
+          box.style.display = 'block';
+        })
+        .catch(() => {
+          box.className = 'status-box pendente';
+          box.innerHTML = '<span class="status-titulo">📤 Material enviado!</span>'
+                        + 'Aguarde a aprovação do administrador.';
+          box.style.display = 'block';
+        });
+    })();
+
+    // Ao abrir a aba "Enviar", busca as notificacoes de avaliacao do usuario
+    // (materiais que o admin ja aprovou ou recusou) e exibe no topo.
+    (function () {
+      const cont = document.getElementById('notificacoesBox');
+      if (!cont) return;
+
+      fetch('/material/notificacoes')
+        .then(resp => resp.json())
+        .then(notificacoes => {
+          if (!Array.isArray(notificacoes) || notificacoes.length === 0) return;
+
+          cont.innerHTML = notificacoes.map(function (n) {
+            let classe = 'pendente';
+            if (n.includes('aprovado')) classe = 'aprovado';
+            else if (n.includes('recusado')) classe = 'recusado';
+            return '<div class="status-box ' + classe + '" style="display:block">' + n + '</div>';
+          }).join('');
+        })
+        .catch(() => { /* silencioso */ });
+    })();
   </script>
 </body>
 </html>

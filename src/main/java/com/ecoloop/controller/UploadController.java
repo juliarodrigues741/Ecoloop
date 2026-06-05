@@ -7,7 +7,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Controller
 public class UploadController {
@@ -30,20 +32,29 @@ public class UploadController {
             return "redirect:/enviar?erro=arquivo";
         }
 
-        String caminho = "src/main/resources/templates/uploads/" + file.getOriginalFilename();
-        file.transferTo(new File(caminho));
+        // Salva o arquivo numa pasta "uploads" na raiz do projeto (criada se nao existir).
+        // transferTo exige caminho absoluto, senao resolve para a pasta temp do Tomcat.
+        Path uploadDir = Paths.get("uploads").toAbsolutePath();
+        Files.createDirectories(uploadDir);
+
+        String nomeArquivo = System.currentTimeMillis() + "_"
+                + (file.getOriginalFilename() == null ? "arquivo" : file.getOriginalFilename());
+        file.transferTo(uploadDir.resolve(nomeArquivo).toFile());
 
         Integer userId = ((com.ecoloop.model.Usuario) session.getAttribute("usuario")).getId();
 
         MaterialEnviado m = new MaterialEnviado();
         m.setUsuarioId(userId);
         m.setDescricao(descricao);
-        m.setCaminhoArquivo("/uploads/" + file.getOriginalFilename());
-        m.setTipoArquivo(file.getContentType().startsWith("video") ? "video" : "foto");
+        m.setCaminhoArquivo("/uploads/" + nomeArquivo);
+        String contentType = file.getContentType();
+        m.setTipoArquivo(contentType != null && contentType.startsWith("video") ? "video" : "foto");
         m.setStatus("pendente");
 
-        materialDAO.create(m);
+        Integer novoId = materialDAO.create(m);
 
-        return "redirect:/dashboard";
+        // Redireciona de volta para a tela de envio com o id do material recem-criado,
+        // para que o JS chame a API /material/status/{id} e exiba a mensagem.
+        return "redirect:/enviar?enviado=" + novoId;
     }
 }
