@@ -9,7 +9,10 @@ CREATE TABLE usuarios (
   foto_perfil VARCHAR(255),
   nivel VARCHAR(50) DEFAULT 'Bronze',
   pontos INT DEFAULT 0,
-  data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  role VARCHAR(20) NOT NULL DEFAULT 'USER',
+  telefone VARCHAR(20),
+  cpf VARCHAR(20)
 );
 
 CREATE TABLE configuracoes_usuario (
@@ -99,10 +102,20 @@ CREATE TABLE logs_acoes (
   FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE SET NULL
 );
 
-INSERT INTO usuarios (nome, email, senha_hash, role, nivel, pontos) 
+-- TOKENS DE REDEFINIÇÃO DE SENHA (usado pela API /recuperacao)
+CREATE TABLE tokens_redefinicao (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  usuario_id INT NOT NULL,
+  token VARCHAR(64) NOT NULL UNIQUE,
+  expiracao DATETIME NOT NULL,
+  usado BOOLEAN DEFAULT FALSE,
+  FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+);
+
+INSERT INTO usuarios (nome, email, senha_hash, role, nivel, pontos)
 VALUES ('Admin', 'admin@adm.com', '123456', 'ADMIN', 'Bronze', 0);
 
-insert into usuarios (nome, email, senha_hash, role, nivel, pontos)
-values ('usuario', 'usuario@gmail.com', '123456', 'usuario', 'Bronze', 0);
+INSERT INTO usuarios (nome, email, senha_hash, role, nivel, pontos)
+VALUES ('usuario', 'usuario@gmail.com', '123456', 'USER', 'Bronze', 0);
 
-SELECT id, nome, email, senha_hash FROM usuarios;
+SELECT id, nome, email, senha_hash, role FROM usuarios;
