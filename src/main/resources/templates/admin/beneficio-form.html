@@ -18,7 +18,7 @@
     .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color:#2f9e44; box-shadow:0 0 0 3px rgba(47,158,68,0.1); }
     .form-actions { display:flex; gap:12px; justify-content:flex-end; margin-top:24px; flex-wrap:wrap; }
     .btn { border:none; border-radius:12px; padding:12px 20px; font-size:15px; font-weight:600; cursor:pointer; transition:0.2s ease; text-decoration:none; display:inline-block; }
-    .btn-secondary { background:#edf6ef; color:#165c33; }
+    .btn-secondary { background: rgba(47,158,68,0.10); color: #2f9e44; border: 1px solid rgba(47,158,68,0.22); }
     .btn-secondary:hover { background:#e2efe5; }
     .btn-primary { background:#2f9e44; color:white; box-shadow:0 4px 12px rgba(47,158,68,0.2); }
     .btn-primary:hover { background:#27873a; transform:translateY(-1px); }
@@ -38,8 +38,8 @@
     body.dark textarea::placeholder { color:#6b9474; }
     body.dark .hint-box { background:#163f25; border-color:#2d4f33; color:#a0c8a8; }
     body.dark .badge-pill { background:#163f25; color:#a0e0b0; }
-    body.dark .btn-secondary { background:#163f25; color:#a0e0b0; }
-    body.dark .btn-secondary:hover { background:#1e4d2e; }
+    body.dark .btn-secondary { background:rgba(47,158,68,0.15); color:#7adf90; border-color:rgba(47,158,68,0.3); }
+    body.dark .btn-secondary:hover { background:rgba(47,158,68,0.25); }
 
   </style>
 </head>
@@ -56,7 +56,7 @@
         <a th:href="@{/admin/dashboard}" href="/admin/dashboard" class="nav-item"><span class="nav-icon">🏠</span> Home</a>
         <a th:href="@{/admin/adicionar-usuario}" href="/admin/adicionar-usuario" class="nav-item"><span class="nav-icon">👤</span> Adicionar Usuário</a>
         <a th:href="@{/admin/adicionar-recompensa}" href="/admin/adicionar-recompensa" class="nav-item active"><span class="nav-icon">🎁</span> Adicionar Recompensa</a>
-        <a th:href="@{/admin/conquistas}" href="/admin/conquistas" class="nav-item"><span class="nav-icon">🏆</span> Conquistas</a>
+        <a th:href="@{/admin/conquistas}" href="/admin/conquistas" class="nav-item"><span class="nav-icon">🏆</span> Adicionar Conquistas</a>
         <a th:href="@{/admin/uploads}" href="/admin/uploads" class="nav-item"><span class="nav-icon">📤</span> Upload Usuário</a>
         <a th:href="@{/admin/config}" href="/admin/config" class="nav-item"><span class="nav-icon">⚙️</span> Configurações</a>
       </nav>

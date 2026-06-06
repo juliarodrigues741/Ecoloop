@@ -4,6 +4,122 @@
   <meta charset="UTF-8" />
   <title>Dashboard - EcoLoop</title>
   <link rel="stylesheet" th:href="@{/admin-dashboard.css}" href="/admin-dashboard.css" />
+  <style>
+    .acao-btn {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px 16px;
+        border-radius: 12px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 14px;
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
+    .acao-btn:hover {
+     transform: translateY(-2px);
+     box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+     filter: brightness(1.06);
+    }
+    .acao-btn-secondary {
+     background: rgba(47,158,68,0.08);
+     color: inherit;
+     border: 1px solid rgba(47,158,68,0.2);
+    }
+    .acao-btn-secondary:hover {
+     background: rgba(47,158,68,0.15);
+     border-color: rgba(47,158,68,0.4);
+    }
+    .progresso-card {
+      background: white;
+      border-radius: 16px;
+      padding: 20px 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .dark .progresso-card { background: #1e2d24; }
+    .progresso-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .progresso-titulo { font-size: 15px; font-weight: 600; color: #1a3c26; }
+    .dark .progresso-titulo { color: #c8e6c9; }
+    .progresso-info { font-size: 13px; color: #6b8576; }
+    .progresso-bar-bg {
+      background: #e8f5e9;
+      border-radius: 100px;
+      height: 14px;
+      width: 100%;
+      overflow: hidden;
+    }
+    .dark .progresso-bar-bg { background: #2e4a35; }
+    .progresso-bar-fill {
+      height: 100%;
+      border-radius: 100px;
+      background: linear-gradient(90deg, #2f9e44, #40c057);
+      transition: width 0.6s ease;
+    }
+    .progresso-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #6b8576;
+      margin-top: 6px;
+    }
+    .progresso-faltam {
+      text-align: center;
+      font-size: 13px;
+      color: #2f9e44;
+      font-weight: 600;
+      margin-top: 8px;
+    }
+    .materiais-card {
+      background: white;
+      border-radius: 16px;
+      padding: 20px 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .dark .materiais-card { background: #1e2d24; }
+    .materiais-card h3 { margin-bottom: 14px; font-size: 15px; color: #1a3c26; }
+    .dark .materiais-card h3 { color: #c8e6c9; }
+    .materiais-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .materiais-table th {
+      text-align: left;
+      padding: 8px 10px;
+      color: #6b8576;
+      font-weight: 600;
+      border-bottom: 1px solid #e8f0eb;
+      font-size: 12px;
+    }
+    .materiais-table td {
+      padding: 10px 10px;
+      border-bottom: 1px solid #f0f5f2;
+      color: #2c3e35;
+      vertical-align: middle;
+    }
+    .dark .materiais-table td { color: #c8e6c9; border-bottom-color: #2e4a35; }
+    .dark .materiais-table th { border-bottom-color: #2e4a35; color: #7aad84; }
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 100px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .badge-aprovado { background: #d3f9d8; color: #1a7431; }
+    .badge-pendente { background: #fff3cd; color: #856404; }
+    .badge-recusado { background: #ffe0e0; color: #b02a37; }
+    .pts-positivo { color: #2f9e44; font-weight: 700; }
+    .pts-neutro   { color: #aaa; }
+  </style>
 </head>
 <body>
   <script>if (localStorage.getItem('tema') === 'escuro') document.body.classList.add('dark');</script>
@@ -16,14 +132,14 @@
       </div>
       <p class="sidebar-section">MENU</p>
       <nav class="nav">
-        <a th:href="@{/dashboard}" href="/dashboard" class="nav-item active"><span class="nav-icon">🏠</span> Home</a>
-        <a th:href="@{/enviar}" href="/enviar" class="nav-item"><span class="nav-icon">📸</span> Enviar</a>
-        <a th:href="@{/beneficios}" href="/beneficios" class="nav-item"><span class="nav-icon">🎁</span> Benefícios</a>
-        <a th:href="@{/conquistas}" href="/conquistas" class="nav-item"><span class="nav-icon">🏆</span> Conquistas</a>
-        <a th:href="@{/perfil}" href="/perfil" class="nav-item"><span class="nav-icon">👤</span> Perfil</a>
-        <a th:href="@{/configuracoes}" href="/configuracoes" class="nav-item"><span class="nav-icon">⚙️</span> Configurações</a>
+        <a th:href="@{/dashboard}"    class="nav-item active"><span class="nav-icon">🏠</span> Home</a>
+        <a th:href="@{/enviar}"       class="nav-item"><span class="nav-icon">📸</span> Enviar</a>
+        <a th:href="@{/beneficios}"   class="nav-item"><span class="nav-icon">🎁</span> Benefícios</a>
+        <a th:href="@{/conquistas}"   class="nav-item"><span class="nav-icon">🏆</span> Conquistas</a>
+        <a th:href="@{/perfil}"       class="nav-item"><span class="nav-icon">👤</span> Perfil</a>
+        <a th:href="@{/configuracoes}" class="nav-item"><span class="nav-icon">⚙️</span> Configurações</a>
       </nav>
-      <a th:href="@{/logout}" href="/logout" class="nav-item sair-btn"><span class="nav-icon">🚪</span> Sair</a>
+      <a th:href="@{/logout}" class="nav-item sair-btn"><span class="nav-icon">🚪</span> Sair</a>
     </aside>
 
     <main class="main">
@@ -34,15 +150,15 @@
           <p class="page-sub" th:text="${'Bem-vindo de volta, ' + (usuario != null ? usuario.nome.split(' ')[0] : 'Usuário') + '! 👋'}">Bem-vindo de volta! 👋</p>
         </div>
         <div class="admin-badge">
-          <div class="admin-avatar" style="overflow:hidden; padding:0;">
+          <div class="admin-avatar" style="overflow:hidden;padding:0;">
             <img th:if="${usuario != null and usuario.fotoPerfil != null and !usuario.fotoPerfil.isEmpty()}"
                  th:src="${usuario.fotoPerfil}"
-                 style="width:100%; height:100%; object-fit:cover; border-radius:50%;" alt="foto" />
+                 style="width:100%;height:100%;object-fit:cover;border-radius:50%;" alt="foto"/>
             <span th:unless="${usuario != null and usuario.fotoPerfil != null and !usuario.fotoPerfil.isEmpty()}"
                   th:text="${usuario != null and usuario.nome != null ? usuario.nome.substring(0,1).toUpperCase() : 'U'}">U</span>
           </div>
           <span th:text="${usuario != null ? usuario.nome.split(' ')[0] : 'Usuário'}"
-                style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:120px;">Usuário</span>
+                style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px;">Usuário</span>
         </div>
       </div>
 
@@ -80,53 +196,120 @@
       <div class="content-grid">
         <div class="center-col">
 
-          <article class="info-card">
-            <h3 style="margin-bottom:14px">📋 Últimos Uploads</h3>
-            <div th:if="${uploads == null or uploads.isEmpty()}" style="color:#6b8576; font-size:14px;">
-              Você ainda não enviou nenhum material.
-              <a th:href="@{/enviar}" style="color:#2f9e44; font-weight:600"> Enviar agora</a>
+          <!-- Barra de progresso de nível -->
+          <div class="progresso-card">
+            <div class="progresso-header">
+              <span class="progresso-titulo">📈 Progresso de Nível</span>
+              <span class="progresso-info"
+                    th:text="${usuario.nivel + ' → ' + proximoNivel}">Bronze → Prata</span>
             </div>
-            <div class="pontos-list" th:if="${uploads != null and !uploads.isEmpty()}">
-              <div class="ponto-item" th:each="u, iter : ${uploads}" th:if="${iter.index < 5}">
-                <div>
-                  <span class="ponto-nome" th:text="${u.material != null ? u.material : 'Material'}">Material</span>
-                  <br>
-                  <small style="color:#6b8576" th:text="${u.status != null ? u.status : 'pendente'}">pendente</small>
-                </div>
-                <span class="ponto-pts"
-                      th:style="${'aprovado'.equalsIgnoreCase(u.status)} ? 'color:#2f9e44' : 'color:#aaa'"
-                      th:text="${'aprovado'.equalsIgnoreCase(u.status)} ? '+50 pts' : '-'">-</span>
-              </div>
+            <div class="progresso-bar-bg">
+              <div class="progresso-bar-fill"
+                   th:style="'width:' + ${progresso} + '%'"></div>
             </div>
-          </article>
+            <div class="progresso-labels">
+              <span th:text="${usuario.nivel}">Bronze</span>
+              <span th:text="${progresso + '%'}">0%</span>
+              <span th:text="${proximoNivel}">Prata</span>
+            </div>
+            <div class="progresso-faltam"
+                 th:if="${faltam > 0}"
+                 th:text="${'Faltam ' + faltam + ' pontos para ' + proximoNivel}">
+              Faltam X pontos
+            </div>
+            <div class="progresso-faltam" th:if="${faltam == 0}">
+              🎉 Você atingiu o nível máximo!
+            </div>
+          </div>
 
-          <article class="info-card">
-            <h3 style="margin-bottom:14px">🏆 Minhas Conquistas</h3>
-            <div th:if="${conquistas == null or conquistas.isEmpty()}" style="color:#6b8576; font-size:14px;">
-              Nenhuma conquista desbloqueada ainda. Continue reciclando!
+          <!-- Situação dos materiais enviados -->
+           <div class="materiais-card">
+            <h3>📦 Situação dos Materiais Enviados</h3>
+            <div th:if="${uploads == null or uploads.isEmpty()}" style="color:#6b8576;font-size:14px;">
+              Você ainda não enviou nenhum material.
+              <a th:href="@{/enviar}" style="color:#2f9e44;font-weight:600"> Enviar agora</a>
             </div>
-            <div class="pontos-list" th:if="${conquistas != null and !conquistas.isEmpty()}">
-              <div class="ponto-item" th:each="uc, iter : ${conquistas}" th:if="${iter.index < 3}">
-                <div>
-                  <span class="ponto-nome" th:text="${uc.conquista.titulo}">Conquista</span>
-                  <br>
-                  <small style="color:#6b8576" th:text="${uc.conquista.nivelRequerido}">Bronze</small>
-                </div>
-                <span class="ponto-pts" style="color:#2f9e44"
-                      th:text="${'+' + uc.conquista.pontosRecompensa + ' pts'}">+0 pts</span>
+            <table class="materiais-table" th:if="${uploads != null and !uploads.isEmpty()}">
+              <thead>
+                <tr>
+                  <th>Material</th>
+                  <th>Descrição</th>
+                  <th>Status</th>
+                  <th>Pontos</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:each="u : ${uploads}">
+                  <td th:text="${u.material != null ? u.material : '-'}">-</td>
+                  <td th:text="${u.descricao != null ? (u.descricao.length() > 30 ? u.descricao.substring(0,30) + '...' : u.descricao) : '-'}">-</td>
+                  <td>
+                    <span th:if="${'aprovado'.equalsIgnoreCase(u.status)}" class="badge badge-aprovado">Aprovado</span>
+                    <span th:if="${'pendente'.equalsIgnoreCase(u.status)}" class="badge badge-pendente">Pendente</span>
+                    <span th:if="${'recusado'.equalsIgnoreCase(u.status)}" class="badge badge-recusado">Recusado</span>
+                  </td>
+                  <td>
+                    <span th:if="${'aprovado'.equalsIgnoreCase(u.status)}"
+                          class="pts-positivo"
+                          th:text="${'+' + (u.pontosGerados != null ? u.pontosGerados : 0) + ' pts'}">+0 pts</span>
+                    <span th:unless="${'aprovado'.equalsIgnoreCase(u.status)}"
+                          class="pts-neutro">—</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Conquistas -->
+            <article class="info-card">
+              <h3 style="margin-bottom:16px">🏆 Minhas Conquistas</h3>
+              <div th:if="${conquistas == null or conquistas.isEmpty()}" style="color:#6b8576;font-size:14px;">
+                Nenhuma conquista desbloqueada ainda. Continue reciclando!
               </div>
-            </div>
-          </article>
+              <div th:if="${conquistas != null and !conquistas.isEmpty()}"
+                   style="display:flex;flex-direction:column;gap:12px;">
+                <div th:each="uc, iter : ${conquistas}" th:if="${iter.index < 3}"
+                     style="display:flex;align-items:center;gap:14px;padding:12px 16px;border-radius:12px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.04);">
+                  <!-- Ícone -->
+                  <div style="width:44px;height:44px;border-radius:50%;background:rgba(47,158,68,0.2);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">
+                    🏅
+                  </div>
+                  <!-- Info -->
+                  <div style="flex:1;">
+                    <div style="font-weight:600;font-size:14px;color:var(--color-text-primary, inherit);"
+                         th:text="${uc.conquista.titulo}">Conquista</div>
+                    <div style="font-size:12px;color:#6b8576;margin-top:2px;"
+                         th:text="${uc.conquista.descricao}">Descrição</div>
+                    <div style="margin-top:6px;">
+                      <span style="background:rgba(47,158,68,0.2);color:#40c057;font-size:11px;font-weight:600;padding:2px 8px;border-radius:100px;"
+                            th:text="${uc.conquista.nivelRequerido}">Bronze</span>
+                    </div>
+                  </div>
+                  <!-- Pontos -->
+                  <div style="text-align:right;flex-shrink:0;">
+                    <div style="font-size:16px;font-weight:700;color:#40c057;"
+                         th:text="${'+' + uc.conquista.pontosRecompensa}">+0</div>
+                    <div style="font-size:11px;color:#6b8576;">pontos</div>
+                  </div>
+                </div>
+              </div>
+            </article>
 
         </div>
 
         <aside class="ranking-col">
           <h2 class="ranking-title">⚡ Ações Rápidas</h2>
-          <div style="display:flex;flex-direction:column;gap:12px">
-            <a th:href="@{/enviar}" href="/enviar" style="background:#2f9e44;color:white;padding:14px;border-radius:12px;text-align:center;text-decoration:none;font-weight:600;box-shadow:0 4px 12px rgba(47,158,68,0.2)">📸 Enviar Material</a>
-            <a th:href="@{/beneficios}" href="/beneficios" style="background:#edf6ef;color:#165c33;padding:14px;border-radius:12px;text-align:center;text-decoration:none;font-weight:600">🎁 Ver Recompensas</a>
-            <a th:href="@{/conquistas}" href="/conquistas" style="background:#edf6ef;color:#165c33;padding:14px;border-radius:12px;text-align:center;text-decoration:none;font-weight:600">🏅 Minhas Conquistas</a>
-          </div>
+            <div style="display:flex;flex-direction:column;gap:10px;">
+              <a th:href="@{/enviar}" class="acao-btn"
+                 style="background:#2f9e44;color:white;box-shadow:0 4px 12px rgba(47,158,68,0.3);">
+                <span style="font-size:18px;">📸</span> Enviar Material
+              </a>
+              <a th:href="@{/beneficios}" class="acao-btn acao-btn-secondary">
+                <span style="font-size:18px;">🎁</span> Ver Recompensas
+              </a>
+              <a th:href="@{/conquistas}" class="acao-btn acao-btn-secondary">
+                <span style="font-size:18px;">🏅</span> Minhas Conquistas
+              </a>
+            </div>
 
           <h2 class="ranking-title" style="margin-top:24px">📈 Seu Progresso</h2>
           <div class="ranking-list">
@@ -142,6 +325,20 @@
               <div class="ranking-info">
                 <span class="ranking-nome">Nível Atual</span>
                 <span class="ranking-pontos" th:text="${usuario != null and usuario.nivel != null ? usuario.nivel : 'Bronze'}">Bronze</span>
+              </div>
+            </div>
+            <div class="ranking-item">
+              <div class="ranking-avatar">🎯</div>
+              <div class="ranking-info">
+                <span class="ranking-nome">Próximo nível</span>
+                <span class="ranking-pontos" th:text="${proximoNivel}">Prata</span>
+              </div>
+            </div>
+            <div class="ranking-item">
+              <div class="ranking-avatar">⏳</div>
+              <div class="ranking-info">
+                <span class="ranking-nome">Faltam</span>
+                <span class="ranking-pontos" th:text="${faltam + ' pts'}">0 pts</span>
               </div>
             </div>
             <div class="ranking-item">

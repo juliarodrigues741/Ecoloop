@@ -24,10 +24,10 @@
     .avatar-sm img { width:100%; height:100%; object-fit:cover; }
     .user-cell { display:flex; align-items:center; gap:10px; }
     .acoes { display:flex; gap:8px; align-items:center; }
-    .btn-editar { background:#e8f5e9; color:#165c33; border:none; border-radius:8px; padding:7px 14px; font-size:13px; font-weight:600; cursor:pointer; text-decoration:none; transition:0.2s; }
-    .btn-editar:hover { background:#d4edda; }
-    .btn-deletar { background:#ffe0e0; color:#c41e3a; border:none; border-radius:8px; padding:7px 14px; font-size:13px; font-weight:600; cursor:pointer; transition:0.2s; }
-    .btn-deletar:hover { background:#ffc5c5; }
+    
+    
+    
+    
     .empty-state { text-align:center; padding:48px 20px; color:#6b8576; }
     .empty-state .icon { font-size:48px; margin-bottom:12px; }
     .empty-state p { font-size:15px; }
@@ -39,6 +39,38 @@
     body.dark th { background:#163f25; color:#c8e6cc; }
     body.dark td { border-color:#2d3f33; color:#c8e6cc; }
 
+  
+    .btn-editar {
+      background: rgba(47,158,68,0.12) !important;
+      color: #2f9e44 !important;
+      border: 1px solid rgba(47,158,68,0.25) !important;
+      border-radius: 8px !important;
+      padding: 7px 14px !important;
+      font-size: 13px !important;
+      font-weight: 600 !important;
+      cursor: pointer !important;
+      text-decoration: none !important;
+      transition: all 0.2s ease !important;
+      display: inline-block !important;
+    }
+    .btn-editar:hover { background: rgba(47,158,68,0.22) !important; }
+    .btn-deletar {
+      background: rgba(196,30,58,0.10) !important;
+      color: #c41e3a !important;
+      border: 1px solid rgba(196,30,58,0.22) !important;
+      border-radius: 8px !important;
+      padding: 7px 14px !important;
+      font-size: 13px !important;
+      font-weight: 600 !important;
+      cursor: pointer !important;
+      transition: all 0.2s ease !important;
+    }
+    .btn-deletar:hover { background: rgba(196,30,58,0.20) !important; }
+    body.dark .btn-editar { background:rgba(47,158,68,0.15) !important; color:#7adf90 !important; border-color:rgba(47,158,68,0.3) !important; }
+    body.dark .btn-editar:hover { background:rgba(47,158,68,0.25) !important; }
+    body.dark .btn-deletar { background:rgba(196,30,58,0.12) !important; color:#ff8a8a !important; border-color:rgba(196,30,58,0.25) !important; }
+    body.dark .btn-deletar:hover { background:rgba(196,30,58,0.22) !important; }
+    body.dark tr:hover td { background: rgba(255,255,255,0.04) !important; }
   </style>
 </head>
 <body>
@@ -54,7 +86,7 @@
         <a th:href="@{/admin/dashboard}" href="/admin/dashboard" class="nav-item"><span class="nav-icon">🏠</span> Home</a>
         <a th:href="@{/admin/adicionar-usuario}" href="/admin/adicionar-usuario" class="nav-item active"><span class="nav-icon">👤</span> Adicionar Usuário</a>
         <a th:href="@{/admin/adicionar-recompensa}" href="/admin/adicionar-recompensa" class="nav-item"><span class="nav-icon">🎁</span> Adicionar Recompensa</a>
-        <a th:href="@{/admin/conquistas}" href="/admin/conquistas" class="nav-item"><span class="nav-icon">🏆</span> Conquistas</a>
+        <a th:href="@{/admin/conquistas}" href="/admin/conquistas" class="nav-item"><span class="nav-icon">🏆</span> Adicionar Conquistas</a>
         <a th:href="@{/admin/uploads}" href="/admin/uploads" class="nav-item"><span class="nav-icon">📤</span> Upload Usuário</a>
         <a th:href="@{/admin/config}" href="/admin/config" class="nav-item"><span class="nav-icon">⚙️</span> Configurações</a>
       </nav>

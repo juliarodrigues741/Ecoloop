@@ -10,30 +10,37 @@
     .upload-header h2 { font-size:28px; color:#165c33; }
     .badge-pill { background:#dff3e3; color:#165c33; padding:8px 16px; border-radius:999px; font-size:13px; font-weight:600; }
     .upload-area { border:2px dashed #2f9e44; border-radius:16px; padding:40px 20px; text-align:center; background:#f8fcf8; cursor:pointer; transition:.2s ease; margin-bottom:24px; }
+    .upload-area:hover { background:#edf6ef; border-color:#27873a; }
     .file-input { display:none; }
     .form-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:18px; margin-bottom:20px; }
     .form-group { display:flex; flex-direction:column; gap:8px; }
     .form-group.full { grid-column:1 / -1; }
     .form-group label { font-size:14px; font-weight:600; color:#456757; }
-    .form-group input, .form-group select, .form-group textarea { width:100%; border:1px solid #e4efe7; background:#f8fcf8; border-radius:12px; padding:12px 14px; font-size:15px; color:#0f3d2b; outline:none; font-family:inherit; }
+    .form-group input, .form-group select, .form-group textarea { width:100%; border:1px solid #e4efe7; background:#f8fcf8; border-radius:12px; padding:12px 14px; font-size:15px; color:#0f3d2b; outline:none; transition:.2s ease; font-family:inherit; }
     .form-group textarea { min-height:100px; resize:vertical; }
-    .btn-submit { background:#2f9e44; color:white; border:none; border-radius:12px; padding:14px 28px; font-size:15px; font-weight:600; cursor:pointer; width:100%; }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color:#2f9e44; box-shadow:0 0 0 3px rgba(47,158,68,0.1); }
+    .btn-submit { background:#2f9e44; color:white; border:none; border-radius:12px; padding:14px 28px; font-size:15px; font-weight:600; cursor:pointer; box-shadow:0 4px 12px rgba(47,158,68,0.2); width:100%; }
+    .btn-submit:hover { background:#27873a; transform:translateY(-1px); }
     .info-box { background:#fff8e1; border-left:4px solid #ffc107; border-radius:12px; padding:16px; margin-bottom:20px; }
+    .info-box strong { display:block; color:#165c33; margin-bottom:6px; font-size:14px; }
+    .info-box p { color:#597464; font-size:14px; line-height:1.6; margin:0; }
     .preview-image { max-width:200px; max-height:200px; border-radius:12px; margin-top:12px; border:2px solid #e4efe7; }
+    .status-box { display:none; border-radius:12px; padding:16px 18px; margin-bottom:16px; font-size:14px; line-height:1.6; }
+    .status-box .status-titulo { font-weight:700; display:block; margin-bottom:4px; }
+    .status-box.pendente { background:#fff8e1; border-left:4px solid #ffc107; color:#7a5b00; }
+    .status-box.aprovado { background:#d8f1dd; border-left:4px solid #2f9e44; color:#165c33; }
+    .status-box.recusado { background:#ffe0e0; border-left:4px solid #ff6b6b; color:#c41e3a; }
     @media (max-width:768px) { .form-grid { grid-template-columns:1fr; } }
-    /* ===== DARK MODE ===== */
     body.dark .upload-section { background:#1c2d22; box-shadow:0 4px 16px rgba(0,0,0,0.4); }
-    body.dark .upload-section h2,
-    body.dark .upload-section h3 { color:#e0f4e6; }
+    body.dark .upload-section h2, body.dark .upload-section h3 { color:#e0f4e6; }
     body.dark .upload-area { background:#163f25; border-color:#2d4f33; color:#a0c8a8; }
     body.dark label { color:#a0c8a8; }
-    body.dark input[type="text"],
-    body.dark textarea,
-    body.dark select { background:#163f25; border-color:#2d4f33; color:#e0f4e6; }
-    body.dark input::placeholder,
-    body.dark textarea::placeholder { color:#6b9474; }
+    body.dark input[type="text"], body.dark textarea, body.dark select { background:#163f25; border-color:#2d4f33; color:#e0f4e6; }
+    body.dark input::placeholder, body.dark textarea::placeholder { color:#6b9474; }
     body.dark .info-box { background:#3d2e1a; border-left-color:#ffc107; color:#e0d4a0; }
-
+    body.dark .status-box.pendente { background:#3d2e1a; color:#e0c060; }
+    body.dark .status-box.aprovado { background:#1a3d22; color:#a0e8a8; }
+    body.dark .status-box.recusado { background:#3d1f24; color:#ff9999; }
   </style>
 </head>
 <body>
@@ -46,14 +53,14 @@
       </div>
       <p class="sidebar-section">MENU</p>
       <nav class="nav">
-        <a th:href="@{/dashboard}" href="/dashboard" class="nav-item"><span class="nav-icon">🏠</span> Home</a>
-        <a th:href="@{/enviar}" href="/enviar" class="nav-item active"><span class="nav-icon">📸</span> Enviar</a>
-        <a th:href="@{/beneficios}" href="/beneficios" class="nav-item"><span class="nav-icon">🎁</span> Benefícios</a>
-        <a th:href="@{/conquistas}" href="/conquistas" class="nav-item"><span class="nav-icon">🏆</span> Conquistas</a>
-        <a th:href="@{/perfil}" href="/perfil" class="nav-item"><span class="nav-icon">👤</span> Perfil</a>
-        <a th:href="@{/configuracoes}" href="/configuracoes" class="nav-item"><span class="nav-icon">⚙️</span> Configurações</a>
+        <a th:href="@{/dashboard}"     class="nav-item"><span class="nav-icon">🏠</span> Home</a>
+        <a th:href="@{/enviar}"        class="nav-item active"><span class="nav-icon">📸</span> Enviar</a>
+        <a th:href="@{/beneficios}"    class="nav-item"><span class="nav-icon">🎁</span> Benefícios</a>
+        <a th:href="@{/conquistas}"    class="nav-item"><span class="nav-icon">🏆</span> Conquistas</a>
+        <a th:href="@{/perfil}"        class="nav-item"><span class="nav-icon">👤</span> Perfil</a>
+        <a th:href="@{/configuracoes}" class="nav-item"><span class="nav-icon">⚙️</span> Configurações</a>
       </nav>
-      <a th:href="@{/logout}" href="/logout" class="nav-item sair-btn"><span class="nav-icon">🚪</span> Sair</a>
+      <a th:href="@{/logout}" class="nav-item sair-btn"><span class="nav-icon">🚪</span> Sair</a>
     </aside>
 
     <main class="main">
@@ -63,33 +70,41 @@
           <p class="page-sub">Envie fotos ou vídeos dos seus materiais recicláveis</p>
         </div>
         <div class="admin-badge">
-          <div class="admin-avatar" style="overflow:hidden; padding:0;">
+          <div class="admin-avatar" style="overflow:hidden;padding:0;">
             <img th:if="${usuario != null and usuario.fotoPerfil != null and !usuario.fotoPerfil.isEmpty()}"
                  th:src="${usuario.fotoPerfil}"
-                 style="width:100%; height:100%; object-fit:cover; border-radius:50%;" alt="foto" />
+                 style="width:100%;height:100%;object-fit:cover;border-radius:50%;" alt="foto"/>
             <span th:unless="${usuario != null and usuario.fotoPerfil != null and !usuario.fotoPerfil.isEmpty()}"
                   th:text="${usuario != null and usuario.nome != null ? usuario.nome.substring(0,1).toUpperCase() : 'U'}">U</span>
           </div>
           <span th:text="${usuario != null and usuario.nome != null ? usuario.nome.split(' ')[0] : 'Usuário'}"
-                style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:120px;">Usuário</span>
+                style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px;">Usuário</span>
         </div>
       </div>
+
+      <!-- Notificações de avaliação -->
+      <div id="notificacoesBox"></div>
 
       <div class="upload-section">
         <div class="upload-header">
           <h2>📸 Novo Envio</h2>
           <div class="badge-pill">Preencha os dados</div>
         </div>
+
+        <!-- Status do envio -->
+        <div id="statusBox" class="status-box"></div>
+
         <div class="info-box">
           <strong>💡 Dica</strong>
           <p>Tire fotos claras dos materiais recicláveis. Quanto melhor a qualidade, mais rápida tende a ser a avaliação.</p>
         </div>
-        <form th:action="@{/uploads}" action="/uploads" method="post" enctype="multipart/form-data">
+
+        <form th:action="@{/enviar}" action="/enviar" method="post" enctype="multipart/form-data">
           <div class="upload-area" onclick="document.getElementById('fileInput').click()">
             <div style="font-size:48px;margin-bottom:12px;">📸</div>
             <h3 style="color:#165c33;margin-bottom:8px;">Clique para selecionar um arquivo</h3>
             <p style="color:#6b8576;font-size:14px;">Imagem ou vídeo</p>
-            <input type="file" id="fileInput" name="files" class="file-input" accept="image/*,video/*" onchange="previewImage(event)" required>
+            <input type="file" id="fileInput" name="file" class="file-input" accept="image/*,video/*" onchange="previewImage(event)" required>
             <img id="preview" class="preview-image" style="display:none">
           </div>
           <div class="form-grid">
@@ -115,6 +130,7 @@
       </div>
     </main>
   </div>
+
   <script>
     function previewImage(event) {
       const preview = document.getElementById('preview');
@@ -122,10 +138,59 @@
       if (!file) { preview.style.display = 'none'; return; }
       if (file.type.startsWith('image/')) {
         const reader = new FileReader();
-        reader.onload = function(e) { preview.src = e.target.result; preview.style.display = 'block'; }
+        reader.onload = e => { preview.src = e.target.result; preview.style.display = 'block'; };
         reader.readAsDataURL(file);
       } else { preview.style.display = 'none'; }
     }
+
+    // Status do envio atual
+    (function() {
+      const params = new URLSearchParams(window.location.search);
+      const box = document.getElementById('statusBox');
+      if (params.get('erro') === 'arquivo') {
+        box.className = 'status-box recusado';
+        box.innerHTML = '<span class="status-titulo">⚠️ Nenhum arquivo selecionado</span>Escolha um arquivo antes de enviar.';
+        box.style.display = 'block';
+        return;
+      }
+      const id = params.get('enviado');
+      if (!id) return;
+      fetch('/material/status/' + id)
+        .then(r => r.json())
+        .then(msgs => {
+          if (!msgs || !msgs.length) return;
+          const texto = msgs.join(' ');
+          let cls = 'pendente';
+          if (texto.includes('aprovado')) cls = 'aprovado';
+          else if (texto.includes('recusado')) cls = 'recusado';
+          box.className = 'status-box ' + cls;
+          box.innerHTML = '<span class="status-titulo">' + msgs[0] + '</span>' + msgs.slice(1).join('<br>');
+          box.style.display = 'block';
+        })
+        .catch(() => {
+          box.className = 'status-box pendente';
+          box.innerHTML = '<span class="status-titulo">📤 Material enviado!</span>Aguarde a aprovação do administrador.';
+          box.style.display = 'block';
+        });
+    })();
+
+    // Notificações de materiais avaliados
+    (function() {
+      const cont = document.getElementById('notificacoesBox');
+      if (!cont) return;
+      fetch('/material/notificacoes')
+        .then(r => r.json())
+        .then(notificacoes => {
+          if (!notificacoes || !notificacoes.length) return;
+          cont.innerHTML = notificacoes.map(n => {
+            let cls = 'pendente';
+            if (n.includes('aprovado')) cls = 'aprovado';
+            else if (n.includes('recusado')) cls = 'recusado';
+            return '<div class="status-box ' + cls + '" style="display:block">' + n + '</div>';
+          }).join('');
+        })
+        .catch(() => {});
+    })();
   </script>
 </body>
 </html>

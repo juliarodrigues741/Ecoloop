@@ -518,9 +518,7 @@ body.dark td {
   color: #c8e6cc;
 }
 
-body.dark tr:hover {
-  background: #163f25;
-}
+body.dark tr:hover td { background: rgba(255,255,255,0.04) !important; }
 
 /* Tabs/Badges */
 body.dark .tab-btn {
@@ -637,16 +635,24 @@ body.dark .vazio {
 
 /* Botões de ação */
 body.dark .btn-editar {
-  background: #1a5fa0;
+  background: rgba(47,158,68,0.15) !important;
+  color: #7adf90 !important;
+  border: 1px solid rgba(47,158,68,0.3) !important;
 }
+body.dark .btn-editar:hover { background: rgba(47,158,68,0.25) !important; }
 body.dark .btn-deletar {
-  background: #b53030;
+  background: rgba(196,30,58,0.12) !important;
+  color: #ff8a8a !important;
+  border: 1px solid rgba(196,30,58,0.25) !important;
 }
+body.dark .btn-deletar:hover { background: rgba(196,30,58,0.22) !important; }
 body.dark .btn-aprovar {
   background: #2f9e44;
 }
 body.dark .btn-recusar {
-  background: #b53030;
+  background: rgba(196,30,58,0.12) !important;
+  color: #ff8a8a !important;
+  border: 1px solid rgba(196,30,58,0.25) !important;
 }
 
 /* Alertas em dark mode */
